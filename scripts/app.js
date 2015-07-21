@@ -75,6 +75,8 @@ angular.module('app', [
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('home');
+    $translatePartialLoader.addPart('friends');
+    $translatePartialLoader.addPart('connect');
 
     $timeout(function(){
         $translate.refresh();
@@ -93,6 +95,8 @@ angular.module('appStub', [
     $httpProvider.interceptors.push('HttpStubInterceptor');
 
 }).run(function(settings, $httpBackend, GetJsonFile){
+
+    $httpBackend.whenGET(new RegExp(settings.endpoint + 'socials$')).respond(GetJsonFile.synchronously('stub/social/GET.json'));
 
     $httpBackend.whenGET(new RegExp(settings.endpoint + 'users$')).respond(GetJsonFile.synchronously('stub/user/GET.json'));
     $httpBackend.whenPOST(new RegExp(settings.endpoint + 'users$')).respond(200);
@@ -141,6 +145,9 @@ angular.module('app').constant('settings', {
 angular.module('app').factory('User', function(settings, $resource){
     return $resource(settings.endpoint + 'users/:id');
 });
+angular.module('app').factory('Social', function(settings, $resource){
+    return $resource(settings.endpoint + 'socials/:id');
+});
 angular.module('app').controller('SidenavCtrl', function($scope){
 
     $scope.entries = [{
@@ -158,40 +165,26 @@ angular.module('app').controller('SidenavCtrl', function($scope){
     }];
 
 });
-angular.module('app').controller('HomeCtrl', function($scope, $interval){
+angular.module('app').controller('HomeCtrl', function($scope, $interval, Social){
 
-    var duration = 2000;
+    Social.query().$promise.then(function(iconList){
 
-    var iconList = [{
-        icon: 'twitter',
-        color: '#1AB2E8'
-    },{
-        icon: 'google-plus',
-        color: '#DA4835'
-    },{
-        icon: 'facebook',
-        color: '#3B5998'
-    },{
-        icon: 'linkedin',
-        color: '#0177B5'
-    },{
-        icon: 'photo_camera',
-        color: 'brown'
-    }];
+        var duration = 2000;
+        var i = 0;
 
-    var i = 0;
-    $scope.selectedIcon = iconList[i];
-    $interval(function(){
-        $scope.selectedIcon = iconList[i % iconList.length];
-        i++;
-    }, duration);
+        $scope.selectedIcon = iconList[i];
 
-    $scope.option = {
-        rotation: 'none',
-        duration: duration,
-        easing : 'sine-out'
-    };
+        $interval(function(){
+            $scope.selectedIcon = iconList[i % iconList.length];
+            i++;
+        }, duration);
 
+        $scope.option = {
+            rotation: 'none',
+            duration: duration,
+            easing : 'sine-out'
+        };
+    });
 });
 angular.module('app').controller('FriendsCtrl', function($scope, $timeout, User){
 
@@ -233,6 +226,10 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, User)
     };
 
 });
-angular.module('app').controller('ConnectCtrl', function($scope){
+angular.module('app').controller('ConnectCtrl', function($scope, Social){
+
+    Social.query().$promise.then(function(socials){
+        $scope.connections = socials;
+    });
 
 });
