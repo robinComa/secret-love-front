@@ -1,0 +1,16 @@
+<md-content>
+    <md-list>
+
+        <md-list-item ng-repeat="user in users" layout="row" ng-click="toogleLove(user)">
+            <img ng-src="{{user.image}}" class="md-avatar" alt="{{user.name}}" />
+            <div flex class="md-list-item-text" layout="row">
+                <ng-md-icon flex="10" icon="{{user.social}}" style="fill: black" size="15"></ng-md-icon>
+                <p flex="80">
+                    {{ user.name }}
+                </p>
+                <ng-md-icon flex="10" icon="{{getLoveIcon(user)}}" style="fill: pink" size="40"></ng-md-icon>
+            </div>
+        </md-list-item>
+
+    </md-list>
+</md-content>

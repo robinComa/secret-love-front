@@ -1,0 +1,33 @@
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+#logs
+*.log
+
+# Gulp Bower Node
+node_modules
+dist
+.tmp
+.publish
+.sass-cache
+app/bower_components
+test/bower_components
+app/main.css
+npm-debug.log
+
+# Reports
+reports

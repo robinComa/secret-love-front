@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fr" ng-app="appStub">
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv="Content-Language" content="en">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{{'common.title' | translate}}</title>
+
+        <!-- build:css styles/vendor.css -->
+        <link rel="stylesheet" href="bower_components/angular-material/angular-material.css">
+        <!-- endbuild -->
+
+        <!-- build:css styles/app.css -->
+        <link rel="stylesheet" href="main.css">
+        <!-- endbuild -->
+    </head>
+
+    <body layout="column" ui-view>
+
+        <!-- build:js scripts/vendor.js -->
+        <script src="bower_components/angular/angular.js"></script>
+        <script src="bower_components/svg-morpheus/compile/unminified/svg-morpheus.js"></script>
+        <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+        <script src="bower_components/angular-translate/angular-translate.js"></script>
+        <script src="bower_components/angular-translate-loader-partial/angular-translate-loader-partial.js"></script>
+        <script src="bower_components/angular-translate-loader-static-files/angular-translate-loader-static-files.js"></script>
+        <script src="bower_components/angular-translate-loader-url/angular-translate-loader-url.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.js"></script>
+        <script src="bower_components/angular-aria/angular-aria.js"></script>
+        <script src="bower_components/angular-resource/angular-resource.js"></script>
+        <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+        <script src="bower_components/angular-material/angular-material.js"></script>
+        <script src="bower_components/angular-material-icons/angular-material-icons.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js scripts/app.js -->
+        <script src="app.js"></script>
+        <script src="appStub.js"></script>
+        <script src="settings.js"></script>
+        <script src="src/resource/user.js"></script>
+        <script src="src/sidenav/controller.js"></script>
+        <script src="src/content/home/controller.js"></script>
+        <script src="src/content/friends/controller.js"></script>
+        <script src="src/content/connect/controller.js"></script>
+        <!-- endbuild -->
+
+        <!-- build:js scripts/templates.js -->
+        <script></script>
+        <!-- endbuild -->
+    </body>
+</html>
