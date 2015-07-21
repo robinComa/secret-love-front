@@ -75,6 +75,8 @@ angular.module('app', [
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('home');
+    $translatePartialLoader.addPart('friends');
+    $translatePartialLoader.addPart('connect');
 
     $timeout(function(){
         $translate.refresh();

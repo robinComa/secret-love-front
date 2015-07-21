@@ -1,0 +1,26 @@
+[{
+  "icon": "twitter",
+  "color": "#1AB2E8",
+  "label": "connect.label.twitter",
+  "social": "twitter"
+},{
+  "icon": "google-plus",
+  "color": "#DA4835",
+  "label": "connect.label.google-plus",
+  "social": "google-plus"
+},{
+  "icon": "facebook",
+  "color": "#3B5998",
+  "label": "connect.label.facebook",
+  "social": "facebook"
+},{
+  "icon": "linkedin",
+  "color": "#0177B5",
+  "label": "connect.label.linkedin",
+  "social": "linkedin"
+},{
+  "icon": "photo_camera",
+  "color": "brown",
+  "label": "connect.label.instagram",
+  "social": "instagram"
+}]

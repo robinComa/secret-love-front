@@ -7,6 +7,8 @@ angular.module('appStub', [
 
 }).run(function(settings, $httpBackend, GetJsonFile){
 
+    $httpBackend.whenGET(new RegExp(settings.endpoint + 'socials$')).respond(GetJsonFile.synchronously('stub/social/GET.json'));
+
     $httpBackend.whenGET(new RegExp(settings.endpoint + 'users$')).respond(GetJsonFile.synchronously('stub/user/GET.json'));
     $httpBackend.whenPOST(new RegExp(settings.endpoint + 'users$')).respond(200);
 
