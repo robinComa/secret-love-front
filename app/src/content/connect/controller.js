@@ -5,7 +5,9 @@ angular.module('app').controller('ConnectCtrl', function($scope, Social, $google
     });
 
     $scope.connect = function(){
-        $google.connect();
+        $google.connect().then(function(){
+            console.log("ok");
+        });
     };
 
 });
