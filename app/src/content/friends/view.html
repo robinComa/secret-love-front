@@ -1,14 +1,14 @@
 <md-content>
     <md-list>
 
-        <md-list-item ng-repeat="user in users" layout="row" ng-click="toogleLove(user)">
-            <img ng-src="{{user.image}}" class="md-avatar" alt="{{user.name}}" />
+        <md-list-item ng-repeat="friend in friends | orderBy:'name'" layout="row" ng-click="toogleLove(friend)">
+            <img ng-src="{{friend.image}}" class="md-avatar" alt="{{friend.name}}" />
             <div flex class="md-list-item-text" layout="row">
-                <ng-md-icon flex="10" icon="{{user.social}}" style="fill: black" size="15"></ng-md-icon>
+                <ng-md-icon flex="10" icon="{{friend.social.icon}}" style="fill: {{friend.social.color}}" size="20"></ng-md-icon>
                 <p flex="80">
-                    {{ user.name }}
+                    {{ friend.name }}
                 </p>
-                <ng-md-icon flex="10" icon="{{getLoveIcon(user)}}" style="fill: pink" size="40"></ng-md-icon>
+                <ng-md-icon flex="10" icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
             </div>
         </md-list-item>
 

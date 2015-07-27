@@ -1,0 +1,41 @@
+[{
+  "name": "Robin Coma Delperier",
+  "social": {
+    "type": "google-plus",
+    "icon": "google-plus",
+    "color": "#DA4835",
+    "label": "connect.label.google-plus"
+  },
+  "love": false,
+  "image": "https://lh6.googleusercontent.com/-Gv6BGLYDSTg/AAAAAAAAAAI/AAAAAAAAAAA/LRElnAg0NzI/s128-c-k/photo.jpg"
+},{
+  "name": "Nicolas Noullet",
+  "social": {
+    "type": "google-plus",
+    "icon": "google-plus",
+    "color": "#DA4835",
+    "label": "connect.label.google-plus"
+  },
+  "love": true,
+  "image": "https://lh6.googleusercontent.com/-fjMah5lHmes/AAAAAAAAAAI/AAAAAAAAAAA/Ng3p7GWOxRE/s128-c-k/photo.jpg"
+},{
+  "name": "Thomas Portet",
+  "social": {
+    "type": "google-plus",
+    "icon": "google-plus",
+    "color": "#DA4835",
+    "label": "connect.label.google-plus"
+  },
+  "love": false,
+  "image": "https://lh4.googleusercontent.com/-xGYTPIQ6nKs/VKP5PT3w3sI/AAAAAAAAAKQ/O9pZ8kzjZeQ/w575-h577-no/pic4linkedin.jpg"
+},{
+  "name": "Manuarii Stein",
+  "social": {
+    "type": "google-plus",
+    "icon": "google-plus",
+    "color": "#DA4835",
+    "label": "connect.label.google-plus"
+  },
+  "love": false,
+  "image": "https://lh5.googleusercontent.com/-JbRqUu0-lj0/ThWVLRMLRzI/AAAAAAAAAD4/vW478jRN7T8/s336-no/profil_googleplus.jpg"
+}]

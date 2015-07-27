@@ -1,0 +1,21 @@
+[{
+  "name": "Sophie Martinez",
+  "social": {
+    "type": "linkedin",
+    "icon": "linkedin",
+    "color": "#0177B5",
+    "label": "connect.label.linkedin"
+  },
+  "love": false,
+  "image": "https://lh3.googleusercontent.com/-GUc48CHh164/ThGGKx2rWUI/AAAAAAAAAD0/GGbDTm-Riz8/w579-h577-no/DSC02723.JPG"
+},{
+  "name": "Jihane KHALIL",
+  "social": {
+    "type": "linkedin",
+    "icon": "linkedin",
+    "color": "#0177B5",
+    "label": "connect.label.linkedin"
+  },
+  "love": false,
+  "image": "https://lh3.googleusercontent.com/-s_4o0vfi0ek/ThIK5Tt4hbI/AAAAAAAAAHM/nWVHoha7w4M/s237-no/36952_441807409531_603499531_5817141_7322230_n.jpg"
+}]
