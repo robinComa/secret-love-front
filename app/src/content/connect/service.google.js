@@ -1,4 +1,12 @@
-angular.module('app').constant('setting').provider('$google', function(settings){
+angular.module('app').provider('$google', function(settings){
+
+    var isApiloaded = false;
+    var isConnected = false;
+
+    window.handleClientLoad = function(){
+        gapi.client.setApiKey(settings.socials.google.apiKey);
+        isApiloaded = true;
+    };
 
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
@@ -6,21 +14,18 @@ angular.module('app').constant('setting').provider('$google', function(settings)
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
     })();
 
-    window.handleClientLoad = function(){
-        gapi.client.setApiKey(settings.socials.google.apiKey);
-    };
+    this.$get = function($q, $interval){
 
-    this.$get = function($q){
-
-        var connect = function(){
+        var authorize = function(){
             var deferred = $q.defer();
             gapi.auth.authorize({
                 client_id: settings.socials.google.clientId,
                 scope: settings.socials.google.scope,
                 immediate: false
-             },function(authResult) {
-                if (authResult['error'] == undefined){
+            },function(authResult) {
+                if (authResult['error'] === undefined){
                     gapi.auth.setToken(authResult);
+                    isConnected = true;
                     deferred.resolve();
                 } else {
                     deferred.reject();
@@ -28,23 +33,22 @@ angular.module('app').constant('setting').provider('$google', function(settings)
             });
             return deferred.promise;
         };
-        var getFriends = function(){
-            var deferred = $q.defer();
-            gapi.client.load('plus', 'v1', function() {
-                var request = gapi.client.plus.people.list({
-                    'userId' : 'me',
-                    'collection' : 'visible'
-                });
-                request.execute(function(resp) {
-                    deferred.resolve(resp);
-                });
-            });
-            return deferred.promise;
-        };
 
         return {
-            connect: connect,
-            getFriends: getFriends
+            connect: function(){
+                var deferred = $q.defer();
+                var interval = $interval(function(){
+                    if(isApiloaded){
+                        if(isConnected){
+                            deferred.resolve();
+                        }else{
+                            authorize().then(deferred.resolve, deferred.reject);
+                        }
+                        $interval.cancel(interval);
+                    }
+                }, 100);
+                return deferred.promise;
+            }
         };
 
     };

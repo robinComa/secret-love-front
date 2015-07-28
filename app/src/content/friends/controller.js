@@ -2,7 +2,7 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
 
     $scope.friends = [];
     Friend.query().then(function(){
-        console.log('ok');
+        console.log('All friends loaded');
     }, function(error){
         console.log('error');
     }, function(friends){

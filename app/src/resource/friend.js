@@ -4,7 +4,7 @@ angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePl
             var deferred = $q.defer();
 
             var twitterDeffered = Twitter.query().$promise;
-            var googleplusDeffered = GooglePlus.get().$promise;
+            var googleplusDeffered = GooglePlus.query();
             var facebookDeffered = Facebook.query().$promise;
             var linkedinDeffered = LinkedIn.query().$promise;
             var instagramDeffered = Instagram.query().$promise;
