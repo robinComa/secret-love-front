@@ -2,11 +2,11 @@ angular.module('app').constant('setting').provider('$google', function(settings)
 
     (function() {
         var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-        po.src = 'https://apis.google.com/js/client:plusone.js?onload=GoogleApiIsLoaded';
+        po.src = 'https://apis.google.com/js/client.js?onload=handleClientLoad';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
     })();
 
-    window.GoogleApiIsLoaded = function(){
+    window.handleClientLoad = function(){
         gapi.client.setApiKey(settings.socials.google.apiKey);
     };
 
@@ -19,7 +19,8 @@ angular.module('app').constant('setting').provider('$google', function(settings)
                 scope: settings.socials.google.scope,
                 immediate: false
              },function(authResult) {
-                if (authResult && !authResult.error) {
+                if (authResult['error'] == undefined){
+                    gapi.auth.setToken(authResult);
                     deferred.resolve();
                 } else {
                     deferred.reject();
@@ -27,9 +28,23 @@ angular.module('app').constant('setting').provider('$google', function(settings)
             });
             return deferred.promise;
         };
+        var getFriends = function(){
+            var deferred = $q.defer();
+            gapi.client.load('plus', 'v1', function() {
+                var request = gapi.client.plus.people.list({
+                    'userId' : 'me',
+                    'collection' : 'visible'
+                });
+                request.execute(function(resp) {
+                    deferred.resolve(resp);
+                });
+            });
+            return deferred.promise;
+        };
 
         return {
-            connect: connect
+            connect: connect,
+            getFriends: getFriends
         };
 
     };

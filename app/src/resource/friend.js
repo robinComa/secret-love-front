@@ -1,10 +1,10 @@
-angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram){
+angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram, GooglePlusAdapter){
     return {
         query: function(){
             var deferred = $q.defer();
 
             var twitterDeffered = Twitter.query().$promise;
-            var googleplusDeffered = GooglePlus.query().$promise;
+            var googleplusDeffered = GooglePlus.get().$promise;
             var facebookDeffered = Facebook.query().$promise;
             var linkedinDeffered = LinkedIn.query().$promise;
             var instagramDeffered = Instagram.query().$promise;
@@ -13,7 +13,7 @@ angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePl
                 deferred.notify(friend);
             });
             googleplusDeffered.then(function(friend){
-                deferred.notify(friend);
+                deferred.notify(GooglePlusAdapter.adaptToModels(friend));
             });
             facebookDeffered.then(function(friend){
                 deferred.notify(friend);
