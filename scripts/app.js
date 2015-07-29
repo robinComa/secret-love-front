@@ -158,7 +158,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.instagram',
             auth: {
                 clientId: '5031270ba8a0440dbf50c0c78f201f1f',
-                redirectUri: 'http://localhost:9000/',
+                redirectUri: window.location.origin,
                 scope: ['basic']
             },
             icon: {
