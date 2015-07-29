@@ -4,7 +4,7 @@ angular.module('app').provider('$google', function(settings){
     var isConnected = false;
 
     window.handleClientLoad = function(){
-        gapi.client.setApiKey(settings.socials.google.apiKey);
+        gapi.client.setApiKey(settings.socials.googlePlus.auth.apiKey);
         isApiloaded = true;
     };
 
@@ -19,8 +19,8 @@ angular.module('app').provider('$google', function(settings){
         var authorize = function(){
             var deferred = $q.defer();
             gapi.auth.authorize({
-                client_id: settings.socials.google.clientId,
-                scope: settings.socials.google.scope,
+                client_id: settings.socials.googlePlus.auth.clientId,
+                scope: settings.socials.googlePlus.auth.scope,
                 immediate: false
             },function(authResult) {
                 if (authResult['error'] === undefined){
@@ -35,6 +35,15 @@ angular.module('app').provider('$google', function(settings){
         };
 
         return {
+            getToken: function(){
+                var deferred = $q.defer();
+                if(isConnected) {
+                    deferred.resolve();
+                }else{
+                    deferred.reject();
+                }
+                return deferred.promise;
+            },
             connect: function(){
                 var deferred = $q.defer();
                 var interval = $interval(function(){

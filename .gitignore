@@ -26,7 +26,7 @@ dist
 .sass-cache
 app/bower_components
 test/bower_components
-app/main.css
+app/**/*.css
 npm-debug.log
 
 # Reports

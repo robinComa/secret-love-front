@@ -21,50 +21,50 @@ angular.module('app', [
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise('/');
 
     $stateProvider
         .state('main', {
             abstract: true,
-            url: "",
-            templateUrl: "src/main.html"
+            url: '',
+            templateUrl: 'src/main/main.html'
         })
         .state('home', {
             parent: 'main',
-            url: "/",
+            url: '/',
             views: {
                 sidenav: {
-                    templateUrl: "src/sidenav/view.html",
+                    templateUrl: 'src/main/sidenav/view.html',
                     controller: 'SidenavCtrl'
                 },
                 content: {
-                    templateUrl: "src/content/home/view.html",
+                    templateUrl: 'src/main/content/home/view.html',
                     controller: 'HomeCtrl'
                 }
             }
         }).state('friends', {
             parent: 'main',
-            url: "/friends",
+            url: '/friends',
             views: {
                 sidenav: {
-                    templateUrl: "src/sidenav/view.html",
+                    templateUrl: 'src/main/sidenav/view.html',
                     controller: 'SidenavCtrl'
                 },
                 content: {
-                    templateUrl: "src/content/friends/view.html",
+                    templateUrl: 'src/main/content/friends/view.html',
                     controller: 'FriendsCtrl'
                 }
             }
         }).state('connect', {
             parent: 'main',
-            url: "/connect",
+            url: '/connect',
             views: {
                 sidenav: {
-                    templateUrl: "src/sidenav/view.html",
+                    templateUrl: 'src/main/sidenav/view.html',
                     controller: 'SidenavCtrl'
                 },
                 content: {
-                    templateUrl: "src/content/connect/view.html",
+                    templateUrl: 'src/main/content/connect/view.html',
                     controller: 'ConnectCtrl'
                 }
             }

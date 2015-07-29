@@ -4,7 +4,7 @@ angular.module('app').factory('GooglePlus', function($q, $google){
         query: function(){
             var deferred = $q.defer();
 
-            $google.connect().then(function(){
+            $google.getToken().then(function(){
                 gapi.client.load('plus', 'v1', function() {
                     var request = gapi.client.plus.people.list({
                         'userId' : 'me',

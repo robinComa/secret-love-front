@@ -3,11 +3,11 @@
         md-row-height-gt-md="1:1" md-row-height="2:2"
         md-gutter="12px" md-gutter-gt-sm="8px" >
 
-    <md-grid-tile md-rowspan="2" md-colspan="2" md-rowspan-sm="1" md-colspan-sm="1" ng-repeat="connection in connections">
-        <ng-md-icon icon="{{connection.icon}}" style="fill: {{connection.color}}" size="200"></ng-md-icon>
+    <md-grid-tile md-rowspan="2" md-colspan="2" md-rowspan-sm="1" md-colspan-sm="1" ng-repeat="(type, connection) in connections">
+        <ng-md-icon icon="{{connection.icon.name}}" style="fill: {{connection.icon.color}}" size="200"></ng-md-icon>
         <md-grid-tile-footer layout="row">
             <h3>{{connection.label | translate}}</h3>
-            <md-button class="md-fab" aria-label="{{connection.label | translate}}" ng-click="connect()">
+            <md-button class="md-fab" aria-label="{{connection.label | translate}}" ng-click="connect(type)">
                 <ng-md-icon icon="login" size="40"></ng-md-icon>
             </md-button>
         </md-grid-tile-footer>

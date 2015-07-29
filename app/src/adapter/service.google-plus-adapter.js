@@ -1,23 +1,11 @@
-angular.module('app').service('GooglePlusAdapter', function(Social){
-
-    var social;
-    Social.query().$promise.then(function(socials){
-        social = socials.filter(function(social){
-            return social.type === 'google-plus';
-        })[0];
-    });
+angular.module('app').service('GooglePlusAdapter', function(FriendModel){
 
     var adaptToModel = function(dto){
-        return {
-            name: dto.displayName,
-            social: social,
-            image: dto.image.url,
-            love: false             //TODO DB input for adapter
-        };
+        return new FriendModel(null, dto.displayName, dto.image.url, 'googlePlus');
     };
 
     this.adaptToModels = function(dto){
-        return dto.items.map(adaptToModel);
+        return dto.items ? dto.items.map(adaptToModel) : [];
     };
 
     this.adaptToDto = function(dto){

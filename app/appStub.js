@@ -7,19 +7,15 @@ angular.module('appStub', [
 
 }).run(function(settings, $httpBackend, GetJsonFile){
 
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'socials$')).respond(GetJsonFile.synchronously('stub/social/GET.json'));
-
     $httpBackend.whenGET(new RegExp(settings.endpoint + 'facebook/friends$')).respond(GetJsonFile.synchronously('stub/facebook/GET.json'));
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'google-plus/friends$')).respond(GetJsonFile.synchronously('stub/google-plus/GET.json'));
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'instagram/friends$')).respond(GetJsonFile.synchronously('stub/instagram/GET.json'));
     $httpBackend.whenGET(new RegExp(settings.endpoint + 'twitter/friends$')).respond(GetJsonFile.synchronously('stub/twitter/GET.json'));
     $httpBackend.whenGET(new RegExp(settings.endpoint + 'linkedin/friends$')).respond(GetJsonFile.synchronously('stub/linkedin/GET.json'));
-    $httpBackend.whenPOST(new RegExp(settings.endpoint + 'friends$')).respond(200);
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
     $httpBackend.whenDELETE(/.*/).passThrough();
     $httpBackend.whenPUT(/.*/).passThrough();
+    $httpBackend.whenJSONP(/.*/).passThrough();
 });
 
 angular.module('appStub').service('HttpStubInterceptor', function($q, $timeout){

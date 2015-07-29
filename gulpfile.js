@@ -11,11 +11,11 @@ gulp.task('clean', function () {
 });
 
 gulp.task('styles', function () {
-	return gulp.src('app/main.scss')
+	return gulp.src('app/src/main/main.scss')
 		.pipe($.plumber())
 		.pipe($.sass())
 		.pipe($.autoprefixer('last 1 version'))
-		.pipe(gulp.dest('app/'));
+		.pipe(gulp.dest('app/src/main/'));
 });
 
 gulp.task('i18n', function () {

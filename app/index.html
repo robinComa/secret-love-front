@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="fr" ng-app="appStub">
     <head>
+        <base href="/">
         <meta charset='utf-8'>
         <meta http-equiv="Content-Language" content="en">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +14,7 @@
         <!-- endbuild -->
 
         <!-- build:css styles/app.css -->
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" href="src/main/main.css">
         <!-- endbuild -->
     </head>
 
@@ -39,19 +40,21 @@
         <script src="app.js"></script>
         <script src="appStub.js"></script>
         <script src="settings.js"></script>
+        <script src="src/model/friend.js"></script>
         <script src="src/adapter/service.google-plus-adapter.js"></script>
+        <script src="src/adapter/service.instagram-adapter.js"></script>
         <script src="src/resource/facebook.js"></script>
         <script src="src/resource/google-plus.js"></script>
         <script src="src/resource/instagram.js"></script>
         <script src="src/resource/linkedin.js"></script>
         <script src="src/resource/twitter.js"></script>
         <script src="src/resource/friend.js"></script>
-        <script src="src/resource/social.js"></script>
-        <script src="src/sidenav/controller.js"></script>
-        <script src="src/content/home/controller.js"></script>
-        <script src="src/content/friends/controller.js"></script>
-        <script src="src/content/connect/controller.js"></script>
-        <script src="src/content/connect/service.google.js"></script>
+        <script src="src/main/sidenav/controller.js"></script>
+        <script src="src/main/content/home/controller.js"></script>
+        <script src="src/main/content/friends/controller.js"></script>
+        <script src="src/main/content/connect/controller.js"></script>
+        <script src="src/main/content/connect/service.google.js"></script>
+        <script src="src/main/content/connect/service.instagram.js"></script>
         <!-- endbuild -->
 
         <!-- build:js scripts/templates.js -->

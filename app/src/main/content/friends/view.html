@@ -4,7 +4,7 @@
         <md-list-item ng-repeat="friend in friends | orderBy:'name'" layout="row" ng-click="toogleLove(friend)">
             <img ng-src="{{friend.image}}" class="md-avatar" alt="{{friend.name}}" />
             <div flex class="md-list-item-text" layout="row">
-                <ng-md-icon flex="10" icon="{{friend.social.icon}}" style="fill: {{friend.social.color}}" size="20"></ng-md-icon>
+                <ng-md-icon flex="10" icon="{{friend.social.icon.name}}" style="fill: {{friend.social.icon.color}}" size="20"></ng-md-icon>
                 <p flex="80">
                     {{ friend.name }}
                 </p>
