@@ -146,7 +146,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.google-plus',
             auth: {
                 clientId: '631974897480.apps.googleusercontent.com',
-                redirectUri: window.location.origin + '/',
+                redirectUri: window.location.origin + '/find-me/',
                 scope: ['profile']
             },
             icon: {
@@ -158,7 +158,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.instagram',
             auth: {
                 clientId: '5031270ba8a0440dbf50c0c78f201f1f',
-                redirectUri: window.location.origin + '/',
+                redirectUri: window.location.origin + '/find-me/',
                 scope: ['basic']
             },
             icon: {
@@ -180,7 +180,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.facebook',
             auth: {
                 clientId: '463627307038698',
-                redirectUri: window.location.origin + '/#/friends',
+                redirectUri: window.location.origin + '/find-me/#/friends',
                 scope: ['user_friends']
             },
             icon: {
