@@ -145,9 +145,9 @@ angular.module('app').constant('settings', {
         googlePlus: {
             label: 'connect.label.google-plus',
             auth: {
-                clientId: '631974897480',
-                apiKey: 'AIzaSyBaMms2VMIOPYxh2hoAjnbKEHxY-bWC8mc',
-                scope: 'https://www.googleapis.com/auth/plus.me'
+                clientId: '631974897480.apps.googleusercontent.com',
+                redirectUri: 'http://localhost:9000/',
+                scope: ['profile']
             },
             icon: {
                 name: 'google-plus',
@@ -158,7 +158,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.instagram',
             auth: {
                 clientId: '5031270ba8a0440dbf50c0c78f201f1f',
-                redirectUri: window.location.href.split('#')[0],
+                redirectUri: 'http://localhost:9000/',
                 scope: ['basic']
             },
             icon: {
@@ -179,7 +179,9 @@ angular.module('app').constant('settings', {
         facebook: {
             label: 'connect.label.facebook',
             auth: {
-
+                clientId: '463627307038698',
+                redirectUri: 'http://localhost:9000/#/friends',
+                scope: ['user_friends']
             },
             icon: {
                 name: 'facebook',
@@ -218,7 +220,7 @@ angular.module('app').service('GooglePlusAdapter', function(FriendModel){
     };
 
     this.adaptToModels = function(dto){
-        return dto.items ? dto.items.map(adaptToModel) : [];
+        return dto && dto.data && dto.data.items ? dto.data.items.map(adaptToModel) : [];
     };
 
     this.adaptToDto = function(dto){
@@ -241,32 +243,53 @@ angular.module('app').service('InstagramAdapter', function(FriendModel){
     };
 
 });
-angular.module('app').factory('Facebook', function(settings, $resource){
-    return $resource(settings.endpoint + 'facebook/friends');
+angular.module('app').service('FacebookAdapter', function(FriendModel){
+
+    var adaptToModel = function(dto){
+        return new FriendModel(null, dto.displayName, dto.image.url, 'facebook');
+    };
+
+    this.adaptToModels = function(dto){
+        console.log(dto.data)
+        return dto && dto.data && dto.data.items ? dto.data.items.map(adaptToModel) : [];
+    };
+
+    this.adaptToDto = function(dto){
+
+    };
+
 });
-angular.module('app').factory('GooglePlus', function($q, $google){
+angular.module('app').factory('Facebook', function(settings, $http, $facebook){
 
     return {
         query: function(){
-            var deferred = $q.defer();
-
-            $google.getToken().then(function(){
-                gapi.client.load('plus', 'v1', function() {
-                    var request = gapi.client.plus.people.list({
-                        'userId' : 'me',
-                        'collection' : 'visible'
-                    });
-                    request.execute(function(resp) {
-                        deferred.resolve(resp);
-                    });
+            return $facebook.getToken().then(function(token){
+                return $http.jsonp('https://graph.facebook.com/v2.4/me/friends', {
+                    params: {
+                        access_token: token,
+                        callback: 'JSON_CALLBACK'
+                    }
                 });
-            }, deferred.reject);
-
-            return deferred.promise;
+            });
         }
     };
 });
-angular.module('app').factory('Instagram', function($q, settings, $http, $location, $rootScope, $instagram){
+angular.module('app').factory('GooglePlus', function($google, $http){
+
+    return {
+        query: function(){
+            return $google.getToken().then(function(token){
+                return $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
+                    params: {
+                        access_token: token,
+                        callback: 'JSON_CALLBACK'
+                    }
+                });
+            });
+        }
+    };
+});
+angular.module('app').factory('Instagram', function($http, $instagram){
 
     return {
         query: function(){
@@ -287,14 +310,14 @@ angular.module('app').factory('LinkedIn', function(settings, $resource){
 angular.module('app').factory('Twitter', function(settings, $resource){
     return $resource(settings.endpoint + 'twitter/friends');
 });
-angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram, GooglePlusAdapter, InstagramAdapter){
+angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram, GooglePlusAdapter, InstagramAdapter, FacebookAdapter){
     return {
         query: function(){
             var deferred = $q.defer();
 
             var twitterDeffered = Twitter.query().$promise;
             var googleplusDeffered = GooglePlus.query();
-            var facebookDeffered = Facebook.query().$promise;
+            var facebookDeffered = Facebook.query();
             var linkedinDeffered = LinkedIn.query().$promise;
             var instagramDeffered = Instagram.query();
 
@@ -305,7 +328,7 @@ angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePl
                 deferred.notify(GooglePlusAdapter.adaptToModels(friend));
             });
             facebookDeffered.then(function(friend){
-                deferred.notify(friend);
+                deferred.notify(FacebookAdapter.adaptToModels(friend));
             });
             linkedinDeffered.then(function(friend){
                 deferred.notify(friend);
@@ -405,7 +428,7 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
     };
 
 });
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $google, $instagram){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $google, $instagram, $facebook){
 
     $scope.connections = settings.socials;
 
@@ -421,6 +444,11 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $goog
 
                 });
                 break;
+            case 'facebook':
+                $facebook.connect().then(function(){
+
+                });
+                break;
         }
 
 
@@ -429,63 +457,39 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $goog
 });
 angular.module('app').provider('$google', function(settings){
 
-    var isApiloaded = false;
-    var isConnected = false;
-
-    window.handleClientLoad = function(){
-        gapi.client.setApiKey(settings.socials.googlePlus.auth.apiKey);
-        isApiloaded = true;
+    var getUriToken = function(hash){
+        var reg = hash.match(/&access_token=([^&]+)/);
+        return reg && reg[1] ? reg[1] : null;
     };
 
-    (function() {
-        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-        po.src = 'https://apis.google.com/js/client.js?onload=handleClientLoad';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
+    var token = getUriToken(window.location.hash);
 
-    this.$get = function($q, $interval){
+    if(token){
+        window.localStorage.setItem('access_token_google', token);
+    }
+    token = window.localStorage.getItem('access_token_google');
 
-        var authorize = function(){
-            var deferred = $q.defer();
-            gapi.auth.authorize({
-                client_id: settings.socials.googlePlus.auth.clientId,
-                scope: settings.socials.googlePlus.auth.scope,
-                immediate: false
-            },function(authResult) {
-                if (authResult['error'] === undefined){
-                    gapi.auth.setToken(authResult);
-                    isConnected = true;
-                    deferred.resolve();
-                } else {
-                    deferred.reject();
-                }
-            });
-            return deferred.promise;
-        };
+    this.$get = function($q){
 
         return {
             getToken: function(){
-                var deferred = $q.defer();
-                if(isConnected) {
-                    deferred.resolve();
-                }else{
-                    deferred.reject();
-                }
-                return deferred.promise;
+                return $q.when(token);
             },
             connect: function(){
-                var deferred = $q.defer();
-                var interval = $interval(function(){
-                    if(isApiloaded){
-                        if(isConnected){
-                            deferred.resolve();
-                        }else{
-                            authorize().then(deferred.resolve, deferred.reject);
-                        }
-                        $interval.cancel(interval);
-                    }
-                }, 100);
-                return deferred.promise;
+                if(token){
+                    return $q.when(token);
+                }else{
+                    var url = 'https://accounts.google.com/o/oauth2/auth';
+                    url += '?client_id=' + settings.socials.googlePlus.auth.clientId;
+                    url += '&redirect_uri=' + settings.socials.googlePlus.auth.redirectUri;
+                    url += '&response_type=token';
+                    url += '&state=security_token';
+                    url += '&approval_prompt=force';
+                    url += '&include_granted_scopes=true';
+                    url += '&scope=' + settings.socials.googlePlus.auth.scope.join(' ');
+                    window.location = url;
+                    return $q.when();
+                }
             }
         };
 
@@ -494,11 +498,16 @@ angular.module('app').provider('$google', function(settings){
 });
 angular.module('app').provider('$instagram', function(settings){
 
-    var token = window.location.hash.split('#access_token=')[1];
+    var getUriToken = function(hash){
+        var reg = hash.match(/#access_token=([^&]+)/);
+        return reg && reg[1] ? reg[1] : null;
+    };
+
+    var token = getUriToken(window.location.hash);
     if(token){
-        window.localStorage.setItem('access_token', token);
+        window.localStorage.setItem('access_token_instagram', token);
     }
-    token = window.localStorage.getItem('access_token');
+    token = window.localStorage.getItem('access_token_instagram');
 
     this.$get = function($q){
 
@@ -515,6 +524,42 @@ angular.module('app').provider('$instagram', function(settings){
                     url += '&redirect_uri=' + settings.socials.instagram.auth.redirectUri;
                     url += '&response_type=token';
                     url += '&scope=' + settings.socials.instagram.auth.scope.join('+');
+                    window.location = url;
+                    return $q.when();
+                }
+            }
+        };
+
+    };
+
+});
+angular.module('app').provider('$facebook', function(settings){
+
+    var getUriToken = function(hash){
+        var reg = hash.match(/code=([^#]+)/);
+        return reg && reg[1] ? reg[1].replace(/[^A-Za-z]/g, '') : null;
+    };
+    var token = getUriToken(window.location.href);
+    console.log(window.location.href)
+    if(token){
+        window.localStorage.setItem('access_token_facebook', token);
+    }
+    token = window.localStorage.getItem('access_token_facebook');
+
+    this.$get = function($q){
+
+        return {
+            getToken: function(){
+                return $q.when(token);
+            },
+            connect: function(){
+                if(token){
+                    return $q.when(token);
+                }else{
+                    var url = 'https://www.facebook.com/v2.0/dialog/oauth';
+                    url += '?app_id=' + settings.socials.facebook.auth.clientId;
+                    url += '&redirect_uri=' + settings.socials.facebook.auth.redirectUri;
+                    url += '&scope=' + settings.socials.facebook.auth.scope.join(',');
                     window.location = url;
                     return $q.when();
                 }
