@@ -1,10 +1,15 @@
 angular.module('app').provider('$instagram', function(settings){
 
-    var token = window.location.hash.split('#access_token=')[1];
+    var getUriToken = function(hash){
+        var reg = hash.match(/#access_token=([^&]+)/);
+        return reg && reg[1] ? reg[1] : null;
+    };
+
+    var token = getUriToken(window.location.hash);
     if(token){
-        window.localStorage.setItem('access_token', token);
+        window.localStorage.setItem('access_token_instagram', token);
     }
-    token = window.localStorage.getItem('access_token');
+    token = window.localStorage.getItem('access_token_instagram');
 
     this.$get = function($q){
 

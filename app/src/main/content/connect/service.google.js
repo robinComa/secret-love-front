@@ -1,62 +1,38 @@
 angular.module('app').provider('$google', function(settings){
 
-    var isApiloaded = false;
-    var isConnected = false;
-
-    window.handleClientLoad = function(){
-        gapi.client.setApiKey(settings.socials.googlePlus.auth.apiKey);
-        isApiloaded = true;
+    var getUriToken = function(hash){
+        var reg = hash.match(/&access_token=([^&]+)/);
+        return reg && reg[1] ? reg[1] : null;
     };
 
-    (function() {
-        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-        po.src = 'https://apis.google.com/js/client.js?onload=handleClientLoad';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-    })();
+    var token = getUriToken(window.location.hash);
 
-    this.$get = function($q, $interval){
+    if(token){
+        window.localStorage.setItem('access_token_google', token);
+    }
+    token = window.localStorage.getItem('access_token_google');
 
-        var authorize = function(){
-            var deferred = $q.defer();
-            gapi.auth.authorize({
-                client_id: settings.socials.googlePlus.auth.clientId,
-                scope: settings.socials.googlePlus.auth.scope,
-                immediate: false
-            },function(authResult) {
-                if (authResult['error'] === undefined){
-                    gapi.auth.setToken(authResult);
-                    isConnected = true;
-                    deferred.resolve();
-                } else {
-                    deferred.reject();
-                }
-            });
-            return deferred.promise;
-        };
+    this.$get = function($q){
 
         return {
             getToken: function(){
-                var deferred = $q.defer();
-                if(isConnected) {
-                    deferred.resolve();
-                }else{
-                    deferred.reject();
-                }
-                return deferred.promise;
+                return $q.when(token);
             },
             connect: function(){
-                var deferred = $q.defer();
-                var interval = $interval(function(){
-                    if(isApiloaded){
-                        if(isConnected){
-                            deferred.resolve();
-                        }else{
-                            authorize().then(deferred.resolve, deferred.reject);
-                        }
-                        $interval.cancel(interval);
-                    }
-                }, 100);
-                return deferred.promise;
+                if(token){
+                    return $q.when(token);
+                }else{
+                    var url = 'https://accounts.google.com/o/oauth2/auth';
+                    url += '?client_id=' + settings.socials.googlePlus.auth.clientId;
+                    url += '&redirect_uri=' + settings.socials.googlePlus.auth.redirectUri;
+                    url += '&response_type=token';
+                    url += '&state=security_token';
+                    url += '&approval_prompt=force';
+                    url += '&include_granted_scopes=true';
+                    url += '&scope=' + settings.socials.googlePlus.auth.scope.join(' ');
+                    window.location = url;
+                    return $q.when();
+                }
             }
         };
 

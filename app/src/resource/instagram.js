@@ -1,4 +1,4 @@
-angular.module('app').factory('Instagram', function($q, settings, $http, $location, $rootScope, $instagram){
+angular.module('app').factory('Instagram', function($http, $instagram){
 
     return {
         query: function(){

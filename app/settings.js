@@ -4,9 +4,9 @@ angular.module('app').constant('settings', {
         googlePlus: {
             label: 'connect.label.google-plus',
             auth: {
-                clientId: '631974897480',
-                apiKey: 'AIzaSyBaMms2VMIOPYxh2hoAjnbKEHxY-bWC8mc',
-                scope: 'https://www.googleapis.com/auth/plus.me'
+                clientId: '631974897480.apps.googleusercontent.com',
+                redirectUri: 'http://localhost:9000/',
+                scope: ['profile']
             },
             icon: {
                 name: 'google-plus',
@@ -38,7 +38,9 @@ angular.module('app').constant('settings', {
         facebook: {
             label: 'connect.label.facebook',
             auth: {
-
+                clientId: '463627307038698',
+                redirectUri: 'http://localhost:9000/#/friends',
+                scope: ['user_friends']
             },
             icon: {
                 name: 'facebook',

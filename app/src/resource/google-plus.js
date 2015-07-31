@@ -1,22 +1,15 @@
-angular.module('app').factory('GooglePlus', function($q, $google){
+angular.module('app').factory('GooglePlus', function($google, $http){
 
     return {
         query: function(){
-            var deferred = $q.defer();
-
-            $google.getToken().then(function(){
-                gapi.client.load('plus', 'v1', function() {
-                    var request = gapi.client.plus.people.list({
-                        'userId' : 'me',
-                        'collection' : 'visible'
-                    });
-                    request.execute(function(resp) {
-                        deferred.resolve(resp);
-                    });
+            return $google.getToken().then(function(token){
+                return $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
+                    params: {
+                        access_token: token,
+                        callback: 'JSON_CALLBACK'
+                    }
                 });
-            }, deferred.reject);
-
-            return deferred.promise;
+            });
         }
     };
 });
