@@ -1,3 +1,8 @@
-angular.module('app').factory('Twitter', function(settings, $resource){
-    return $resource(settings.endpoint + 'twitter/friends');
-});
+angular.module('app').factory('Twitter', function($twitter){
+    return {
+        query: function(){
+            return $twitter.getToken().then(function(token){
+                //console.log(token)
+            });
+        }
+    };});

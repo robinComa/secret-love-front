@@ -15,7 +15,13 @@ angular.module('app').provider('$instagram', function(settings){
 
         return {
             getToken: function(){
-                return $q.when(token);
+                var deferred = $q.defer();
+                if(token){
+                    deferred.resolve(token);
+                }else{
+                    deferred.reject();
+                }
+                return deferred.promise;
             },
             connect: function(){
                 if(token){

@@ -1,16 +1,16 @@
-angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram, GooglePlusAdapter, InstagramAdapter, FacebookAdapter){
+angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram, GooglePlusAdapter, InstagramAdapter, FacebookAdapter, LinkedinAdapter, TwitterAdapter){
     return {
         query: function(){
             var deferred = $q.defer();
 
-            var twitterDeffered = Twitter.query().$promise;
+            var twitterDeffered = Twitter.query();
             var googleplusDeffered = GooglePlus.query();
             var facebookDeffered = Facebook.query();
-            var linkedinDeffered = LinkedIn.query().$promise;
+            var linkedinDeffered = LinkedIn.query();
             var instagramDeffered = Instagram.query();
 
             twitterDeffered.then(function(friend){
-                deferred.notify(friend);
+                deferred.notify(TwitterAdapter.adaptToModels(friend));
             });
             googleplusDeffered.then(function(friend){
                 deferred.notify(GooglePlusAdapter.adaptToModels(friend));
@@ -19,7 +19,7 @@ angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePl
                 deferred.notify(FacebookAdapter.adaptToModels(friend));
             });
             linkedinDeffered.then(function(friend){
-                deferred.notify(friend);
+                deferred.notify(LinkedinAdapter.adaptToModels(friend));
             });
             instagramDeffered.then(function(friend){
                 deferred.notify(InstagramAdapter.adaptToModels(friend));

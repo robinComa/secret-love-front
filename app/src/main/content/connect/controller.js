@@ -1,4 +1,4 @@
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $google, $instagram, $facebook){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $google, $instagram, $facebook, $linkedin, $twitter){
 
     $scope.connections = settings.socials;
 
@@ -16,6 +16,16 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $goog
                 break;
             case 'facebook':
                 $facebook.connect().then(function(){
+
+                });
+                break;
+            case 'linkedin':
+                $linkedin.connect().then(function(){
+
+                });
+                break;
+            case 'twitter':
+                $twitter.connect().then(function(){
 
                 });
                 break;

@@ -1,7 +1,7 @@
-angular.module('app').service('FacebookAdapter', function(FriendModel){
+angular.module('app').service('TwitterAdapter', function(FriendModel){
 
     var adaptToModel = function(dto){
-        return new FriendModel(dto.id, dto.name, dto.picture.data.url, 'facebook');
+        return new FriendModel(null, dto.username + ' (' + dto.full_name + ')', dto.profile_picture, 'twitter');
     };
 
     this.adaptToModels = function(dto){
