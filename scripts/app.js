@@ -139,6 +139,9 @@ angular.module('appStub').service('GetJsonFile', function(){
         return request.response;
     };
 });
+var origin = window.location.origin;
+origin += '/find-me';
+
 angular.module('app').constant('settings', {
     endpoint: 'rest-api/',
     socials: {
@@ -146,7 +149,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.google-plus',
             auth: {
                 clientId: '631974897480.apps.googleusercontent.com',
-                redirectUri: window.location.origin + '/find-me/',
+                redirectUri: origin + '/',
                 scope: ['profile']
             },
             icon: {
@@ -158,7 +161,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.instagram',
             auth: {
                 clientId: '5031270ba8a0440dbf50c0c78f201f1f',
-                redirectUri: window.location.origin + '/find-me/',
+                redirectUri: origin + '/',
                 scope: ['basic']
             },
             icon: {
@@ -169,7 +172,9 @@ angular.module('app').constant('settings', {
         twitter: {
             label: 'connect.label.twitter',
             auth: {
-
+                clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
+                redirectUri: origin + '/#/friends',
+                scope: ['user_friends']
             },
             icon: {
                 name: 'twitter',
@@ -180,7 +185,8 @@ angular.module('app').constant('settings', {
             label: 'connect.label.facebook',
             auth: {
                 clientId: '463627307038698',
-                redirectUri: window.location.origin + '/find-me/#/friends',
+                clientSecret: 'c300b7e8922bfaeb84a84ca01e32245d',
+                redirectUri: origin + '/',
                 scope: ['user_friends']
             },
             icon: {
@@ -191,7 +197,10 @@ angular.module('app').constant('settings', {
         linkedin: {
             label: 'connect.label.linkedin',
             auth: {
-
+                clientId: '77bmx0zg9stbsk',
+                clientSecret: 'aryHtzhM2yc9aXeS',
+                redirectUri: origin + '/',
+                scope: ['r_basicprofile']
             },
             icon: {
                 name: 'linkedin',
@@ -246,12 +255,54 @@ angular.module('app').service('InstagramAdapter', function(FriendModel){
 angular.module('app').service('FacebookAdapter', function(FriendModel){
 
     var adaptToModel = function(dto){
-        return new FriendModel(null, dto.displayName, dto.image.url, 'facebook');
+        return new FriendModel(dto.id, dto.name, dto.picture.data.url, 'facebook');
     };
 
     this.adaptToModels = function(dto){
-        console.log(dto.data)
-        return dto && dto.data && dto.data.items ? dto.data.items.map(adaptToModel) : [];
+        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
+    };
+
+    this.adaptToDto = function(dto){
+
+    };
+
+});
+angular.module('app').service('LinkedinAdapter', function(FriendModel){
+
+    var adaptToModel = function(dto){
+        return new FriendModel(dto.id, dto.firstName + ' ' + dto.lastName, dto.pictureUrl, 'linkedin');
+    };
+
+    this.adaptToModels = function(dto){
+        if(dto && dto.data && dto.data.numConnections){
+            var models = [];
+            for(var i = 0; i < dto.data.numConnections; i++){
+                models.push(adaptToModel({
+                    id: i,
+                    firstName: 'Fake First Name',
+                    lastName: i,
+                    pictureUrl: 'https://media.licdn.com/mpr/mprx/0_io443xgIdsvMEmnciSRb3pp6IjA9oDnc3e2b3j0zqUL6zWTB72Hq7gwRLrldWoBRGdV6asDHmXt1'
+                }));
+            }
+            return models;
+        }else{
+            return [];
+        }
+    };
+
+    this.adaptToDto = function(dto){
+
+    };
+
+});
+angular.module('app').service('TwitterAdapter', function(FriendModel){
+
+    var adaptToModel = function(dto){
+        return new FriendModel(null, dto.username + ' (' + dto.full_name + ')', dto.profile_picture, 'twitter');
+    };
+
+    this.adaptToModels = function(dto){
+        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
     };
 
     this.adaptToDto = function(dto){
@@ -264,7 +315,7 @@ angular.module('app').factory('Facebook', function(settings, $http, $facebook){
     return {
         query: function(){
             return $facebook.getToken().then(function(token){
-                return $http.jsonp('https://graph.facebook.com/v2.4/me/friends', {
+                return $http.jsonp('https://graph.facebook.com/v2.4/me/friends?fields=id,name,picture', {
                     params: {
                         access_token: token,
                         callback: 'JSON_CALLBACK'
@@ -304,25 +355,42 @@ angular.module('app').factory('Instagram', function($http, $instagram){
         }
     };
 });
-angular.module('app').factory('LinkedIn', function(settings, $resource){
-    return $resource(settings.endpoint + 'linkedin/friends');
+angular.module('app').factory('LinkedIn', function($linkedin, $http){
+    return {
+        query: function(){
+            return $linkedin.getToken().then(function(token){
+                return $http.jsonp('https://api.linkedin.com/v1/people/~:(num-connections)', {
+                    params: {
+                        format: 'jsonp',
+                        oauth2_access_token: token,
+                        callback: 'JSON_CALLBACK'
+                    }
+                });
+            });
+        }
+    };
 });
-angular.module('app').factory('Twitter', function(settings, $resource){
-    return $resource(settings.endpoint + 'twitter/friends');
-});
-angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram, GooglePlusAdapter, InstagramAdapter, FacebookAdapter){
+angular.module('app').factory('Twitter', function($twitter){
+    return {
+        query: function(){
+            return $twitter.getToken().then(function(token){
+                //console.log(token)
+            });
+        }
+    };});
+angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePlus, Facebook, LinkedIn, Instagram, GooglePlusAdapter, InstagramAdapter, FacebookAdapter, LinkedinAdapter, TwitterAdapter){
     return {
         query: function(){
             var deferred = $q.defer();
 
-            var twitterDeffered = Twitter.query().$promise;
+            var twitterDeffered = Twitter.query();
             var googleplusDeffered = GooglePlus.query();
             var facebookDeffered = Facebook.query();
-            var linkedinDeffered = LinkedIn.query().$promise;
+            var linkedinDeffered = LinkedIn.query();
             var instagramDeffered = Instagram.query();
 
             twitterDeffered.then(function(friend){
-                deferred.notify(friend);
+                deferred.notify(TwitterAdapter.adaptToModels(friend));
             });
             googleplusDeffered.then(function(friend){
                 deferred.notify(GooglePlusAdapter.adaptToModels(friend));
@@ -331,7 +399,7 @@ angular.module('app').factory('Friend', function(settings, $q, Twitter, GooglePl
                 deferred.notify(FacebookAdapter.adaptToModels(friend));
             });
             linkedinDeffered.then(function(friend){
-                deferred.notify(friend);
+                deferred.notify(LinkedinAdapter.adaptToModels(friend));
             });
             instagramDeffered.then(function(friend){
                 deferred.notify(InstagramAdapter.adaptToModels(friend));
@@ -385,9 +453,9 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
 
     $scope.friends = [];
     Friend.query().then(function(){
-        console.log('All friends loaded');
+
     }, function(error){
-        console.log('error');
+        console.error('error');
     }, function(friends){
         $scope.friends = $scope.friends.concat(friends);
     });
@@ -428,34 +496,59 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
     };
 
 });
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $google, $instagram, $facebook){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $google, $instagram, $facebook, $linkedin, $twitter){
 
     $scope.connections = settings.socials;
 
-    $scope.connect = function(type){
-        switch (type){
+    var getSocialServiceByName = function(name){
+        switch (name) {
             case 'googlePlus':
-                $google.connect().then(function(){
-
-                });
-                break;
+                return $google;
             case 'instagram':
-                $instagram.connect().then(function(){
-
-                });
-                break;
+                return $instagram;
             case 'facebook':
-                $facebook.connect().then(function(){
-
-                });
-                break;
+                return $facebook;
+            case 'linkedin':
+                return $linkedin;
+            case 'twitter':
+                return $twitter;
         }
+    };
+    $scope.connectToogle = function(event, name){
+        var socialService = getSocialServiceByName(name);
+        if(socialService.isConnected()){
+            var confirm = $mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title($translate.instant('connect.disconnect.confirmation.title'))
+                .content($translate.instant('connect.disconnect.confirmation.content', {
+                    name: $translate.instant('connect.label.' + name)
+                }))
+                .ariaLabel($translate.instant('connect.disconnect.confirmation.title'))
+                .ok($translate.instant('connect.disconnect.confirmation.ok'))
+                .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
+                .targetEvent(event);
+            $mdDialog.show(confirm).then(function() {
+                socialService.disconnect()
+            });
+        }else{
+            socialService.connect().then(function(){
 
+            });
+        }
+    };
 
+    $scope.isConnected = function(name){
+      return getSocialServiceByName(name).isConnected();
+    };
+
+    $scope.isNotImplemented = function(name){
+        return !getSocialServiceByName(name).isImplemented();
     };
 
 });
 angular.module('app').provider('$google', function(settings){
+
+    var STORAGE_ITEM_TOKEN_NAME = 'access_token_google';
 
     var getUriToken = function(hash){
         var reg = hash.match(/&access_token=([^&]+)/);
@@ -465,15 +558,21 @@ angular.module('app').provider('$google', function(settings){
     var token = getUriToken(window.location.hash);
 
     if(token){
-        window.localStorage.setItem('access_token_google', token);
+        window.localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
     }
-    token = window.localStorage.getItem('access_token_google');
+    token = window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
 
     this.$get = function($q){
 
         return {
             getToken: function(){
-                return $q.when(token);
+                var deferred = $q.defer();
+                if(token){
+                    deferred.resolve(token);
+                }else{
+                    deferred.reject();
+                }
+                return deferred.promise;
             },
             connect: function(){
                 if(token){
@@ -490,6 +589,16 @@ angular.module('app').provider('$google', function(settings){
                     window.location = url;
                     return $q.when();
                 }
+            },
+            isConnected: function(){
+                return window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME) !== null;
+            },
+            disconnect: function(){
+                window.localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+                token = null;
+            },
+            isImplemented: function(){
+                return true;
             }
         };
 
@@ -498,6 +607,8 @@ angular.module('app').provider('$google', function(settings){
 });
 angular.module('app').provider('$instagram', function(settings){
 
+    var STORAGE_ITEM_TOKEN_NAME = 'access_token_instagram';
+
     var getUriToken = function(hash){
         var reg = hash.match(/#access_token=([^&]+)/);
         return reg && reg[1] ? reg[1] : null;
@@ -505,15 +616,21 @@ angular.module('app').provider('$instagram', function(settings){
 
     var token = getUriToken(window.location.hash);
     if(token){
-        window.localStorage.setItem('access_token_instagram', token);
+        window.localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
     }
-    token = window.localStorage.getItem('access_token_instagram');
+    token = window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
 
     this.$get = function($q){
 
         return {
             getToken: function(){
-                return $q.when(token);
+                var deferred = $q.defer();
+                if(token){
+                    deferred.resolve(token);
+                }else{
+                    deferred.reject();
+                }
+                return deferred.promise;
             },
             connect: function(){
                 if(token){
@@ -527,6 +644,16 @@ angular.module('app').provider('$instagram', function(settings){
                     window.location = url;
                     return $q.when();
                 }
+            },
+            isConnected: function(){
+                return window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME) !== null;
+            },
+            disconnect: function(){
+                window.localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+                token = null;
+            },
+            isImplemented: function(){
+                return true;
             }
         };
 
@@ -535,26 +662,52 @@ angular.module('app').provider('$instagram', function(settings){
 });
 angular.module('app').provider('$facebook', function(settings){
 
-    var getUriToken = function(hash){
-        var reg = hash.match(/code=([^#]+)/);
-        return reg && reg[1] ? reg[1].replace(/[^A-Za-z]/g, '') : null;
-    };
-    var token = getUriToken(window.location.href);
-    console.log(window.location.href)
-    if(token){
-        window.localStorage.setItem('access_token_facebook', token);
-    }
-    token = window.localStorage.getItem('access_token_facebook');
+    var STORAGE_ITEM_CODE_NAME = 'access_code_facebook';
+    var STORAGE_ITEM_TOKEN_NAME = 'access_token_facebook';
 
-    this.$get = function($q){
+    var getUriToken = function(hash){
+        var reg = hash.match(/\?code=([^&]*)#/);
+        return reg && reg[1] ? reg[1] : null;
+    };
+    var code = getUriToken(window.location.href);
+
+    if(code){
+        window.localStorage.setItem(STORAGE_ITEM_CODE_NAME, code);
+    }
+    code = window.localStorage.getItem(STORAGE_ITEM_CODE_NAME);
+
+    var token = window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
+
+    this.$get = function($q, $http){
 
         return {
             getToken: function(){
-                return $q.when(token);
+                var deferred = $q.defer();
+                if(token){
+                    deferred.resolve(token);
+                }else if(code){
+                    $http({
+                        method: 'GET',
+                        url: 'https://graph.facebook.com/oauth/access_token',
+                        params: {
+                            code: code,
+                            client_id: settings.socials.facebook.auth.clientId,
+                            client_secret: settings.socials.facebook.auth.clientSecret,
+                            redirect_uri: settings.socials.facebook.auth.redirectUri
+                        }
+                    }).then(function(resp){
+                        token = resp.data.match(/access_token\=([^&]+)/)[1];
+                        window.localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
+                        window.localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
+                        code = null;
+                        deferred.resolve(token);
+                    }, deferred.reject);
+                }
+                return deferred.promise;
             },
             connect: function(){
-                if(token){
-                    return $q.when(token);
+                if(code){
+                    return $q.when(code);
                 }else{
                     var url = 'https://www.facebook.com/v2.0/dialog/oauth';
                     url += '?app_id=' + settings.socials.facebook.auth.clientId;
@@ -563,6 +716,131 @@ angular.module('app').provider('$facebook', function(settings){
                     window.location = url;
                     return $q.when();
                 }
+            },
+            isConnected: function(){
+                return window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME) !== null;
+            },
+            disconnect: function(){
+                window.localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+                token = null;
+            },
+            isImplemented: function(){
+                return true;
+            }
+        };
+
+    };
+
+});
+angular.module('app').provider('$linkedin', function(settings){
+
+    var getUriCode = function(hash){
+        var reg = hash.match(/code=(.*)&state/);
+        return reg && reg[1] ? reg[1] : null;
+    };
+
+    var code = getUriCode(window.location.href);
+
+    if(code){
+        window.localStorage.setItem('access_code_linkedin', code);
+    }
+    code = window.localStorage.getItem('access_code_linkedin');
+
+    var token = window.localStorage.getItem('access_token_linkedin');
+
+    this.$get = function($q, $http){
+
+        return {
+            getToken: function(){
+                var deferred = $q.defer();
+                if(token){
+                    deferred.resolve(token);
+                }else if(code){
+                    $http.get('https://www.linkedin.com/uas/oauth2/accessToken', {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        params: {
+                            grant_type: 'authorization_code',
+                            code: code,
+                            redirect_uri: settings.socials.linkedin.auth.redirectUri,
+                            client_id: settings.socials.linkedin.auth.clientId,
+                            client_secret: settings.socials.linkedin.auth.clientSecret
+                        }
+                    }).then(function(resp){
+                        token = resp.data.access_token;
+                        window.localStorage.setItem('access_token_linkedin', token);
+                        deferred.resolve(token);
+                    });
+                }
+                return deferred.promise;
+            },
+            connect: function(){
+                if(code){
+                    return $q.when(code);
+                }else{
+                    var url = 'https://www.linkedin.com/uas/oauth2/authorization';
+                    url += '?client_id=' + settings.socials.linkedin.auth.clientId;
+                    url += '&redirect_uri=' + settings.socials.linkedin.auth.redirectUri;
+                    url += '&response_type=code';
+                    url += '&state=abcde';
+                    url += '&scope=' + settings.socials.linkedin.auth.scope.join(' ');
+                    window.location = url;
+                    return $q.when();
+                }
+            },
+            isConnected: function(){
+                return false;
+            },
+            disconnect: function(){
+
+            },
+            isImplemented: function(){
+                return false;
+            }
+        };
+
+    };
+
+});
+angular.module('app').provider('$twitter', function(settings){
+
+    this.$get = function($q, $http){
+
+        return {
+            getToken: function(){
+                return $q.when(null);
+            },
+            connect: function(){
+
+                var bearerToken = function(){
+                    var consumerKey = encodeURIComponent('r9e5QZVVUIu3ChTXr1w08fm5T');
+                    var consumerSecret = encodeURIComponent('tWwdJUrW4bnKsfkhXzKpzYw03LYKFZiu3fn2ePA18l2unk6DNN');
+                    return btoa(consumerKey + ':' + consumerSecret);
+                };
+                $http.defaults.useXDomain = true;
+                delete $http.defaults.headers.common['X-Requested-With'];
+                $http({
+                    method: 'POST',
+                    url: 'https://api.twitter.com/oauth2/token',
+                    data: 'grant_type=client_credentials',
+                    headers: {
+                        'Authorization': 'Basic ' + bearerToken(),
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                    }
+                }).then(function(response){
+                    console.log(response);
+                });
+                return $q.when(null);
+            },
+            isConnected: function(){
+                return false;
+            },
+            disconnect: function(){
+
+            },
+            isImplemented: function(){
+                return false;
             }
         };
 

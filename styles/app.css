@@ -10,3 +10,6 @@ md-sidenav md-list-item a.md-button {
   md-sidenav md-list-item a.md-button ng-md-icon {
     float: right;
     fill: pink; }
+
+md-whiteframe button {
+  width: 90%; }
