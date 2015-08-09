@@ -1,16 +1,23 @@
 <md-grid-list
-        md-cols-sm="1" md-cols-md="2" md-cols-gt-md="6"
-        md-row-height-gt-md="1:1" md-row-height="2:2"
-        md-gutter="12px" md-gutter-gt-sm="8px" >
-
-    <md-grid-tile md-rowspan="2" md-colspan="2" md-rowspan-sm="1" md-colspan-sm="1" ng-repeat="(type, connection) in connections">
-        <ng-md-icon icon="{{connection.icon.name}}" style="fill: {{connection.icon.color}}" size="200"></ng-md-icon>
-        <md-grid-tile-footer layout="row">
-            <h3>{{connection.label | translate}}</h3>
-            <md-button class="md-fab" aria-label="{{connection.label | translate}}" ng-click="connect(type)">
-                <ng-md-icon icon="login" size="40"></ng-md-icon>
+    md-cols-sm="2"
+    md-cols-md="1"
+    md-cols-lg="3"
+    md-cols-gt-lg="4"
+    md-row-height="3:4"
+>
+    <md-grid-tile ng-repeat="(type, connection) in connections">
+        <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="center center">
+            <ng-md-icon icon="{{connection.icon.name}}" style="fill: {{connection.icon.color}}" size="200"></ng-md-icon>
+            <md-button
+                    class="md-raised"
+                    ng-class="{'md-primary': !isConnected(type)}"
+                    aria-label="{{connection.label | translate}}"
+                    ng-disabled="isNotImplemented(type)"
+                    ng-click="connectToogle($event, type)">
+                <h3 ng-if="!isNotImplemented(type) && isConnected(type)">{{'connect.is.connected' | translate}}</h3>
+                <h3 ng-if="!isNotImplemented(type) && !isConnected(type)">{{'connect.is.not.connected' | translate}}</h3>
+                <h3 ng-if="isNotImplemented(type)">{{'connect.is.not.implemented' | translate}}</h3>
             </md-button>
-        </md-grid-tile-footer>
+        </md-whiteframe>
     </md-grid-tile>
-
 </md-grid-list>

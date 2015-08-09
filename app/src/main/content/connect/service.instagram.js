@@ -1,5 +1,7 @@
 angular.module('app').provider('$instagram', function(settings){
 
+    var STORAGE_ITEM_TOKEN_NAME = 'access_token_instagram';
+
     var getUriToken = function(hash){
         var reg = hash.match(/#access_token=([^&]+)/);
         return reg && reg[1] ? reg[1] : null;
@@ -7,9 +9,9 @@ angular.module('app').provider('$instagram', function(settings){
 
     var token = getUriToken(window.location.hash);
     if(token){
-        window.localStorage.setItem('access_token_instagram', token);
+        window.localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
     }
-    token = window.localStorage.getItem('access_token_instagram');
+    token = window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
 
     this.$get = function($q){
 
@@ -35,6 +37,15 @@ angular.module('app').provider('$instagram', function(settings){
                     window.location = url;
                     return $q.when();
                 }
+            },
+            isConnected: function(){
+                return window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME) !== null;
+            },
+            disconnect: function(){
+                window.localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+            },
+            isImplemented: function(){
+                return true;
             }
         };
 

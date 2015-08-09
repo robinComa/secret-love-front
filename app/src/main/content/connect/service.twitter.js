@@ -27,6 +27,15 @@ angular.module('app').provider('$twitter', function(settings){
                     console.log(response);
                 });
                 return $q.when(null);
+            },
+            isConnected: function(){
+                return false;
+            },
+            disconnect: function(){
+
+            },
+            isImplemented: function(){
+                return false;
             }
         };
 

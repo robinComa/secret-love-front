@@ -1,37 +1,50 @@
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $google, $instagram, $facebook, $linkedin, $twitter){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $google, $instagram, $facebook, $linkedin, $twitter){
 
     $scope.connections = settings.socials;
 
-    $scope.connect = function(type){
-        switch (type){
+    var getSocialServiceByName = function(name){
+        switch (name) {
             case 'googlePlus':
-                $google.connect().then(function(){
-
-                });
-                break;
+                return $google;
             case 'instagram':
-                $instagram.connect().then(function(){
-
-                });
-                break;
+                return $instagram;
             case 'facebook':
-                $facebook.connect().then(function(){
-
-                });
-                break;
+                return $facebook;
             case 'linkedin':
-                $linkedin.connect().then(function(){
-
-                });
-                break;
+                return $linkedin;
             case 'twitter':
-                $twitter.connect().then(function(){
-
-                });
-                break;
+                return $twitter;
         }
+    };
+    $scope.connectToogle = function(event, name){
+        var socialService = getSocialServiceByName(name);
+        if(socialService.isConnected()){
+            var confirm = $mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title($translate.instant('connect.disconnect.confirmation.title'))
+                .content($translate.instant('connect.disconnect.confirmation.content', {
+                    name: $translate.instant('connect.label.' + name)
+                }))
+                .ariaLabel($translate.instant('connect.disconnect.confirmation.title'))
+                .ok($translate.instant('connect.disconnect.confirmation.ok'))
+                .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
+                .targetEvent(event);
+            $mdDialog.show(confirm).then(function() {
+                socialService.disconnect()
+            });
+        }else{
+            socialService.connect().then(function(){
 
+            });
+        }
+    };
 
+    $scope.isConnected = function(name){
+      return getSocialServiceByName(name).isConnected();
+    };
+
+    $scope.isNotImplemented = function(name){
+        return !getSocialServiceByName(name).isImplemented();
     };
 
 });

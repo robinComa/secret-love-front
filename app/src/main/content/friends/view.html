@@ -1,18 +1,25 @@
-<md-content>
-    <md-list>
+<md-card>
+    <md-card-content>
 
-        {{friends.length}}
+        <md-list>
 
-        <md-list-item ng-repeat="friend in friends | orderBy:'name'  track by $index" layout="row" ng-click="toogleLove(friend)">
-            <img ng-src="{{friend.image}}" class="md-avatar" alt="{{friend.name}}" />
-            <div flex class="md-list-item-text" layout="row">
-                <ng-md-icon flex="10" icon="{{friend.social.icon.name}}" style="fill: {{friend.social.icon.color}}" size="20"></ng-md-icon>
-                <p flex="80">
+            <md-subheader class="md-no-sticky">
+                <p>
+                    <strong>{{'friends.list.title.count' | translate}} :</strong>
+                    {{friends.length}}
+                </p>
+            </md-subheader>
+
+            <md-list-item ng-repeat="friend in friends | orderBy:'name'  track by $index" ng-click="toogleLove(friend)">
+                <img ng-src="{{friend.image}}" class="md-avatar" alt="{{friend.name}}"/>
+                <p>
+                    <ng-md-icon flex="10" icon="{{friend.social.icon.name}}" style="fill: {{friend.social.icon.color}}" size="20"></ng-md-icon>
                     {{ friend.name }}
                 </p>
                 <ng-md-icon flex="10" icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
-            </div>
-        </md-list-item>
+            </md-list-item>
 
-    </md-list>
-</md-content>
+        </md-list>
+
+    </md-card-content>
+</md-card>

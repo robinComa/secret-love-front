@@ -54,6 +54,15 @@ angular.module('app').provider('$linkedin', function(settings){
                     window.location = url;
                     return $q.when();
                 }
+            },
+            isConnected: function(){
+                return false;
+            },
+            disconnect: function(){
+
+            },
+            isImplemented: function(){
+                return false;
             }
         };
 
