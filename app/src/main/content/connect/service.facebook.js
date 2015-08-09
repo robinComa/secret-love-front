@@ -37,6 +37,7 @@ angular.module('app').provider('$facebook', function(settings){
                         token = resp.data.match(/access_token\=([^&]+)/)[1];
                         window.localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
                         window.localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
+                        code = null;
                         deferred.resolve(token);
                     }, deferred.reject);
                 }
@@ -59,6 +60,7 @@ angular.module('app').provider('$facebook', function(settings){
             },
             disconnect: function(){
                 window.localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+                token = null;
             },
             isImplemented: function(){
                 return true;

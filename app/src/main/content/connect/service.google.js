@@ -47,6 +47,7 @@ angular.module('app').provider('$google', function(settings){
             },
             disconnect: function(){
                 window.localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+                token = null;
             },
             isImplemented: function(){
                 return true;

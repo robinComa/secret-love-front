@@ -1,3 +1,6 @@
+var origin = window.location.origin;
+//origin += '/find-me';
+
 angular.module('app').constant('settings', {
     endpoint: 'rest-api/',
     socials: {
@@ -5,7 +8,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.google-plus',
             auth: {
                 clientId: '631974897480.apps.googleusercontent.com',
-                redirectUri: window.location.origin + '/',
+                redirectUri: origin + '/',
                 scope: ['profile']
             },
             icon: {
@@ -17,7 +20,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.instagram',
             auth: {
                 clientId: '5031270ba8a0440dbf50c0c78f201f1f',
-                redirectUri: window.location.origin + '/',
+                redirectUri: origin + '/',
                 scope: ['basic']
             },
             icon: {
@@ -29,7 +32,7 @@ angular.module('app').constant('settings', {
             label: 'connect.label.twitter',
             auth: {
                 clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
-                redirectUri: window.location.origin + '/#/friends',
+                redirectUri: origin + '/#/friends',
                 scope: ['user_friends']
             },
             icon: {
@@ -42,7 +45,7 @@ angular.module('app').constant('settings', {
             auth: {
                 clientId: '463627307038698',
                 clientSecret: 'c300b7e8922bfaeb84a84ca01e32245d',
-                redirectUri: window.location.origin + '/',
+                redirectUri: origin + '/',
                 scope: ['user_friends']
             },
             icon: {
@@ -55,7 +58,7 @@ angular.module('app').constant('settings', {
             auth: {
                 clientId: '77bmx0zg9stbsk',
                 clientSecret: 'aryHtzhM2yc9aXeS',
-                redirectUri: window.location.origin + '/',
+                redirectUri: origin + '/',
                 scope: ['r_basicprofile']
             },
             icon: {
