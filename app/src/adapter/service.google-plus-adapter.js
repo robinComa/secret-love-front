@@ -8,8 +8,4 @@ angular.module('app').service('GooglePlusAdapter', function(FriendModel){
         return dto && dto.data && dto.data.items ? dto.data.items.map(adaptToModel) : [];
     };
 
-    this.adaptToDto = function(dto){
-
-    };
-
 });

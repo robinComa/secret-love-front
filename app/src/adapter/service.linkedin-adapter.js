@@ -21,8 +21,4 @@ angular.module('app').service('LinkedinAdapter', function(FriendModel){
         }
     };
 
-    this.adaptToDto = function(dto){
-
-    };
-
 });

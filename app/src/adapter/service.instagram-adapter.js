@@ -5,11 +5,7 @@ angular.module('app').service('InstagramAdapter', function(FriendModel){
     };
 
     this.adaptToModels = function(dto){
-        return dto.data.data ? dto.data.data.map(adaptToModel) : [];
-    };
-
-    this.adaptToDto = function(dto){
-
+        return dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
     };
 
 });

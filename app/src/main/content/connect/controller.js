@@ -1,17 +1,17 @@
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $google, $instagram, $facebook, $linkedin, $twitter){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $googlePlus, $instagram, $facebook, $linkedIn, $twitter){
 
     $scope.connections = settings.socials;
 
     var getSocialServiceByName = function(name){
         switch (name) {
             case 'googlePlus':
-                return $google;
+                return $googlePlus;
             case 'instagram':
                 return $instagram;
             case 'facebook':
                 return $facebook;
             case 'linkedin':
-                return $linkedin;
+                return $linkedIn;
             case 'twitter':
                 return $twitter;
         }
@@ -30,10 +30,10 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
                 .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
                 .targetEvent(event);
             $mdDialog.show(confirm).then(function() {
-                socialService.disconnect()
+                socialService.close()
             });
         }else{
-            socialService.connect().then(function(){
+            socialService.getToken().then(function(){
 
             });
         }

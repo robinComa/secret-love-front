@@ -8,8 +8,4 @@ angular.module('app').service('TwitterAdapter', function(FriendModel){
         return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
     };
 
-    this.adaptToDto = function(dto){
-
-    };
-
 });

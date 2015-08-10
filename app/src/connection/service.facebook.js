@@ -1,3 +1,28 @@
+angular.module('app').provider('$facebook', function() {
+
+    this.$get = function(settings, $connection, $http){
+        return new $connection({
+            name: 'facebook',
+            isImplemented: false,
+            sendTokenRequest: function(){
+                throw 'Not Implemented';
+            },
+            sendConnectionClose: function(){
+                throw 'Not Implemented';
+            },
+            getFriends: function(token){
+                return $http.jsonp('https://graph.facebook.com/v2.4/me/friends?fields=id,name,picture', {
+                    params: {
+                        access_token: token,
+                        callback: 'JSON_CALLBACK'
+                    }
+                });
+            }
+        });
+    };
+
+});
+/**
 angular.module('app').provider('$facebook', function(settings){
 
     var STORAGE_ITEM_CODE_NAME = 'access_code_facebook';
@@ -54,19 +79,9 @@ angular.module('app').provider('$facebook', function(settings){
                     window.location = url;
                     return $q.when();
                 }
-            },
-            isConnected: function(){
-                return window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME) !== null;
-            },
-            disconnect: function(){
-                window.localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
-                token = null;
-            },
-            isImplemented: function(){
-                return true;
             }
         };
 
     };
 
-});
+});*/

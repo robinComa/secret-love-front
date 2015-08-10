@@ -7,6 +7,7 @@ angular.module('app').constant('settings', {
         googlePlus: {
             label: 'connect.label.google-plus',
             auth: {
+                patternURI: /&access_token=([^&]+)/,
                 clientId: '631974897480.apps.googleusercontent.com',
                 redirectUri: origin + '/',
                 scope: ['profile']
@@ -19,6 +20,7 @@ angular.module('app').constant('settings', {
         instagram: {
             label: 'connect.label.instagram',
             auth: {
+                patternURI: /#access_token=([^&]+)/,
                 clientId: '5031270ba8a0440dbf50c0c78f201f1f',
                 redirectUri: origin + '/',
                 scope: ['basic']
@@ -31,6 +33,7 @@ angular.module('app').constant('settings', {
         twitter: {
             label: 'connect.label.twitter',
             auth: {
+                patternURI: /^#access_token_unknow=([^&]+)/,
                 clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
                 redirectUri: origin + '/#/friends',
                 scope: ['user_friends']
@@ -43,6 +46,7 @@ angular.module('app').constant('settings', {
         facebook: {
             label: 'connect.label.facebook',
             auth: {
+                patternURI: /\?code=([^&]*)#/,
                 clientId: '463627307038698',
                 clientSecret: 'c300b7e8922bfaeb84a84ca01e32245d',
                 redirectUri: origin + '/',
@@ -56,6 +60,7 @@ angular.module('app').constant('settings', {
         linkedin: {
             label: 'connect.label.linkedin',
             auth: {
+                patternURI: /code=(.*)&state/,
                 clientId: '77bmx0zg9stbsk',
                 clientSecret: 'aryHtzhM2yc9aXeS',
                 redirectUri: origin + '/',

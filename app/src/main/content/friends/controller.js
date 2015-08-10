@@ -2,9 +2,9 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
 
     $scope.friends = [];
     Friend.query().then(function(){
-
+        console.info('All friends loaded');
     }, function(error){
-        console.error('error');
+        console.error('Friend loading error');
     }, function(friends){
         $scope.friends = $scope.friends.concat(friends);
     });
