@@ -1,26 +1,24 @@
-angular.module('app').provider('$linkedIn', function() {
+angular.module('app').factory('$linkedIn', function($connection, $http) {
 
-    this.$get = function(settings, $connection, $http){
-        return new $connection({
-            name: 'linkedin',
-            isImplemented: false,
-            sendTokenRequest: function(){
-                throw 'Not Implemented';
-            },
-            sendConnectionClose: function(){
-                throw 'Not Implemented';
-            },
-            getFriends: function(token){
-                return $http.jsonp('https://api.linkedin.com/v1/people/~:(num-connections)', {
-                    params: {
-                        format: 'jsonp',
-                        oauth2_access_token: token,
-                        callback: 'JSON_CALLBACK'
-                    }
-                });
-            }
-        });
-    };
+    return new $connection({
+        name: 'linkedin',
+        isImplemented: false,
+        sendTokenRequest: function(){
+            throw 'Not Implemented';
+        },
+        sendConnectionClose: function(){
+            throw 'Not Implemented';
+        },
+        getFriends: function(token){
+            return $http.jsonp('https://api.linkedin.com/v1/people/~:(num-connections)', {
+                params: {
+                    format: 'jsonp',
+                    oauth2_access_token: token,
+                    callback: 'JSON_CALLBACK'
+                }
+            });
+        }
+    });
 
 });
 

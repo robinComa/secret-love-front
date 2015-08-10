@@ -1,25 +1,23 @@
-angular.module('app').provider('$facebook', function() {
+angular.module('app').factory('$facebook', function($connection, $http) {
 
-    this.$get = function(settings, $connection, $http){
-        return new $connection({
-            name: 'facebook',
-            isImplemented: false,
-            sendTokenRequest: function(){
-                throw 'Not Implemented';
-            },
-            sendConnectionClose: function(){
-                throw 'Not Implemented';
-            },
-            getFriends: function(token){
-                return $http.jsonp('https://graph.facebook.com/v2.4/me/friends?fields=id,name,picture', {
-                    params: {
-                        access_token: token,
-                        callback: 'JSON_CALLBACK'
-                    }
-                });
-            }
-        });
-    };
+    return new $connection({
+        name: 'facebook',
+        isImplemented: false,
+        sendTokenRequest: function(){
+            throw 'Not Implemented';
+        },
+        sendConnectionClose: function(){
+            throw 'Not Implemented';
+        },
+        getFriends: function(token){
+            return $http.jsonp('https://graph.facebook.com/v2.4/me/friends?fields=id,name,picture', {
+                params: {
+                    access_token: token,
+                    callback: 'JSON_CALLBACK'
+                }
+            });
+        }
+    });
 
 });
 /**
