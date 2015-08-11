@@ -1,5 +1,9 @@
-angular.module('app').factory('$instagram', function(settings, $connection, $q, $http){
-    return new $connection({
+angular.module('app').factory('$instagram', function(settings, $connection, $q, $http, FriendModel){
+
+    var LIMIT_TOKEN_STATUS = 429;
+    var INVALID_TOKEN_STATUS = 400;
+
+    var connection =  new $connection({
         name: 'instagram',
         isImplemented: true,
         sendTokenRequest: function(){
@@ -13,13 +17,35 @@ angular.module('app').factory('$instagram', function(settings, $connection, $q, 
         sendConnectionClose: function(){
             return $q.when();
         },
-        getFriends: function(token){
-            return $http.jsonp('https://api.instagram.com/v1/users/self/follows', {
+        getFriends: function(token, getNewToken, close){
+            var deferred = $q.defer();
+            $http.jsonp('https://api.instagram.com/v1/users/self/follows', {
                 params: {
                     access_token: token,
-                    callback: 'JSON_CALLBACK'
+                    callback: 'JSON_CALLBACK',
+                    count: 1000
                 }
-            });
+            }).then(function(response){
+                if(response.data.meta.code === LIMIT_TOKEN_STATUS || response.data.meta.code === INVALID_TOKEN_STATUS){
+                    close().then(function(){
+                        getNewToken().then(function(){
+                            deferred.reject(response.data.meta.error_message);
+                        }, deferred.reject);
+                    });
+                }else{
+                    deferred.resolve(response.data.data.map(function(friend){
+                        var name = friend.username;
+                        if(friend.full_name){
+                            name += ' (' + friend.full_name + ')'
+                        }
+                        return new FriendModel(null, name, friend.profile_picture, 'instagram');
+                    }));
+                }
+            }, deferred.reject);
+            return deferred.promise;
         }
     });
+
+    return connection;
+
 });

@@ -23,7 +23,9 @@ angular.module('app').provider('$connection', function(settings){
             var deferred = $q.defer();
 
             var hash = uriMatch[args.name];
-            if(hash){
+              alert(JSON.stringify(uriMatch))
+
+              if(hash){
                 localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, hash);
                 delete uriMatch[args.name];
             }
@@ -56,7 +58,7 @@ angular.module('app').provider('$connection', function(settings){
           };
 
           this.getFriends = function(){
-              return $q.when(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME)) : []);
+              return $q.when(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), this.getToken, this.close) : []);
           };
 
       };
