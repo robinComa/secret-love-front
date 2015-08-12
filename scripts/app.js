@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app', [
     'ngResource',
     'pascalprecht.translate',
@@ -87,6 +89,8 @@ angular.module('app', [
     };
 
 });
+'use strict';
+
 angular.module('appStub', [
     'app',
     'ngMockE2E'
@@ -96,9 +100,8 @@ angular.module('appStub', [
 
 }).run(function(settings, $httpBackend, GetJsonFile){
 
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'facebook/friends$')).respond(GetJsonFile.synchronously('stub/facebook/GET.json'));
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'twitter/friends$')).respond(GetJsonFile.synchronously('stub/twitter/GET.json'));
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'linkedin/friends$')).respond(GetJsonFile.synchronously('stub/linkedin/GET.json'));
+    $httpBackend.whenPOST(new RegExp(settings.endpoint + 'friends$')).respond(200);
+    $httpBackend.whenGET(new RegExp(settings.endpoint + 'friends$')).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -139,6 +142,8 @@ angular.module('appStub').service('GetJsonFile', function(){
         return request.response;
     };
 });
+'use strict';
+
 var origin = window.location.origin;
 origin += '/find-me';
 
@@ -214,100 +219,8 @@ angular.module('app').constant('settings', {
         }
     }
 });
-angular.module('app').factory('FriendModel', function(settings){
+'use strict';
 
-    return function(id, name, image, type){
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.social = {
-            icon: settings.socials[type].icon
-        };
-        this.love = false;
-    };
-
-});
-angular.module('app').service('FacebookAdapter', function(FriendModel){
-
-    var adaptToModel = function(dto){
-        return new FriendModel(dto.id, dto.name, dto.picture.data.url, 'facebook');
-    };
-
-    this.adaptToModels = function(dto){
-        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
-    };
-
-});
-angular.module('app').service('LinkedinAdapter', function(FriendModel){
-
-    var adaptToModel = function(dto){
-        return new FriendModel(dto.id, dto.firstName + ' ' + dto.lastName, dto.pictureUrl, 'linkedin');
-    };
-
-    this.adaptToModels = function(dto){
-        if(dto && dto.data && dto.data.numConnections){
-            var models = [];
-            for(var i = 0; i < dto.data.numConnections; i++){
-                models.push(adaptToModel({
-                    id: i,
-                    firstName: 'Fake First Name',
-                    lastName: i,
-                    pictureUrl: 'https://media.licdn.com/mpr/mprx/0_io443xgIdsvMEmnciSRb3pp6IjA9oDnc3e2b3j0zqUL6zWTB72Hq7gwRLrldWoBRGdV6asDHmXt1'
-                }));
-            }
-            return models;
-        }else{
-            return [];
-        }
-    };
-
-});
-angular.module('app').service('TwitterAdapter', function(FriendModel){
-
-    var adaptToModel = function(dto){
-        return new FriendModel(null, dto.username + ' (' + dto.full_name + ')', dto.profile_picture, 'twitter');
-    };
-
-    this.adaptToModels = function(dto){
-        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
-    };
-
-});
-angular.module('app').factory('Friend', function(settings, $q, $twitter, $googlePlus, $facebook, $linkedIn, $instagram, FacebookAdapter, LinkedinAdapter, TwitterAdapter){
-    return {
-        query: function(){
-            var deferred = $q.defer();
-
-            var twitterDeffered = $twitter.getFriends();
-            var googleplusDeffered = $googlePlus.getFriends();
-            var facebookDeffered = $facebook.getFriends();
-            var linkedinDeffered = $linkedIn.getFriends();
-            var instagramDeffered = $instagram.getFriends();
-
-            twitterDeffered.then(function(friend){
-                deferred.notify(TwitterAdapter.adaptToModels(friend));
-            });
-            googleplusDeffered.then(function(friends){
-                deferred.notify(friends);
-            });
-            facebookDeffered.then(function(friend){
-                deferred.notify(FacebookAdapter.adaptToModels(friend));
-            });
-            linkedinDeffered.then(function(friend){
-                deferred.notify(LinkedinAdapter.adaptToModels(friend));
-            });
-            instagramDeffered.then(function(friends){
-                deferred.notify(friends);
-            });
-
-            $q.all([twitterDeffered, googleplusDeffered, facebookDeffered, linkedinDeffered, instagramDeffered]).then(function(){
-                deferred.resolve();
-            });
-
-            return deferred.promise;
-        }
-    };
-});
 angular.module('app').controller('SidenavCtrl', function($scope){
 
     $scope.entries = [{
@@ -325,6 +238,8 @@ angular.module('app').controller('SidenavCtrl', function($scope){
     }];
 
 });
+'use strict';
+
 angular.module('app').controller('HomeCtrl', function($scope, $interval, settings){
 
     var duration = 2000;
@@ -344,13 +259,15 @@ angular.module('app').controller('HomeCtrl', function($scope, $interval, setting
         easing : 'sine-out'
     };
 });
+'use strict';
+
 angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Friend){
 
     $scope.friends = [];
-    Friend.query().then(function(){
-        console.info('All friends loaded');
+    Friend.query().then(function(friends){
+        console.info(friends.length + ' friends loaded');
     }, function(error){
-        console.error('Friend loading error');
+        console.error('Friend loading error : ' + error);
     }, function(friends){
         $scope.friends = $scope.friends.concat(friends);
     });
@@ -368,7 +285,7 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
         friendCopy.love = !friendCopy.love;
         friend.love = null;
 
-        friendCopy.$save().then(function(){
+        Friend.save(friendCopy).$promise.then(function(){
             friend.love = friendCopy.love;
         }).catch(function(){
             friend.love = undefined;
@@ -391,40 +308,32 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
     };
 
 });
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $googlePlus, $instagram, $facebook, $linkedIn, $twitter){
+'use strict';
+
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector){
 
     $scope.connections = settings.socials;
 
-    var getSocialServiceByName = function(name){
-        switch (name) {
-            case 'googlePlus':
-                return $googlePlus;
-            case 'instagram':
-                return $instagram;
-            case 'facebook':
-                return $facebook;
-            case 'linkedin':
-                return $linkedIn;
-            case 'twitter':
-                return $twitter;
-        }
+    var disconnectAction = function(socialService){
+        var confirm = $mdDialog.confirm()
+            .parent(angular.element(document.body))
+            .title($translate.instant('connect.disconnect.confirmation.title'))
+            .content($translate.instant('connect.disconnect.confirmation.content', {
+                name: $translate.instant('connect.label.' + name)
+            }))
+            .ariaLabel($translate.instant('connect.disconnect.confirmation.title'))
+            .ok($translate.instant('connect.disconnect.confirmation.ok'))
+            .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
+            .targetEvent(event);
+        $mdDialog.show(confirm).then(function() {
+            socialService.close();
+        });
     };
+
     $scope.connectToogle = function(event, name){
-        var socialService = getSocialServiceByName(name);
+        var socialService = $injector.get(name);
         if(socialService.isConnected()){
-            var confirm = $mdDialog.confirm()
-                .parent(angular.element(document.body))
-                .title($translate.instant('connect.disconnect.confirmation.title'))
-                .content($translate.instant('connect.disconnect.confirmation.content', {
-                    name: $translate.instant('connect.label.' + name)
-                }))
-                .ariaLabel($translate.instant('connect.disconnect.confirmation.title'))
-                .ok($translate.instant('connect.disconnect.confirmation.ok'))
-                .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
-                .targetEvent(event);
-            $mdDialog.show(confirm).then(function() {
-                socialService.close()
-            });
+            disconnectAction(socialService);
         }else{
             socialService.getToken().then(function(){
 
@@ -433,17 +342,63 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
     };
 
     $scope.isConnected = function(name){
-      return getSocialServiceByName(name).isConnected();
+      return $injector.get(name).isConnected();
     };
 
     $scope.isNotImplemented = function(name){
-        return !getSocialServiceByName(name).isImplemented();
+        return !$injector.get(name).isImplemented();
     };
 
 });
-angular.module('app').provider('$connection', function(settings){
+'use strict';
 
-    var uriMatch = {};
+angular.module('app').factory('Friend', function(settings, $q, $resource, $injector, $http){
+
+    var Friend = $resource(settings.endpoint + 'friends');
+
+    Friend.query = function(){
+        var deferred = $q.defer();
+
+        $http.get(settings.endpoint + 'friends').then(function(response){
+            var loveFriends = response.data;
+
+            var promises = [];
+
+            var areInLove = function(loveFriends, friend){
+                return loveFriends.some(function(loveFriend){
+                    return angular.equals(loveFriend, friend);
+                });
+            };
+
+            angular.forEach(settings.socials, function(social, name){
+                var socialService = $injector.get(name);
+                var promise = socialService.getFriends();
+                promise.then(function(friends){
+                    deferred.notify(friends.map(function(friend){
+                        friend.love = areInLove(loveFriends, friend);
+                        return friend;
+                    }));
+                });
+                promises.push(promise);
+            });
+
+            $q.all(promises).then(function(friends){
+                deferred.resolve(friends.reduce(function(previous, current){
+                    return previous.concat(current);
+                }));
+            });
+        });
+
+        return deferred.promise;
+    };
+
+    return Friend;
+});
+'use strict';
+
+angular.module('app').provider('Connection', function(settings){
+
+    var STORAGE_ITEM_TOKEN_NAME_PREFIX = 'access_token_';
 
     var findPatternInURI = function(pattern){
         var reg = window.location.href.match(pattern);
@@ -453,26 +408,18 @@ angular.module('app').provider('$connection', function(settings){
     for(var i in settings.socials){
         var hash = findPatternInURI(settings.socials[i].auth.patternURI);
         if(hash){
-            uriMatch[i] = hash;
+            localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+            break;
         }
     }
 
     this.$get = function($q){
       return function(args){
 
-          var STORAGE_ITEM_TOKEN_NAME = 'access_token_' + args.name;
+          var STORAGE_ITEM_TOKEN_NAME = STORAGE_ITEM_TOKEN_NAME_PREFIX + args.name;
 
           this.getToken = function(){
             var deferred = $q.defer();
-
-            var hash = uriMatch[args.name];
-              alert(JSON.stringify(uriMatch))
-
-              if(hash){
-                localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, hash);
-                delete uriMatch[args.name];
-            }
-
             var token = localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
             if(token){
                 deferred.resolve(token);
@@ -509,12 +456,14 @@ angular.module('app').provider('$connection', function(settings){
 
 
 });
-angular.module('app').factory('$googlePlus', function(settings, $connection, $http, $q, FriendModel) {
+'use strict';
+
+angular.module('app').factory('googlePlus', function(settings, Connection, $http, $q) {
 
     var LIMIT_TOKEN_STATUS = 401;
     var UNAUTH_STATUS = 403;
 
-    var connection =  new $connection({
+    var connection =  new Connection({
         name: 'googlePlus',
         isImplemented: true,
         sendTokenRequest: function(){
@@ -548,7 +497,15 @@ angular.module('app').factory('$googlePlus', function(settings, $connection, $ht
                     });
                 }else{
                     deferred.resolve(response.data.items.map(function(friend){
-                        return new FriendModel(null, friend.displayName, friend.image.url, 'googlePlus');
+                        return {
+                            id: null,
+                            name: friend.displayName,
+                            picture: friend.image.url,
+                            type: 'googlePlus',
+                            $$social: {
+                                icon: settings.socials.googlePlus.icon
+                            }
+                        };
                     }));
                 }
             }, deferred.reject);
@@ -559,12 +516,14 @@ angular.module('app').factory('$googlePlus', function(settings, $connection, $ht
     return connection;
 
 });
-angular.module('app').factory('$instagram', function(settings, $connection, $q, $http, FriendModel){
+'use strict';
+
+angular.module('app').factory('instagram', function(settings, Connection, $q, $http){
 
     var LIMIT_TOKEN_STATUS = 429;
     var INVALID_TOKEN_STATUS = 400;
 
-    var connection =  new $connection({
+    var connection =  new Connection({
         name: 'instagram',
         isImplemented: true,
         sendTokenRequest: function(){
@@ -597,9 +556,17 @@ angular.module('app').factory('$instagram', function(settings, $connection, $q, 
                     deferred.resolve(response.data.data.map(function(friend){
                         var name = friend.username;
                         if(friend.full_name){
-                            name += ' (' + friend.full_name + ')'
+                            name += ' (' + friend.full_name + ')';
                         }
-                        return new FriendModel(null, name, friend.profile_picture, 'instagram');
+                        return {
+                            id: null,
+                            name: name,
+                            picture: friend.profile_picture,
+                            type: 'instagram',
+                            $$social: {
+                                icon: settings.socials.instagram.icon
+                            }
+                        };
                     }));
                 }
             }, deferred.reject);
@@ -610,9 +577,11 @@ angular.module('app').factory('$instagram', function(settings, $connection, $q, 
     return connection;
 
 });
-angular.module('app').factory('$facebook', function($connection, $http) {
+'use strict';
 
-    return new $connection({
+angular.module('app').factory('facebook', function(Connection, $http) {
+
+    return new Connection({
         name: 'facebook',
         isImplemented: false,
         sendTokenRequest: function(){
@@ -633,6 +602,15 @@ angular.module('app').factory('$facebook', function($connection, $http) {
 
 });
 /**
+ * var adaptToModel = function(dto){
+        return new FriendModel(dto.id, dto.name, dto.picture.data.url, 'facebook');
+    };
+
+ this.adaptToModels = function(dto){
+        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
+    };
+ *
+ *
 angular.module('app').provider('$facebook', function(settings){
 
     var STORAGE_ITEM_CODE_NAME = 'access_code_facebook';
@@ -695,9 +673,11 @@ angular.module('app').provider('$facebook', function(settings){
     };
 
 });*/
-angular.module('app').factory('$linkedIn', function($connection, $http) {
+'use strict';
 
-    return new $connection({
+angular.module('app').factory('linkedin', function(Connection, $http) {
+
+    return new Connection({
         name: 'linkedin',
         isImplemented: false,
         sendTokenRequest: function(){
@@ -720,6 +700,30 @@ angular.module('app').factory('$linkedIn', function($connection, $http) {
 });
 
 /**
+ *
+ *
+ *
+ *  var adaptToModel = function(dto){
+        return new FriendModel(dto.id, dto.firstName + ' ' + dto.lastName, dto.pictureUrl, 'linkedin');
+    };
+
+ this.adaptToModels = function(dto){
+        if(dto && dto.data && dto.data.numConnections){
+            var models = [];
+            for(var i = 0; i < dto.data.numConnections; i++){
+                models.push(adaptToModel({
+                    id: i,
+                    firstName: 'Fake First Name',
+                    lastName: i,
+                    pictureUrl: 'https://media.licdn.com/mpr/mprx/0_io443xgIdsvMEmnciSRb3pp6IjA9oDnc3e2b3j0zqUL6zWTB72Hq7gwRLrldWoBRGdV6asDHmXt1'
+                }));
+            }
+            return models;
+        }else{
+            return [];
+        }
+    };
+
 angular.module('app').provider('$linkedin', function(settings){
 
     var getUriCode = function(hash){
@@ -783,8 +787,10 @@ angular.module('app').provider('$linkedin', function(settings){
 
 });
  */
-angular.module('app').factory('$twitter', function($connection) {
-    return new $connection({
+'use strict';
+
+angular.module('app').factory('twitter', function(Connection) {
+    return new Connection({
         name: 'twitter',
         isImplemented: false,
         sendTokenRequest: function(){
@@ -793,8 +799,19 @@ angular.module('app').factory('$twitter', function($connection) {
         sendConnectionClose: function(){
             throw 'Not Implemented';
         },
-        getFriends: function(token){
+        getFriends: function(){
             throw 'Not Implemented';
         }
     });
 });
+
+/**
+ var adaptToModel = function(dto){
+        return new FriendModel(null, dto.username + ' (' + dto.full_name + ')', dto.profile_picture, 'twitter');
+    };
+
+ this.adaptToModels = function(dto){
+        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
+    };
+
+ */
