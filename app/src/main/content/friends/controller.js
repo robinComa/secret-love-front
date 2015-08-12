@@ -1,8 +1,8 @@
 angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Friend){
 
     $scope.friends = [];
-    Friend.query().then(function(){
-        console.info('All friends loaded');
+    Friend.query().then(function(friends){
+        console.info(friends.length + ' friends loaded');
     }, function(error){
         console.error('Friend loading error');
     }, function(friends){

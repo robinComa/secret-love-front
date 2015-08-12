@@ -4,7 +4,7 @@ angular.module('app').factory('FriendModel', function(settings){
         this.id = id;
         this.name = name;
         this.image = image;
-        this.social = {
+        this.$social = {
             icon: settings.socials[type].icon
         };
         this.love = false;

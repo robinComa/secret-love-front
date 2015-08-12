@@ -25,8 +25,10 @@ angular.module('app').factory('Friend', function(settings, $q, $twitter, $google
                 deferred.notify(friends);
             });
 
-            $q.all([twitterDeffered, googleplusDeffered, facebookDeffered, linkedinDeffered, instagramDeffered]).then(function(){
-                deferred.resolve();
+            $q.all([twitterDeffered, googleplusDeffered, facebookDeffered, linkedinDeffered, instagramDeffered]).then(function(result){
+                deferred.resolve(result.reduce(function(previous, current){
+                    return previous.concat(current);
+                }));
             });
 
             return deferred.promise;
