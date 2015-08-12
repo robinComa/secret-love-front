@@ -1,10 +1,11 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Friend){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend){
 
     $scope.friends = [];
     Friend.query().then(function(friends){
         console.info(friends.length + ' friends loaded');
+        $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
@@ -14,24 +15,26 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
     var icons = {
         LOVE : 'favorite',
         NOT_LOVE : 'favorite_outline',
-        SYNC : 'sync',
         SYNC_PROBLEM: 'sync_problem'
     };
 
     $scope.toogleLove = function(friend){
 
-        var friendCopy = angular.copy(friend);
-        friendCopy.love = !friendCopy.love;
-        friend.love = null;
+        var initialLove = friend.love;
 
-        Friend.save(friendCopy).$promise.then(function(){
-            friend.love = friendCopy.love;
-        }).catch(function(){
+        friend.love = !initialLove;
+        friend.$save().then(function(){
+
+        }, function(){
             friend.love = undefined;
             $timeout(function(){
-                friend.love = !friendCopy.love;
+                friend.love = initialLove;
             }, 3000);
         });
+    };
+
+    $scope.getSocialIcon = function(social){
+        return settings.socials[social].icon;
     };
 
     $scope.getLoveIcon = function(friend){
@@ -39,8 +42,6 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
             return icons.LOVE;
         }else if(friend.love === false){
             return icons.NOT_LOVE;
-        }else if(friend.love === null){
-            return icons.SYNC;
         }else if(friend.love === undefined){
             return icons.SYNC_PROBLEM;
         }

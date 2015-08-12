@@ -39,15 +39,12 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                     });
                 }else{
                     deferred.resolve(response.data.items.map(function(friend){
-                        return {
+                        return new Friend({
                             id: null,
                             name: friend.displayName,
                             picture: friend.image.url,
-                            type: 'googlePlus',
-                            $$social: {
-                                icon: settings.socials.googlePlus.icon
-                            }
-                        };
+                            type: 'googlePlus'
+                        });
                     }));
                 }
             }, deferred.reject);
