@@ -7,10 +7,10 @@ angular.module('appStub', [
 
     $httpProvider.interceptors.push('HttpStubInterceptor');
 
-}).run(function(settings, $httpBackend, GetJsonFile){
+}).run(function($httpBackend, GetJsonFile){
 
-    $httpBackend.whenPOST(new RegExp(settings.endpoint + 'friends$')).respond(200);
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'friends$')).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
+    $httpBackend.whenPOST(/friends$/).respond(200);
+    $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
