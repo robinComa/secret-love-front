@@ -1,5 +1,7 @@
-angular.module('app').factory('$twitter', function($connection) {
-    return new $connection({
+'use strict';
+
+angular.module('app').factory('$twitter', function(Connection) {
+    return new Connection({
         name: 'twitter',
         isImplemented: false,
         sendTokenRequest: function(){
@@ -8,7 +10,7 @@ angular.module('app').factory('$twitter', function($connection) {
         sendConnectionClose: function(){
             throw 'Not Implemented';
         },
-        getFriends: function(token){
+        getFriends: function(){
             throw 'Not Implemented';
         }
     });

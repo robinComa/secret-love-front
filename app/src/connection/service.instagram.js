@@ -1,9 +1,11 @@
-angular.module('app').factory('$instagram', function(settings, $connection, $q, $http, FriendModel){
+'use strict';
+
+angular.module('app').factory('$instagram', function(settings, Connection, $q, $http, FriendModel){
 
     var LIMIT_TOKEN_STATUS = 429;
     var INVALID_TOKEN_STATUS = 400;
 
-    var connection =  new $connection({
+    var connection =  new Connection({
         name: 'instagram',
         isImplemented: true,
         sendTokenRequest: function(){
@@ -36,7 +38,7 @@ angular.module('app').factory('$instagram', function(settings, $connection, $q, 
                     deferred.resolve(response.data.data.map(function(friend){
                         var name = friend.username;
                         if(friend.full_name){
-                            name += ' (' + friend.full_name + ')'
+                            name += ' (' + friend.full_name + ')';
                         }
                         return new FriendModel(null, name, friend.profile_picture, 'instagram');
                     }));

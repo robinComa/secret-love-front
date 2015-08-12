@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app').factory('Friend', function(settings, $q, $twitter, $googlePlus, $facebook, $linkedIn, $instagram){
     return {
         query: function(){

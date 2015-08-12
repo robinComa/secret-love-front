@@ -2,6 +2,7 @@
 
 var gulp = require('gulp');
 var open = require('open');
+var runSequence = require('run-sequence');
 var karma = require('gulp-karma');
 var bower = require('./bower.json');
 var $ = require('gulp-load-plugins')();
@@ -52,7 +53,16 @@ gulp.task('template', function () {
     })).pipe(gulp.dest('dist/scripts/'));
 });
 
-gulp.task('dist', ['clean', 'html', 'template', 'i18n', 'stub']);
+gulp.task('jshint', function() {
+    return gulp.src('app/src/**/*.js')
+        .pipe($.jshint('.jshintrc'))
+        .pipe($.jshint.reporter('jshint-stylish'))
+        .pipe($.jshint.reporter('fail'));
+});
+
+gulp.task('dist', ['jshint', 'clean'], function(callback){
+    runSequence(['html', 'template', 'i18n', 'stub'], callback);
+});
 
 gulp.task('deploy', ['dist'], function () {
     return gulp.src('dist/**/*').pipe($.ghPages({

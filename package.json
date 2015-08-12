@@ -15,8 +15,9 @@
   "dependencies": {},
   "devDependencies": {
     "gulp": "3.9.0",
-    "gulp-useref": "1.2.0",
     "open": "0.0.5",
+    "run-sequence": "1.1.2",
+    "gulp-useref": "1.2.0",
     "gulp-load-plugins": "1.0.0-rc.1",
     "gulp-clean": "0.3.1",
     "gulp-plumber": "1.0.1",
@@ -31,7 +32,9 @@
     "gulp-jasmine": "2.0.1",
     "karma-jasmine": "0.3.6",
     "karma-phantomjs-launcher": "0.2.0",
-    "karma-spec-reporter": "0.0.19"
+    "karma-spec-reporter": "0.0.19",
+    "gulp-jshint": "1.11.2",
+    "jshint-stylish": "2.0.1"
   },
   "engines": {
     "node": ">=0.10.0"

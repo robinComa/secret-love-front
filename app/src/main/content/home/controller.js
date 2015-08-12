@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app').controller('HomeCtrl', function($scope, $interval, settings){
 
     var duration = 2000;

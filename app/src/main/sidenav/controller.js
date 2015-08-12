@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app').controller('SidenavCtrl', function($scope){
 
     $scope.entries = [{

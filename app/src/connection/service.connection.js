@@ -1,4 +1,6 @@
-angular.module('app').provider('$connection', function(settings){
+'use strict';
+
+angular.module('app').provider('Connection', function(settings){
 
     var STORAGE_ITEM_TOKEN_NAME_PREFIX = 'access_token_';
 

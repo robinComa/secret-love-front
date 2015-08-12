@@ -1,6 +1,8 @@
-angular.module('app').factory('$facebook', function($connection, $http) {
+'use strict';
 
-    return new $connection({
+angular.module('app').factory('$facebook', function(Connection, $http) {
+
+    return new Connection({
         name: 'facebook',
         isImplemented: false,
         sendTokenRequest: function(){

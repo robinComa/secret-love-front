@@ -1,9 +1,11 @@
-angular.module('app').factory('$googlePlus', function(settings, $connection, $http, $q, FriendModel) {
+'use strict';
+
+angular.module('app').factory('$googlePlus', function(settings, Connection, $http, $q, FriendModel) {
 
     var LIMIT_TOKEN_STATUS = 401;
     var UNAUTH_STATUS = 403;
 
-    var connection =  new $connection({
+    var connection =  new Connection({
         name: 'googlePlus',
         isImplemented: true,
         sendTokenRequest: function(){

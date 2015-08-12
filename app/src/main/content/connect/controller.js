@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $googlePlus, $instagram, $facebook, $linkedIn, $twitter){
 
     $scope.connections = settings.socials;
@@ -30,7 +32,7 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
                 .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
                 .targetEvent(event);
             $mdDialog.show(confirm).then(function() {
-                socialService.close()
+                socialService.close();
             });
         }else{
             socialService.getToken().then(function(){

@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app').factory('FriendModel', function(settings){
 
     return function(id, name, image, type){
