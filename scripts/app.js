@@ -98,10 +98,10 @@ angular.module('appStub', [
 
     $httpProvider.interceptors.push('HttpStubInterceptor');
 
-}).run(function(settings, $httpBackend, GetJsonFile){
+}).run(function($httpBackend, GetJsonFile){
 
-    $httpBackend.whenPOST(new RegExp(settings.endpoint + 'friends$')).respond(200);
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'friends$')).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
+    $httpBackend.whenPOST(/friends$/).respond(200);
+    $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -144,81 +144,82 @@ angular.module('appStub').service('GetJsonFile', function(){
 });
 'use strict';
 
-var origin = window.location.origin;
-origin += '/find-me';
+(function(){
+    var origin = window.location.href.split(window.location.hash)[0];
 
-angular.module('app').constant('settings', {
-    endpoint: 'rest-api/',
-    socials: {
-        googlePlus: {
-            label: 'connect.label.google-plus',
-            auth: {
-                patternURI: /&access_token=([^&]+)/,
-                clientId: '631974897480.apps.googleusercontent.com',
-                redirectUri: origin + '/',
-                scope: ['profile']
+    angular.module('app').constant('settings', {
+        endpoint: 'rest-api/',
+        socials: {
+            googlePlus: {
+                label: 'connect.label.google-plus',
+                auth: {
+                    patternURI: /&access_token=([^&]+)/,
+                    clientId: '631974897480.apps.googleusercontent.com',
+                    redirectUri: origin,
+                    scope: ['profile']
+                },
+                icon: {
+                    name: 'google-plus',
+                    color: '#DA4835'
+                }
             },
-            icon: {
-                name: 'google-plus',
-                color: '#DA4835'
-            }
-        },
-        instagram: {
-            label: 'connect.label.instagram',
-            auth: {
-                patternURI: /#access_token=([^&]+)/,
-                clientId: '5031270ba8a0440dbf50c0c78f201f1f',
-                redirectUri: origin + '/',
-                scope: ['basic']
+            instagram: {
+                label: 'connect.label.instagram',
+                auth: {
+                    patternURI: /#access_token=([^&]+)/,
+                    clientId: '5031270ba8a0440dbf50c0c78f201f1f',
+                    redirectUri: origin,
+                    scope: ['basic']
+                },
+                icon: {
+                    name: 'photo_camera',
+                    color: 'brown'
+                }
             },
-            icon: {
-                name: 'photo_camera',
-                color: 'brown'
-            }
-        },
-        twitter: {
-            label: 'connect.label.twitter',
-            auth: {
-                patternURI: /^#access_token_unknow=([^&]+)/,
-                clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
-                redirectUri: origin + '/#/friends',
-                scope: ['user_friends']
+            twitter: {
+                label: 'connect.label.twitter',
+                auth: {
+                    patternURI: /^#access_token_unknow=([^&]+)/,
+                    clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
+                    redirectUri: origin + '#/friends',
+                    scope: ['user_friends']
+                },
+                icon: {
+                    name: 'twitter',
+                    color: '#1AB2E8'
+                }
             },
-            icon: {
-                name: 'twitter',
-                color: '#1AB2E8'
-            }
-        },
-        facebook: {
-            label: 'connect.label.facebook',
-            auth: {
-                patternURI: /\?code=([^&]*)#/,
-                clientId: '463627307038698',
-                clientSecret: 'c300b7e8922bfaeb84a84ca01e32245d',
-                redirectUri: origin + '/',
-                scope: ['user_friends']
+            facebook: {
+                label: 'connect.label.facebook',
+                auth: {
+                    patternURI: /\?code=([^&]*)#/,
+                    clientId: '463627307038698',
+                    clientSecret: 'c300b7e8922bfaeb84a84ca01e32245d',
+                    redirectUri: origin,
+                    scope: ['user_friends']
+                },
+                icon: {
+                    name: 'facebook',
+                    color: '#3B5998'
+                }
             },
-            icon: {
-                name: 'facebook',
-                color: '#3B5998'
-            }
-        },
-        linkedin: {
-            label: 'connect.label.linkedin',
-            auth: {
-                patternURI: /code=(.*)&state/,
-                clientId: '77bmx0zg9stbsk',
-                clientSecret: 'aryHtzhM2yc9aXeS',
-                redirectUri: origin + '/',
-                scope: ['r_basicprofile']
-            },
-            icon: {
-                name: 'linkedin',
-                color: '#0177B5'
+            linkedin: {
+                label: 'connect.label.linkedin',
+                auth: {
+                    patternURI: /code=(.*)&state/,
+                    clientId: '77bmx0zg9stbsk',
+                    clientSecret: 'aryHtzhM2yc9aXeS',
+                    redirectUri: origin,
+                    scope: ['r_basicprofile']
+                },
+                icon: {
+                    name: 'linkedin',
+                    color: '#0177B5'
+                }
             }
         }
-    }
-});
+    });
+})();
 'use strict';
 
 angular.module('app').controller('SidenavCtrl', function($scope){
@@ -261,11 +262,12 @@ angular.module('app').controller('HomeCtrl', function($scope, $interval, setting
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Friend){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend){
 
     $scope.friends = [];
     Friend.query().then(function(friends){
         console.info(friends.length + ' friends loaded');
+        $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
@@ -275,24 +277,26 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
     var icons = {
         LOVE : 'favorite',
         NOT_LOVE : 'favorite_outline',
-        SYNC : 'sync',
         SYNC_PROBLEM: 'sync_problem'
     };
 
     $scope.toogleLove = function(friend){
 
-        var friendCopy = angular.copy(friend);
-        friendCopy.love = !friendCopy.love;
-        friend.love = null;
+        var initialLove = friend.love;
 
-        Friend.save(friendCopy).$promise.then(function(){
-            friend.love = friendCopy.love;
-        }).catch(function(){
+        friend.love = !initialLove;
+        friend.$save().then(function(){
+
+        }, function(){
             friend.love = undefined;
             $timeout(function(){
-                friend.love = !friendCopy.love;
+                friend.love = initialLove;
             }, 3000);
         });
+    };
+
+    $scope.getSocialIcon = function(social){
+        return settings.socials[social].icon;
     };
 
     $scope.getLoveIcon = function(friend){
@@ -300,8 +304,6 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
             return icons.LOVE;
         }else if(friend.love === false){
             return icons.NOT_LOVE;
-        }else if(friend.love === null){
-            return icons.SYNC;
         }else if(friend.love === undefined){
             return icons.SYNC_PROBLEM;
         }
@@ -458,7 +460,7 @@ angular.module('app').provider('Connection', function(settings){
 });
 'use strict';
 
-angular.module('app').factory('googlePlus', function(settings, Connection, $http, $q) {
+angular.module('app').factory('googlePlus', function(settings, Connection, $http, $q, Friend) {
 
     var LIMIT_TOKEN_STATUS = 401;
     var UNAUTH_STATUS = 403;
@@ -497,15 +499,12 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                     });
                 }else{
                     deferred.resolve(response.data.items.map(function(friend){
-                        return {
+                        return new Friend({
                             id: null,
                             name: friend.displayName,
                             picture: friend.image.url,
-                            type: 'googlePlus',
-                            $$social: {
-                                icon: settings.socials.googlePlus.icon
-                            }
-                        };
+                            type: 'googlePlus'
+                        });
                     }));
                 }
             }, deferred.reject);
@@ -518,7 +517,7 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
 });
 'use strict';
 
-angular.module('app').factory('instagram', function(settings, Connection, $q, $http){
+angular.module('app').factory('instagram', function(settings, Connection, $q, $http, Friend){
 
     var LIMIT_TOKEN_STATUS = 429;
     var INVALID_TOKEN_STATUS = 400;
@@ -558,15 +557,12 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                         if(friend.full_name){
                             name += ' (' + friend.full_name + ')';
                         }
-                        return {
+                        return new Friend({
                             id: null,
                             name: name,
                             picture: friend.profile_picture,
-                            type: 'instagram',
-                            $$social: {
-                                icon: settings.socials.instagram.icon
-                            }
-                        };
+                            type: 'instagram'
+                        });
                     }));
                 }
             }, deferred.reject);

@@ -11,5 +11,8 @@ md-sidenav md-list-item a.md-button {
     float: right;
     fill: pink; }
 
+md-backdrop.md-sidenav-backdrop {
+  position: relative; }
+
 md-whiteframe button {
   width: 90%; }
