@@ -1,6 +1,6 @@
 angular.module('app').provider('$connection', function(settings){
 
-    var uriMatch = {};
+    var STORAGE_ITEM_TOKEN_NAME_PREFIX = 'access_token_';
 
     var findPatternInURI = function(pattern){
         var reg = window.location.href.match(pattern);
@@ -10,26 +10,19 @@ angular.module('app').provider('$connection', function(settings){
     for(var i in settings.socials){
         var hash = findPatternInURI(settings.socials[i].auth.patternURI);
         if(hash){
-            uriMatch[i] = hash;
+            console.log(STORAGE_ITEM_TOKEN_NAME_PREFIX + i);
+            localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+            break;
         }
     }
 
     this.$get = function($q){
       return function(args){
 
-          var STORAGE_ITEM_TOKEN_NAME = 'access_token_' + args.name;
+          var STORAGE_ITEM_TOKEN_NAME = STORAGE_ITEM_TOKEN_NAME_PREFIX + args.name;
 
           this.getToken = function(){
             var deferred = $q.defer();
-
-            var hash = uriMatch[args.name];
-              alert(JSON.stringify(uriMatch))
-
-              if(hash){
-                localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, hash);
-                delete uriMatch[args.name];
-            }
-
             var token = localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
             if(token){
                 deferred.resolve(token);
