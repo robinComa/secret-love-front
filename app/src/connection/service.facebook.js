@@ -21,6 +21,15 @@ angular.module('app').factory('$facebook', function($connection, $http) {
 
 });
 /**
+ * var adaptToModel = function(dto){
+        return new FriendModel(dto.id, dto.name, dto.picture.data.url, 'facebook');
+    };
+
+ this.adaptToModels = function(dto){
+        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
+    };
+ *
+ *
 angular.module('app').provider('$facebook', function(settings){
 
     var STORAGE_ITEM_CODE_NAME = 'access_code_facebook';

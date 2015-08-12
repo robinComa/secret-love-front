@@ -13,3 +13,14 @@ angular.module('app').factory('$twitter', function($connection) {
         }
     });
 });
+
+/**
+ var adaptToModel = function(dto){
+        return new FriendModel(null, dto.username + ' (' + dto.full_name + ')', dto.profile_picture, 'twitter');
+    };
+
+ this.adaptToModels = function(dto){
+        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
+    };
+
+ */
