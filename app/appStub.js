@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('appStub', [
     'app',
     'ngMockE2E'
@@ -7,9 +9,8 @@ angular.module('appStub', [
 
 }).run(function(settings, $httpBackend, GetJsonFile){
 
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'facebook/friends$')).respond(GetJsonFile.synchronously('stub/facebook/GET.json'));
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'twitter/friends$')).respond(GetJsonFile.synchronously('stub/twitter/GET.json'));
-    $httpBackend.whenGET(new RegExp(settings.endpoint + 'linkedin/friends$')).respond(GetJsonFile.synchronously('stub/linkedin/GET.json'));
+    $httpBackend.whenPOST(new RegExp(settings.endpoint + 'friends$')).respond(200);
+    $httpBackend.whenGET(new RegExp(settings.endpoint + 'friends$')).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();

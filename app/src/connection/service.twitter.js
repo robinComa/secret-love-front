@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').factory('$twitter', function(Connection) {
+angular.module('app').factory('twitter', function(Connection) {
     return new Connection({
         name: 'twitter',
         isImplemented: false,

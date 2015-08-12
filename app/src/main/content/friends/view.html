@@ -11,9 +11,9 @@
             </md-subheader>
 
             <md-list-item ng-repeat="friend in friends | orderBy:'name'  track by $index" ng-click="toogleLove(friend)">
-                <img ng-src="{{friend.image}}" class="md-avatar" alt="{{friend.name}}"/>
+                <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
                 <p>
-                    <ng-md-icon flex="10" icon="{{friend.$social.icon.name}}" style="fill: {{friend.$social.icon.color}}" size="20"></ng-md-icon>
+                    <ng-md-icon flex="10" icon="{{friend.$$social.icon.name}}" ng-style="{fill: friend.$$social.icon.color}" size="20"></ng-md-icon>
                     {{ friend.name }}
                 </p>
                 <ng-md-icon flex="10" icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>

@@ -24,7 +24,7 @@ angular.module('app').controller('FriendsCtrl', function($scope, $timeout, Frien
         friendCopy.love = !friendCopy.love;
         friend.love = null;
 
-        friendCopy.$save().then(function(){
+        Friend.save(friendCopy).$promise.then(function(){
             friend.love = friendCopy.love;
         }).catch(function(){
             friend.love = undefined;

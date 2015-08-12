@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').factory('$facebook', function(Connection, $http) {
+angular.module('app').factory('facebook', function(Connection, $http) {
 
     return new Connection({
         name: 'facebook',

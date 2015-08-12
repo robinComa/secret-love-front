@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').factory('$linkedIn', function(Connection, $http) {
+angular.module('app').factory('linkedin', function(Connection, $http) {
 
     return new Connection({
         name: 'linkedin',

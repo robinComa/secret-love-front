@@ -1,3 +1,5 @@
+'use strict';
+
 var origin = window.location.origin;
 //origin += '/find-me';
 

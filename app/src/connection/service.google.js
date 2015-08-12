@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').factory('$googlePlus', function(settings, Connection, $http, $q, FriendModel) {
+angular.module('app').factory('googlePlus', function(settings, Connection, $http, $q, Friend) {
 
     var LIMIT_TOKEN_STATUS = 401;
     var UNAUTH_STATUS = 403;
@@ -39,7 +39,15 @@ angular.module('app').factory('$googlePlus', function(settings, Connection, $htt
                     });
                 }else{
                     deferred.resolve(response.data.items.map(function(friend){
-                        return new FriendModel(null, friend.displayName, friend.image.url, 'googlePlus');
+                        return {
+                            id: null,
+                            name: friend.displayName,
+                            picture: friend.image.url,
+                            type: 'googlePlus',
+                            $$social: {
+                                icon: settings.socials.googlePlus.icon
+                            }
+                        };
                     }));
                 }
             }, deferred.reject);

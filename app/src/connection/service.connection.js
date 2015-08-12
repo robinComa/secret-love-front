@@ -12,7 +12,6 @@ angular.module('app').provider('Connection', function(settings){
     for(var i in settings.socials){
         var hash = findPatternInURI(settings.socials[i].auth.patternURI);
         if(hash){
-            console.log(STORAGE_ITEM_TOKEN_NAME_PREFIX + i);
             localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
             break;
         }
