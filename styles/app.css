@@ -40,7 +40,7 @@ md-input-container ng-md-icon {
 .filter-btn {
   position: fixed;
   bottom: 100px;
-  left: 0px; }
+  right: 10px; }
   .filter-btn p {
     color: pink;
     position: absolute;
