@@ -1,3 +1,7 @@
 {
-  "friends.list.title.count": "Nb of friends loaded"
+  "friends.list.title.count": "Nb of friends loaded",
+  "friends.filter.name.label": "Search by name",
+  "friends.filter.button": "Filter action button",
+  "friends.list.filter.dialog.cancel": "Cancel",
+  "friends.list.filter.dialog.submit": "Apply filters"
 }

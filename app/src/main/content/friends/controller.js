@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog){
 
     $scope.friends = [];
     Friend.query().then(function(friends){
@@ -45,6 +45,18 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         }else if(friend.love === undefined){
             return icons.SYNC_PROBLEM;
         }
+    };
+
+    $scope.showFilter = function(ev){
+        $mdDialog.show({
+            controller: 'FriendsFilterCtrl',
+            templateUrl: 'src/main/content/friends/filter/view.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose:true
+        }).then(function(filter) {
+            $scope.filter = filter;
+        });
     };
 
 });

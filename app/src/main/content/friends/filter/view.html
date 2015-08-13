@@ -1,0 +1,28 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <form name="filterForm" ng-submit="submit(filter)">
+        <md-dialog-content>
+
+            <md-input-container>
+                <label>{{'friends.filter.name.label' | translate}}</label>
+                <input ng-model="filter.search" type="text"/>
+            </md-input-container>
+
+            <md-radio-group ng-model="filter.social" layout="column" layout-align="center center">
+                <md-radio-button ng-repeat="(key, social) in socials" ng-value="key" aria-label="{{social.label | translate}}">
+                    <ng-md-icon icon="{{social.icon.name}}" ng-style="{fill: social.icon.color}" size="30"></ng-md-icon>
+                </md-radio-button>
+            </md-radio-group>
+
+        </md-dialog-content>
+
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button type="button" class="md-raised" ng-click="cancel()">
+                {{'friends.list.filter.dialog.cancel' | translate}}
+            </md-button>
+            <md-button class="md-raised md-primary">
+                {{'friends.list.filter.dialog.submit' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>

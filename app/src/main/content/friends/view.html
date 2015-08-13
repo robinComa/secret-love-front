@@ -3,14 +3,7 @@
 
         <md-list>
 
-            <md-subheader class="md-no-sticky">
-                <p>
-                    <strong>{{'friends.list.title.count' | translate}} :</strong>
-                    {{friends.length}}
-                </p>
-            </md-subheader>
-
-            <md-list-item ng-repeat="friend in friends | orderBy:'name' track by $index" ng-click="toogleLove(friend)">
+            <md-list-item ng-repeat="friend in friends | filter:filter.search | filter:{type:filter.social} | orderBy:'name' track by $index" ng-click="toogleLove(friend)">
                 <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
                 <p>
                     <ng-md-icon flex="10" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>
@@ -23,3 +16,8 @@
 
     </md-card-content>
 </md-card>
+
+<md-button class="md-fab filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">
+    <p><strong>{{(friends | filter:filter.search | filter:{type:filter.social}).length}}</strong></p>
+    <ng-md-icon icon="filter_list" ng-style="{fill: 'white'}" size="30"></ng-md-icon>
+</md-button>
