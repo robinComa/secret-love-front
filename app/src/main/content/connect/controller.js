@@ -4,7 +4,7 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
 
     $scope.connections = settings.socials;
 
-    var disconnectAction = function(socialService){
+    var disconnectAction = function(socialService, name){
         var confirm = $mdDialog.confirm()
             .parent(angular.element(document.body))
             .title($translate.instant('connect.disconnect.confirmation.title'))
@@ -23,7 +23,7 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
     $scope.connectToogle = function(event, name){
         var socialService = $injector.get(name);
         if(socialService.isConnected()){
-            disconnectAction(socialService);
+            disconnectAction(socialService, name);
         }else{
             socialService.getToken().then(function(){
 
