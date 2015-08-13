@@ -29,7 +29,13 @@ angular.module('app', [
         .state('main', {
             abstract: true,
             url: '',
-            templateUrl: 'src/main/main.html'
+            templateUrl: 'src/main/main.html',
+            controller: 'MainCtrl',
+            resolve: {
+                me: function(Me){
+                    return Me.get().$promise;
+                }
+            }
         })
         .state('home', {
             parent: 'main',
@@ -83,9 +89,5 @@ angular.module('app', [
     $timeout(function(){
         $translate.refresh();
     },1);
-
-    $rootScope.toggleSidenav = function(menuId) {
-        $mdSidenav(menuId).toggle();
-    };
 
 });

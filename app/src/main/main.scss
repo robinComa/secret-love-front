@@ -1,5 +1,13 @@
-md-toolbar [icon]{
-  fill: white;
+md-toolbar{
+  button.md-button{
+    position: absolute;
+    left: 5px;
+    top: 15px;
+    min-width: 50px;
+    [icon]{
+      fill: white;
+    }
+  }
 }
 md-sidenav {
   md-list-item{
