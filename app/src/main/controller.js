@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me){
+angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $state){
 
-    $scope.login = me.login;
+    $scope.me = me;
+    $scope.state = $state;
 
     $scope.toggleSidenav = function(menuId) {
         $mdSidenav(menuId).toggle();

@@ -2,9 +2,11 @@
 
 angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog){
 
+    $scope.loading = true;
+
     $scope.friends = [];
     Friend.query().then(function(friends){
-        console.info(friends.length + ' friends loaded');
+        $scope.loading = false;
         $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);

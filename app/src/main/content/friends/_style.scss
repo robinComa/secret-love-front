@@ -1,0 +1,33 @@
+.filter-btn{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  p{
+    color: pink;
+    position: absolute;
+    top: -30px;
+    right: 10px;
+  }
+  ng-md-icon{
+    position: absolute;
+    top: 10px;
+    left: 13px;
+  }
+}
+
+.friend-list{
+  md-list-item{
+    > button{
+      padding-left: 0px;
+      p{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      ng-md-icon.user-social{
+        position: absolute;
+        left: 32px;
+      }
+    }
+  }
+}

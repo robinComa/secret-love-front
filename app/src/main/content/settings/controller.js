@@ -2,10 +2,13 @@
 
 angular.module('app').controller('SettingsCtrl', function($scope, me){
 
-    $scope.me = me;
+    $scope.meCopy = angular.copy(me);
 
     $scope.submit = function(){
-        $scope.me.$save();
+        $scope.meCopy.$save().then(function(){
+            me.login = $scope.meCopy.login;
+            me.email = $scope.meCopy.email;
+        });
     };
 
 });

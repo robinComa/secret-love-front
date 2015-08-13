@@ -1,27 +1,36 @@
-<md-card>
-    <md-card-content>
+<md-progress-linear ng-if="loading" md-mode="indeterminate"></md-progress-linear>
 
-        <md-list>
+<md-card>
+
+    <md-card-content ng-if="friends.length === 0 && !loading">
+        <h1>{{ 'friends.no.friend.title' | translate }} :'(</h1>
+        <p>{{ 'friends.no.friend.description' | translate }}</p>
+
+        <md-button ui-sref="connect" class="md-raised md-primary" aria-label="{{'friends.no.friend.button' | translate}}">
+            {{'friends.no.friend.button' | translate}}
+        </md-button>
+    </md-card-content>
+
+    <md-card-content ng-if="friends.length > 0">
+
+        <md-list class="friend-list">
 
             <md-list-item ng-repeat="friend in friends | filter:filter.search | filter:{type:filter.social} | orderBy:'name' track by $index" ng-click="toogleLove(friend)">
                 <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
-                <p>
-                    <ng-md-icon flex="10" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>
-                    {{ friend.name }}
-                </p>
+                <ng-md-icon class="user-social" flex="10" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>
+                <p>{{ friend.name }}</p>
                 <ng-md-icon flex="10" icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
             </md-list-item>
 
             <md-list-item></md-list-item>
-            <md-list-item></md-list-item>
-            <md-list-item></md-list-item>
 
         </md-list>
 
-    </md-card-content>
-</md-card>
+        <md-button class="md-fab filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">
+            <p><strong>{{(friends | filter:filter.search | filter:{type:filter.social}).length}}</strong></p>
+            <ng-md-icon icon="filter_list" ng-style="{fill: 'white'}" size="30"></ng-md-icon>
+        </md-button>
 
-<md-button class="md-fab filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">
-    <p><strong>{{(friends | filter:filter.search | filter:{type:filter.social}).length}}</strong></p>
-    <ng-md-icon icon="filter_list" ng-style="{fill: 'white'}" size="30"></ng-md-icon>
-</md-button>
+    </md-card-content>
+
+</md-card>
