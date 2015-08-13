@@ -693,9 +693,10 @@ angular.module('app').factory('twitter', function(Connection) {
  */
 'use strict';
 
-angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me){
+angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $state){
 
-    $scope.login = me.login;
+    $scope.me = me;
+    $scope.state = $state;
 
     $scope.toggleSidenav = function(menuId) {
         $mdSidenav(menuId).toggle();
@@ -742,9 +743,11 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 
 angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog){
 
+    $scope.loading = true;
+
     $scope.friends = [];
     Friend.query().then(function(friends){
-        console.info(friends.length + ' friends loaded');
+        $scope.loading = false;
         $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);
@@ -860,10 +863,13 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
 
 angular.module('app').controller('SettingsCtrl', function($scope, me){
 
-    $scope.me = me;
+    $scope.meCopy = angular.copy(me);
 
     $scope.submit = function(){
-        $scope.me.$save();
+        $scope.meCopy.$save().then(function(){
+            me.login = $scope.meCopy.login;
+            me.email = $scope.meCopy.email;
+        });
     };
 
 });

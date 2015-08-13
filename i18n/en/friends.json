@@ -3,5 +3,8 @@
   "friends.filter.name.label": "Search by name",
   "friends.filter.button": "Filter action button",
   "friends.list.filter.dialog.cancel": "Cancel",
-  "friends.list.filter.dialog.submit": "Apply filters"
+  "friends.list.filter.dialog.submit": "Apply filters",
+  "friends.no.friend.title": "You have no friends yet",
+  "friends.no.friend.description": "You can access to your contacts from your favorite social application. Connect to it in order to show all your contacts into this screen to be able to match with somebody!",
+  "friends.no.friend.button": "Connect your social applications now!"
 }

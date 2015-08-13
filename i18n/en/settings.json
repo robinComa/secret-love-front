@@ -1,6 +1,8 @@
 {
   "settings.login.placeholder": "Login",
   "settings.login.error.required": "Login is required",
+  "settings.login.error.maxlength": "Too long",
+  "settings.login.error.minlength": "Too short",
   "settings.email.placeholder": "Email",
   "settings.email.error.required": "Email is required",
   "settings.email.error.email": "Your email is not a valid email",

@@ -1,3 +1,6 @@
+body {
+  font-family: 'Roboto Condensed', sans-serif; }
+
 md-toolbar button.md-button {
   position: absolute;
   left: 5px;
@@ -22,31 +25,41 @@ md-sidenav md-list-item a.md-button {
 
 md-sidenav .socialCarousel {
   position: fixed;
-  bottom: 100px;
+  bottom: 20px;
   right: 20px; }
 
 md-backdrop.md-sidenav-backdrop {
   display: none; }
 
-md-whiteframe button {
-  width: 90%; }
-
-md-input-container ng-md-icon {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  fill: pink; }
-
-.filter-btn {
+.state-friends .filter-btn {
   position: fixed;
-  bottom: 100px;
-  right: 10px; }
-  .filter-btn p {
+  bottom: 20px;
+  right: 20px; }
+  .state-friends .filter-btn p {
     color: pink;
     position: absolute;
     top: -30px;
     right: 10px; }
-  .filter-btn ng-md-icon {
+  .state-friends .filter-btn ng-md-icon {
     position: absolute;
     top: 10px;
     left: 13px; }
+
+.state-friends .friend-list md-list-item > button {
+  padding-left: 0px; }
+  .state-friends .friend-list md-list-item > button p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; }
+  .state-friends .friend-list md-list-item > button ng-md-icon.user-social {
+    position: absolute;
+    left: 32px; }
+
+.state-connect md-whiteframe button {
+  width: 90%; }
+
+.state-settings md-input-container ng-md-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  fill: pink; }
