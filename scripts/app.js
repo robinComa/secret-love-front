@@ -252,12 +252,17 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                 });
             };
 
+            var isVisible = function(){
+                return true;
+            };
+
             angular.forEach(settings.socials, function(social, name){
                 var socialService = $injector.get(name);
                 var promise = socialService.getFriends();
                 promise.then(function(friends){
                     deferred.notify(friends.map(function(friend){
                         friend.love = areInLove(loveFriends, friend);
+                        friend.visibility = isVisible();
                         return friend;
                     }));
                 });
@@ -741,7 +746,7 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog, $mdToast,$translate){
 
     $scope.loading = true;
 
@@ -790,6 +795,25 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         }
     };
 
+    $scope.hideFriend = function(friend){
+        friend.visibility = false;
+        var toast = $mdToast.simple()
+            .content($translate.instant('friends.list.hide.toast.content', {
+                name: friend.name
+            }))
+            .action($translate.instant('friends.list.hide.toast.cancel'))
+            .highlightAction(false)
+            .position('bottom right');
+        $mdToast.show(toast).then(function(response) {
+            if ( response === 'ok' ) {
+                friend.visibility = true;
+            }
+        });
+    };
+
+    $scope.filter = {
+        visibility: true
+    };
     $scope.showFilter = function(ev){
         $mdDialog.show({
             controller: 'FriendsFilterCtrl',
@@ -808,6 +832,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
 angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope, $mdDialog){
 
     $scope.socials = settings.socials;
+
+    $scope.filter = {
+        visibility: true
+    };
 
     $scope.cancel = function() {
         $mdDialog.cancel();
