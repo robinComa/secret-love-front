@@ -14,6 +14,10 @@ angular.module('app').controller('SidenavCtrl', function($scope){
         uiSref: 'connect',
         label: 'sidenav.entry.label.connect',
         icon: 'apps'
+    },{
+        uiSref: 'settings',
+        label: 'sidenav.entry.label.settings',
+        icon: 'settings_applications'
     }];
 
 });

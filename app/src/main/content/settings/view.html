@@ -1,0 +1,24 @@
+<form md-content layout-padding class="autoScroll" name="settingsForm" ng-submit="submit()">
+    <md-input-container>
+        <label>{{'settings.login.placeholder' | translate}}</label>
+        <input ng-model="me.login" name="login" type="text" required/>
+        <ng-md-icon icon="account_circle" size="50"></ng-md-icon>
+        <div ng-messages="settingsForm.login.$error">
+            <div ng-message="required">{{'settings.login.error.required' | translate}}</div>
+        </div>
+    </md-input-container>
+    <md-input-container>
+        <label>{{'settings.email.placeholder' | translate}}</label>
+        <input ng-model="me.email" name="email" type="email" required/>
+        <ng-md-icon icon="mail" size="50"></ng-md-icon>
+        <div ng-messages="settingsForm.email.$error">
+            <div ng-message="required">{{'settings.email.error.required' | translate}}</div>
+            <div ng-message="email">{{'settings.email.error.email' | translate}}</div>
+        </div>
+    </md-input-container>
+
+    <div layout="row" layout-align="end start">
+        <md-button type="submit" class="md-raised">{{'settings.form.submit.label' | translate}}</md-button>
+    </div>
+
+</form>

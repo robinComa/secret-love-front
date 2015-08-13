@@ -10,6 +10,7 @@ angular.module('appStub', [
 }).run(function($httpBackend, GetJsonFile){
 
     $httpBackend.whenGET(/me$/).respond(GetJsonFile.synchronously('stub/me/GET-x.json'));
+    $httpBackend.whenPOST(/me$/).respond(200);
 
     $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
     $httpBackend.whenPOST(/friends$/).respond(200);

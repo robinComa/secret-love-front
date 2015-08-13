@@ -2,7 +2,7 @@
 
 angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me){
 
-    $scope.me = me;
+    $scope.login = me.login;
 
     $scope.toggleSidenav = function(menuId) {
         $mdSidenav(menuId).toggle();

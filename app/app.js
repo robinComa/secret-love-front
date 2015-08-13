@@ -7,7 +7,8 @@ angular.module('app', [
     'ngAria',
     'ngAnimate',
     'ngMaterial',
-    'ngMdIcons'
+    'ngMdIcons',
+    'ngMessages'
 ]).config(function($translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
 
     $translateProvider.useLoader('$translatePartialLoader', {
@@ -76,6 +77,19 @@ angular.module('app', [
                     controller: 'ConnectCtrl'
                 }
             }
+        }).state('settings', {
+            parent: 'main',
+            url: '/settings',
+            views: {
+                sidenav: {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                content: {
+                    templateUrl: 'src/main/content/settings/view.html',
+                    controller: 'SettingsCtrl'
+                }
+            }
         });
 
 }).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){
@@ -85,6 +99,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('home');
     $translatePartialLoader.addPart('friends');
     $translatePartialLoader.addPart('connect');
+    $translatePartialLoader.addPart('settings');
 
     $timeout(function(){
         $translate.refresh();
