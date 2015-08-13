@@ -23,6 +23,11 @@ md-sidenav {
       }
     }
   }
+  .socialCarousel{
+    position: fixed;
+    bottom: 100px;
+    right: 20px
+  }
 }
 md-backdrop.md-sidenav-backdrop {
   position: relative;

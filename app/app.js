@@ -24,7 +24,7 @@ angular.module('app', [
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/friends');
 
     $stateProvider
         .state('main', {
@@ -35,20 +35,6 @@ angular.module('app', [
             resolve: {
                 me: function(Me){
                     return Me.get().$promise;
-                }
-            }
-        })
-        .state('home', {
-            parent: 'main',
-            url: '/',
-            views: {
-                sidenav: {
-                    templateUrl: 'src/main/sidenav/view.html',
-                    controller: 'SidenavCtrl'
-                },
-                content: {
-                    templateUrl: 'src/main/content/home/view.html',
-                    controller: 'HomeCtrl'
                 }
             }
         }).state('friends', {
@@ -96,7 +82,6 @@ angular.module('app', [
 
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
-    $translatePartialLoader.addPart('home');
     $translatePartialLoader.addPart('friends');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');

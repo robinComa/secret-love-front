@@ -1,12 +1,14 @@
 <md-content>
     <md-list>
-
         <md-list-item ng-repeat="entry in entries">
             <md-button class="md-primary" ui-sref="{{entry.uiSref}}" aria-label="{{entry.label | translate}}">
                 {{entry.label | translate}}
                 <ng-md-icon icon="{{entry.icon}}" size="30"></ng-md-icon>
             </md-button>
         </md-list-item>
-
     </md-list>
+
+    <div class="socialCarousel" layout="row" layout-align="center end">
+        <ng-md-icon icon="{{selectedIcon.name}}" style="fill: {{selectedIcon.color}}" size="50" options="{{option}}"></ng-md-icon>
+    </div>
 </md-content>
