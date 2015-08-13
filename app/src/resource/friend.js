@@ -18,12 +18,17 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                 });
             };
 
+            var isVisible = function(){
+                return true;
+            };
+
             angular.forEach(settings.socials, function(social, name){
                 var socialService = $injector.get(name);
                 var promise = socialService.getFriends();
                 promise.then(function(friends){
                     deferred.notify(friends.map(function(friend){
                         friend.love = areInLove(loveFriends, friend);
+                        friend.visibility = isVisible();
                         return friend;
                     }));
                 });

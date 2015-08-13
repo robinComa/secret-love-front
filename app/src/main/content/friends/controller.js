@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog, $mdToast,$translate){
 
     $scope.loading = true;
 
@@ -49,6 +49,25 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         }
     };
 
+    $scope.hideFriend = function(friend){
+        friend.visibility = false;
+        var toast = $mdToast.simple()
+            .content($translate.instant('friends.list.hide.toast.content', {
+                name: friend.name
+            }))
+            .action($translate.instant('friends.list.hide.toast.cancel'))
+            .highlightAction(false)
+            .position('bottom right');
+        $mdToast.show(toast).then(function(response) {
+            if ( response === 'ok' ) {
+                friend.visibility = true;
+            }
+        });
+    };
+
+    $scope.filter = {
+        visibility: true
+    };
     $scope.showFilter = function(ev){
         $mdDialog.show({
             controller: 'FriendsFilterCtrl',

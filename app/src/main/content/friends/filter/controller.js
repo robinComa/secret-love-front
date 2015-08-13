@@ -4,6 +4,10 @@ angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope,
 
     $scope.socials = settings.socials;
 
+    $scope.filter = {
+        visibility: true
+    };
+
     $scope.cancel = function() {
         $mdDialog.cancel();
     };
