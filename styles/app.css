@@ -1,5 +1,14 @@
-md-toolbar [icon] {
-  fill: white; }
+md-toolbar button.md-button {
+  position: absolute;
+  left: 5px;
+  top: 15px;
+  min-width: 50px; }
+  md-toolbar button.md-button [icon] {
+    fill: white; }
+
+md-toolbar .login {
+  color: pink;
+  font-size: 14px; }
 
 md-sidenav md-list-item a.md-button {
   width: 100%;
@@ -11,8 +20,33 @@ md-sidenav md-list-item a.md-button {
     float: right;
     fill: pink; }
 
+md-sidenav .socialCarousel {
+  position: fixed;
+  bottom: 100px;
+  right: 20px; }
+
 md-backdrop.md-sidenav-backdrop {
-  position: relative; }
+  display: none; }
 
 md-whiteframe button {
   width: 90%; }
+
+md-input-container ng-md-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  fill: pink; }
+
+.filter-btn {
+  position: fixed;
+  bottom: 100px;
+  left: 0px; }
+  .filter-btn p {
+    color: pink;
+    position: absolute;
+    top: -30px;
+    right: 10px; }
+  .filter-btn ng-md-icon {
+    position: absolute;
+    top: 10px;
+    left: 13px; }

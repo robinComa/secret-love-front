@@ -1,0 +1,8 @@
+{
+  "settings.login.placeholder": "Login",
+  "settings.login.error.required": "Login is required",
+  "settings.email.placeholder": "Email",
+  "settings.email.error.required": "Email is required",
+  "settings.email.error.email": "Your email is not a valid email",
+  "settings.form.submit.label": "Save changes"
+}

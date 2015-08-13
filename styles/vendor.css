@@ -2,7 +2,7 @@
  * Angular Material Design
  * https://github.com/angular/material
  * @license MIT
- * v0.10.1-rc5
+ * v0.10.1
  */
 /* mixin definition ; sets LTR and RTL within the same style call */
 html, body {
@@ -231,14 +231,14 @@ select, button, textarea, input {
   display: flex; }
 
 [layout=column] {
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column; }
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -webkit-flex-direction: column; }
 
 [layout=row] {
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row; }
+  -ms-flex-direction: row;
+      flex-direction: row;
+  -webkit-flex-direction: row; }
 
 [layout-padding] > [flex-sm], [layout-padding] > [flex-lt-md] {
   padding: 4px; }
@@ -3020,6 +3020,139 @@ md-card {
   md-card {
     border: 1px solid #fff; } }
 
+md-checkbox {
+  box-sizing: border-box;
+  display: block;
+  margin: 8px;
+  white-space: nowrap;
+  cursor: pointer;
+  outline: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  padding-left: 18px;
+  padding-right: 0;
+  position: relative;
+  line-height: 26px;
+  min-width: 18px;
+  min-height: 18px; }
+  html[dir=rtl] md-checkbox {
+    padding-left: 0; }
+  html[dir=rtl] md-checkbox {
+    padding-right: 18px; }
+  md-checkbox *, md-checkbox *:before, md-checkbox *:after {
+    box-sizing: border-box; }
+  md-checkbox.md-focused:not([disabled]) .md-container:before {
+    left: -8px;
+    top: -8px;
+    right: -8px;
+    bottom: -8px; }
+  md-checkbox.md-focused:not([disabled]):not(.md-checked) .md-container:before {
+    background-color: rgba(0, 0, 0, 0.12); }
+  md-checkbox .md-container {
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    left: 0;
+    right: auto; }
+    html[dir=rtl] md-checkbox .md-container {
+      left: auto; }
+    html[dir=rtl] md-checkbox .md-container {
+      right: 0; }
+    md-checkbox .md-container:before {
+      background-color: transparent;
+      border-radius: 50%;
+      content: '';
+      position: absolute;
+      display: block;
+      height: auto;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      transition: all 0.5s;
+      width: auto; }
+    md-checkbox .md-container:after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      bottom: -10px;
+      left: -10px; }
+    md-checkbox .md-container .md-ripple-container {
+      position: absolute;
+      display: block;
+      width: auto;
+      height: auto;
+      left: -15px;
+      top: -15px;
+      right: -15px;
+      bottom: -15px; }
+  md-checkbox.md-align-top-left > div.md-container {
+    top: 12px; }
+  md-checkbox .md-icon {
+    transition: 240ms;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 2px; }
+  md-checkbox.md-checked .md-icon {
+    border: none; }
+  md-checkbox[disabled] {
+    cursor: no-drop; }
+  md-checkbox.md-checked .md-icon:after {
+    -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    display: table;
+    width: 6px;
+    height: 12px;
+    border-width: 2px;
+    border-style: solid;
+    border-top: 0;
+    border-left: 0;
+    content: ''; }
+  md-checkbox .md-label {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: normal;
+    -webkit-user-select: text;
+       -moz-user-select: text;
+        -ms-user-select: text;
+            user-select: text;
+    margin-left: 10px;
+    margin-right: 0; }
+    html[dir=rtl] md-checkbox .md-label {
+      margin-left: 0; }
+    html[dir=rtl] md-checkbox .md-label {
+      margin-right: 10px; }
+
+md-content {
+  display: block;
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch; }
+  md-content[md-scroll-y] {
+    overflow-y: auto;
+    overflow-x: hidden; }
+  md-content[md-scroll-x] {
+    overflow-x: auto;
+    overflow-y: hidden; }
+  md-content.autoScroll {
+    -webkit-overflow-scrolling: auto; }
+
 /**
  * Position a FAB button.
  */
@@ -3180,124 +3313,13 @@ md-card {
   .md-button.md-raised, .md-button.md-fab {
     border: 1px solid #fff; } }
 
-md-checkbox {
-  box-sizing: border-box;
+md-divider {
   display: block;
-  margin: 8px;
-  white-space: nowrap;
-  cursor: pointer;
-  outline: none;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  padding-left: 18px;
-  padding-right: 0;
-  position: relative;
-  line-height: 26px;
-  min-width: 18px;
-  min-height: 18px; }
-  html[dir=rtl] md-checkbox {
-    padding-left: 0; }
-  html[dir=rtl] md-checkbox {
-    padding-right: 18px; }
-  md-checkbox *, md-checkbox *:before, md-checkbox *:after {
-    box-sizing: border-box; }
-  md-checkbox.md-focused:not([disabled]) .md-container:before {
-    left: -8px;
-    top: -8px;
-    right: -8px;
-    bottom: -8px; }
-  md-checkbox.md-focused:not([disabled]):not(.md-checked) .md-container:before {
-    background-color: rgba(0, 0, 0, 0.12); }
-  md-checkbox .md-container {
-    position: absolute;
-    top: 50%;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    left: 0;
-    right: auto; }
-    html[dir=rtl] md-checkbox .md-container {
-      left: auto; }
-    html[dir=rtl] md-checkbox .md-container {
-      right: 0; }
-    md-checkbox .md-container:before {
-      background-color: transparent;
-      border-radius: 50%;
-      content: '';
-      position: absolute;
-      display: block;
-      height: auto;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      transition: all 0.5s;
-      width: auto; }
-    md-checkbox .md-container:after {
-      content: '';
-      position: absolute;
-      top: -10px;
-      right: -10px;
-      bottom: -10px;
-      left: -10px; }
-    md-checkbox .md-container .md-ripple-container {
-      position: absolute;
-      display: block;
-      width: auto;
-      height: auto;
-      left: -15px;
-      top: -15px;
-      right: -15px;
-      bottom: -15px; }
-  md-checkbox.md-align-top-left > div.md-container {
-    top: 12px; }
-  md-checkbox .md-icon {
-    transition: 240ms;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 18px;
-    height: 18px;
-    border-width: 2px;
-    border-style: solid;
-    border-radius: 2px; }
-  md-checkbox.md-checked .md-icon {
-    border: none; }
-  md-checkbox[disabled] {
-    cursor: no-drop; }
-  md-checkbox.md-checked .md-icon:after {
-    -webkit-transform: rotate(45deg);
-            transform: rotate(45deg);
-    position: absolute;
-    left: 6px;
-    top: 2px;
-    display: table;
-    width: 6px;
-    height: 12px;
-    border-width: 2px;
-    border-style: solid;
-    border-top: 0;
-    border-left: 0;
-    content: ''; }
-  md-checkbox .md-label {
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    white-space: normal;
-    -webkit-user-select: text;
-       -moz-user-select: text;
-        -ms-user-select: text;
-            user-select: text;
-    margin-left: 10px;
-    margin-right: 0; }
-    html[dir=rtl] md-checkbox .md-label {
-      margin-left: 0; }
-    html[dir=rtl] md-checkbox .md-label {
-      margin-right: 10px; }
+  border-top-width: 1px;
+  border-top-style: solid;
+  margin: 0; }
+  md-divider[md-inset] {
+    margin-left: 80px; }
 
 .md-contact-chips .md-chips .md-chip {
   padding: 0 8px 0 0; }
@@ -3429,20 +3451,6 @@ md-checkbox {
   .md-chip-input-container md-autocomplete {
     border: none; } }
 
-md-content {
-  display: block;
-  position: relative;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch; }
-  md-content[md-scroll-y] {
-    overflow-y: auto;
-    overflow-x: hidden; }
-  md-content[md-scroll-x] {
-    overflow-x: auto;
-    overflow-y: hidden; }
-  md-content.autoScroll {
-    -webkit-overflow-scrolling: auto; }
-
 .md-dialog-is-showing {
   max-height: 100%; }
 
@@ -3550,14 +3558,6 @@ md-dialog {
 @media screen and (-ms-high-contrast: active) {
   md-dialog {
     border: 1px solid #fff; } }
-
-md-divider {
-  display: block;
-  border-top-width: 1px;
-  border-top-style: solid;
-  margin: 0; }
-  md-divider[md-inset] {
-    margin-left: 80px; }
 
 md-fab-speed-dial {
   position: relative;
@@ -3966,7 +3966,6 @@ md-list {
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.01em;
-    line-height: 24px;
     line-height: 0.75em; }
 
 md-list-item.md-proxy-focus.md-focused .md-no-style {
@@ -4088,23 +4087,19 @@ md-list-item.md-2-line, md-list-item.md-2-line > .md-no-style, md-list-item.md-3
       font-size: 16px;
       font-weight: 400;
       letter-spacing: 0.01em;
-      line-height: 24px;
       margin: 0 0 6px 0;
       line-height: 0.75em; }
     md-list-item.md-2-line .md-list-item-text h4, md-list-item.md-2-line > .md-no-style .md-list-item-text h4, md-list-item.md-3-line .md-list-item-text h4, md-list-item.md-3-line > .md-no-style .md-list-item-text h4 {
       font-size: 14px;
-      font-weight: 500;
       letter-spacing: 0.01em;
-      line-height: 24px;
-      font-weight: 400;
       margin: 10px 0 5px 0;
+      font-weight: 400;
       line-height: 0.75em; }
     md-list-item.md-2-line .md-list-item-text p, md-list-item.md-2-line > .md-no-style .md-list-item-text p, md-list-item.md-3-line .md-list-item-text p, md-list-item.md-3-line > .md-no-style .md-list-item-text p {
       font-size: 14px;
       font-weight: 500;
       letter-spacing: 0.01em;
-      line-height: 24px;
-      margin: 0 0 0px 0;
+      margin: 0 0 0 0;
       line-height: 1.6em; }
 
 md-list-item.md-2-line > .md-avatar:first-child, md-list-item.md-2-line > .md-no-style > .md-avatar:first-child {
@@ -5935,6 +5930,97 @@ md-progress-linear[md-mode="indeterminate"] {
   100% {
     left: 117.38889%; } }
 
+md-radio-button, .md-switch-thumb {
+  box-sizing: border-box;
+  display: block;
+  margin: 15px;
+  white-space: nowrap;
+  cursor: pointer; }
+  md-radio-button *, md-radio-button *:before, md-radio-button *:after, .md-switch-thumb *, .md-switch-thumb *:before, .md-switch-thumb *:after {
+    box-sizing: border-box; }
+  md-radio-button input, .md-switch-thumb input {
+    display: none; }
+  md-radio-button .md-container, .md-switch-thumb .md-container {
+    position: relative;
+    top: 4px;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    cursor: pointer; }
+    md-radio-button .md-container .md-ripple-container, .md-switch-thumb .md-container .md-ripple-container {
+      position: absolute;
+      display: block;
+      width: 48px;
+      height: 48px;
+      left: -16px;
+      top: -16px; }
+    md-radio-button .md-container:before, .md-switch-thumb .md-container:before {
+      background-color: transparent;
+      border-radius: 50%;
+      content: '';
+      position: absolute;
+      display: block;
+      height: auto;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      transition: all 0.5s;
+      width: auto; }
+  md-radio-button.md-align-top-left > div.md-container, .md-switch-thumb.md-align-top-left > div.md-container {
+    top: -15px; }
+  md-radio-button .md-off, .md-switch-thumb .md-off {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 50%;
+    transition: border-color ease 0.28s; }
+  md-radio-button .md-on, .md-switch-thumb .md-on {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    transition: -webkit-transform ease 0.28s;
+    transition: transform ease 0.28s;
+    -webkit-transform: scale(0);
+            transform: scale(0); }
+  md-radio-button.md-checked .md-on, .md-switch-thumb.md-checked .md-on {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5); }
+  md-radio-button .md-label, .md-switch-thumb .md-label {
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 0;
+    vertical-align: middle;
+    white-space: normal;
+    pointer-events: none;
+    width: auto; }
+    html[dir=rtl] md-radio-button .md-label, html[dir=rtl] .md-switch-thumb .md-label {
+      margin-left: 0; }
+    html[dir=rtl] md-radio-button .md-label, html[dir=rtl] .md-switch-thumb .md-label {
+      margin-right: 10px; }
+  md-radio-button .circle, .md-switch-thumb .circle {
+    border-radius: 50%; }
+
+md-radio-group:focus {
+  outline: none; }
+md-radio-group.md-focused .md-checked .md-container:before {
+  left: -8px;
+  top: -8px;
+  right: -8px;
+  bottom: -8px; }
+
+@media screen and (-ms-high-contrast: active) {
+  md-radio-button.md-default-theme .md-on {
+    background-color: #fff; } }
+
 .md-select-menu-container {
   position: fixed;
   left: 0;
@@ -6114,96 +6200,98 @@ md-optgroup {
   md-select-menu {
     border: 1px solid #fff; } }
 
-md-radio-button, .md-switch-thumb {
+md-sidenav {
   box-sizing: border-box;
-  display: block;
-  margin: 15px;
-  white-space: nowrap;
-  cursor: pointer; }
-  md-radio-button *, md-radio-button *:before, md-radio-button *:after, .md-switch-thumb *, .md-switch-thumb *:before, .md-switch-thumb *:after {
+  position: absolute;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  z-index: 60;
+  width: 304px;
+  min-width: 304px;
+  max-width: 304px;
+  bottom: 0;
+  background-color: white;
+  overflow: auto; }
+  md-sidenav *, md-sidenav *:before, md-sidenav *:after {
     box-sizing: border-box; }
-  md-radio-button input, .md-switch-thumb input {
+  md-sidenav ul {
+    list-style: none; }
+  md-sidenav.md-closed {
     display: none; }
-  md-radio-button .md-container, .md-switch-thumb .md-container {
-    position: relative;
-    top: 4px;
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    cursor: pointer; }
-    md-radio-button .md-container .md-ripple-container, .md-switch-thumb .md-container .md-ripple-container {
-      position: absolute;
-      display: block;
-      width: 48px;
-      height: 48px;
-      left: -16px;
-      top: -16px; }
-    md-radio-button .md-container:before, .md-switch-thumb .md-container:before {
-      background-color: transparent;
-      border-radius: 50%;
-      content: '';
-      position: absolute;
-      display: block;
-      height: auto;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      transition: all 0.5s;
-      width: auto; }
-  md-radio-button.md-align-top-left > div.md-container, .md-switch-thumb.md-align-top-left > div.md-container {
-    top: -15px; }
-  md-radio-button .md-off, .md-switch-thumb .md-off {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 16px;
-    height: 16px;
-    border-style: solid;
-    border-width: 2px;
-    border-radius: 50%;
-    transition: border-color ease 0.28s; }
-  md-radio-button .md-on, .md-switch-thumb .md-on {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    transition: -webkit-transform ease 0.28s;
-    transition: transform ease 0.28s;
-    -webkit-transform: scale(0);
-            transform: scale(0); }
-  md-radio-button.md-checked .md-on, .md-switch-thumb.md-checked .md-on {
-    -webkit-transform: scale(0.5);
-            transform: scale(0.5); }
-  md-radio-button .md-label, .md-switch-thumb .md-label {
-    position: relative;
-    display: inline-block;
-    margin-left: 10px;
-    margin-right: 0;
-    vertical-align: middle;
-    white-space: normal;
-    pointer-events: none;
-    width: auto; }
-    html[dir=rtl] md-radio-button .md-label, html[dir=rtl] .md-switch-thumb .md-label {
-      margin-left: 0; }
-    html[dir=rtl] md-radio-button .md-label, html[dir=rtl] .md-switch-thumb .md-label {
-      margin-right: 10px; }
-  md-radio-button .circle, .md-switch-thumb .circle {
-    border-radius: 50%; }
+  md-sidenav.md-closed-add, md-sidenav.md-closed-remove {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    /* this is required as of 1.3x to properly
+       apply all styling in a show/hide animation */
+    transition: 0s all; }
+  md-sidenav.md-closed-add.md-closed-add-active, md-sidenav.md-closed-remove.md-closed-remove-active {
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+  md-sidenav.md-locked-open-add, md-sidenav.md-locked-open-remove {
+    position: static;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0); }
+  md-sidenav.md-locked-open {
+    width: 304px;
+    min-width: 304px;
+    max-width: 304px; }
+  md-sidenav.md-locked-open, md-sidenav.md-locked-open.md-closed, md-sidenav.md-locked-open.md-closed.md-sidenav-left, md-sidenav.md-locked-open.md-closed, md-sidenav.md-locked-open.md-closed.md-sidenav-right, md-sidenav.md-locked-open-remove.md-closed {
+    position: static;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0); }
+  md-sidenav.md-locked-open-remove-active {
+    transition: width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2), min-width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    width: 0;
+    min-width: 0; }
+  md-sidenav.md-closed.md-locked-open-add {
+    width: 0;
+    min-width: 0;
+    -webkit-transform: translate3d(0%, 0, 0);
+            transform: translate3d(0%, 0, 0); }
+  md-sidenav.md-closed.md-locked-open-add-active {
+    transition: width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2), min-width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+    width: 304px;
+    min-width: 304px;
+    -webkit-transform: translate3d(0%, 0, 0);
+            transform: translate3d(0%, 0, 0); }
 
-md-radio-group:focus {
-  outline: none; }
-md-radio-group.md-focused .md-checked .md-container:before {
-  left: -8px;
-  top: -8px;
-  right: -8px;
-  bottom: -8px; }
+.md-sidenav-backdrop.md-locked-open {
+  display: none; }
+
+.md-sidenav-left, md-sidenav {
+  left: 0;
+  top: 0;
+  -webkit-transform: translate3d(0%, 0, 0);
+          transform: translate3d(0%, 0, 0); }
+  .md-sidenav-left.md-closed, md-sidenav.md-closed {
+    -webkit-transform: translate3d(-100%, 0, 0);
+            transform: translate3d(-100%, 0, 0); }
+
+.md-sidenav-right {
+  left: 100%;
+  top: 0;
+  -webkit-transform: translate3d(-100%, 0, 0);
+          transform: translate3d(-100%, 0, 0); }
+  .md-sidenav-right.md-closed {
+    -webkit-transform: translate3d(0%, 0, 0);
+            transform: translate3d(0%, 0, 0); }
+
+@media (max-width: 360px) {
+  md-sidenav {
+    width: 85%; } }
 
 @media screen and (-ms-high-contrast: active) {
-  md-radio-button.md-default-theme .md-on {
-    background-color: #fff; } }
+  .md-sidenav-left, md-sidenav {
+    border-right: 1px solid #fff; }
+  .md-sidenav-right {
+    border-left: 1px solid #fff; } }
 
 @-webkit-keyframes sliderFocusThumb {
   0% {
@@ -6421,99 +6509,6 @@ md-slider {
 @media screen and (-ms-high-contrast: active) {
   md-slider.md-default-theme .md-track {
     border-bottom: 1px solid #fff; } }
-
-md-sidenav {
-  box-sizing: border-box;
-  position: absolute;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  z-index: 60;
-  width: 304px;
-  min-width: 304px;
-  max-width: 304px;
-  bottom: 0;
-  background-color: white;
-  overflow: auto; }
-  md-sidenav *, md-sidenav *:before, md-sidenav *:after {
-    box-sizing: border-box; }
-  md-sidenav ul {
-    list-style: none; }
-  md-sidenav.md-closed {
-    display: none; }
-  md-sidenav.md-closed-add, md-sidenav.md-closed-remove {
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    /* this is required as of 1.3x to properly
-       apply all styling in a show/hide animation */
-    transition: 0s all; }
-  md-sidenav.md-closed-add.md-closed-add-active, md-sidenav.md-closed-remove.md-closed-remove-active {
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
-  md-sidenav.md-locked-open-add, md-sidenav.md-locked-open-remove {
-    position: static;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0); }
-  md-sidenav.md-locked-open {
-    width: 304px;
-    min-width: 304px;
-    max-width: 304px; }
-  md-sidenav.md-locked-open, md-sidenav.md-locked-open.md-closed, md-sidenav.md-locked-open.md-closed.md-sidenav-left, md-sidenav.md-locked-open.md-closed, md-sidenav.md-locked-open.md-closed.md-sidenav-right, md-sidenav.md-locked-open-remove.md-closed {
-    position: static;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0); }
-  md-sidenav.md-locked-open-remove-active {
-    transition: width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2), min-width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-    width: 0;
-    min-width: 0; }
-  md-sidenav.md-closed.md-locked-open-add {
-    width: 0;
-    min-width: 0;
-    -webkit-transform: translate3d(0%, 0, 0);
-            transform: translate3d(0%, 0, 0); }
-  md-sidenav.md-closed.md-locked-open-add-active {
-    transition: width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2), min-width 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
-    width: 304px;
-    min-width: 304px;
-    -webkit-transform: translate3d(0%, 0, 0);
-            transform: translate3d(0%, 0, 0); }
-
-.md-sidenav-backdrop.md-locked-open {
-  display: none; }
-
-.md-sidenav-left, md-sidenav {
-  left: 0;
-  top: 0;
-  -webkit-transform: translate3d(0%, 0, 0);
-          transform: translate3d(0%, 0, 0); }
-  .md-sidenav-left.md-closed, md-sidenav.md-closed {
-    -webkit-transform: translate3d(-100%, 0, 0);
-            transform: translate3d(-100%, 0, 0); }
-
-.md-sidenav-right {
-  left: 100%;
-  top: 0;
-  -webkit-transform: translate3d(-100%, 0, 0);
-          transform: translate3d(-100%, 0, 0); }
-  .md-sidenav-right.md-closed {
-    -webkit-transform: translate3d(0%, 0, 0);
-            transform: translate3d(0%, 0, 0); }
-
-@media (max-width: 360px) {
-  md-sidenav {
-    width: 85%; } }
-
-@media screen and (-ms-high-contrast: active) {
-  .md-sidenav-left, md-sidenav {
-    border-right: 1px solid #fff; }
-  .md-sidenav-right {
-    border-left: 1px solid #fff; } }
 
 .md-sticky-clone {
   z-index: 2;
@@ -7114,7 +7109,6 @@ md-toolbar {
 
 .md-toolbar-tools {
   font-size: 20px;
-  font-weight: 500;
   letter-spacing: 0.005em;
   font-weight: 400;
   display: -webkit-flex;

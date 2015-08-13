@@ -7,7 +7,8 @@ angular.module('app', [
     'ngAria',
     'ngAnimate',
     'ngMaterial',
-    'ngMdIcons'
+    'ngMdIcons',
+    'ngMessages'
 ]).config(function($translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
 
     $translateProvider.useLoader('$translatePartialLoader', {
@@ -23,25 +24,17 @@ angular.module('app', [
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/friends');
 
     $stateProvider
         .state('main', {
             abstract: true,
             url: '',
-            templateUrl: 'src/main/main.html'
-        })
-        .state('home', {
-            parent: 'main',
-            url: '/',
-            views: {
-                sidenav: {
-                    templateUrl: 'src/main/sidenav/view.html',
-                    controller: 'SidenavCtrl'
-                },
-                content: {
-                    templateUrl: 'src/main/content/home/view.html',
-                    controller: 'HomeCtrl'
+            templateUrl: 'src/main/main.html',
+            controller: 'MainCtrl',
+            resolve: {
+                me: function(Me){
+                    return Me.get().$promise;
                 }
             }
         }).state('friends', {
@@ -70,23 +63,32 @@ angular.module('app', [
                     controller: 'ConnectCtrl'
                 }
             }
+        }).state('settings', {
+            parent: 'main',
+            url: '/settings',
+            views: {
+                sidenav: {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                content: {
+                    templateUrl: 'src/main/content/settings/view.html',
+                    controller: 'SettingsCtrl'
+                }
+            }
         });
 
 }).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){
 
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
-    $translatePartialLoader.addPart('home');
     $translatePartialLoader.addPart('friends');
     $translatePartialLoader.addPart('connect');
+    $translatePartialLoader.addPart('settings');
 
     $timeout(function(){
         $translate.refresh();
     },1);
-
-    $rootScope.toggleSidenav = function(menuId) {
-        $mdSidenav(menuId).toggle();
-    };
 
 });
 'use strict';
@@ -100,8 +102,11 @@ angular.module('appStub', [
 
 }).run(function($httpBackend, GetJsonFile){
 
-    $httpBackend.whenPOST(/friends$/).respond(200);
+    $httpBackend.whenGET(/me$/).respond(GetJsonFile.synchronously('stub/me/GET-x.json'));
+    $httpBackend.whenPOST(/me$/).respond(200);
+
     $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
+    $httpBackend.whenPOST(/friends$/).respond(200);
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -222,134 +227,9 @@ angular.module('appStub').service('GetJsonFile', function(){
 })();
 'use strict';
 
-angular.module('app').controller('SidenavCtrl', function($scope){
+angular.module('app').factory('Me', function(settings, $resource){
 
-    $scope.entries = [{
-        uiSref: 'home',
-        label: 'sidenav.entry.label.home',
-        icon: 'home'
-    },{
-        uiSref: 'friends',
-        label: 'sidenav.entry.label.friends',
-        icon: 'group'
-    },{
-        uiSref: 'connect',
-        label: 'sidenav.entry.label.connect',
-        icon: 'apps'
-    }];
-
-});
-'use strict';
-
-angular.module('app').controller('HomeCtrl', function($scope, $interval, settings){
-
-    var duration = 2000;
-    var i = 0;
-    var keys = Object.keys(settings.socials);
-
-    $scope.selectedIcon = settings.socials[keys[i]].icon;
-
-    $interval(function(){
-        $scope.selectedIcon = settings.socials[keys[i % keys.length]].icon;
-        i++;
-    }, duration);
-
-    $scope.option = {
-        rotation: 'none',
-        duration: duration,
-        easing : 'sine-out'
-    };
-});
-'use strict';
-
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend){
-
-    $scope.friends = [];
-    Friend.query().then(function(friends){
-        console.info(friends.length + ' friends loaded');
-        $scope.friends = friends;
-    }, function(error){
-        console.error('Friend loading error : ' + error);
-    }, function(friends){
-        $scope.friends = $scope.friends.concat(friends);
-    });
-
-    var icons = {
-        LOVE : 'favorite',
-        NOT_LOVE : 'favorite_outline',
-        SYNC_PROBLEM: 'sync_problem'
-    };
-
-    $scope.toogleLove = function(friend){
-
-        var initialLove = friend.love;
-
-        friend.love = !initialLove;
-        friend.$save().then(function(){
-
-        }, function(){
-            friend.love = undefined;
-            $timeout(function(){
-                friend.love = initialLove;
-            }, 3000);
-        });
-    };
-
-    $scope.getSocialIcon = function(social){
-        return settings.socials[social].icon;
-    };
-
-    $scope.getLoveIcon = function(friend){
-        if(friend.love === true){
-            return icons.LOVE;
-        }else if(friend.love === false){
-            return icons.NOT_LOVE;
-        }else if(friend.love === undefined){
-            return icons.SYNC_PROBLEM;
-        }
-    };
-
-});
-'use strict';
-
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector){
-
-    $scope.connections = settings.socials;
-
-    var disconnectAction = function(socialService){
-        var confirm = $mdDialog.confirm()
-            .parent(angular.element(document.body))
-            .title($translate.instant('connect.disconnect.confirmation.title'))
-            .content($translate.instant('connect.disconnect.confirmation.content', {
-                name: $translate.instant('connect.label.' + name)
-            }))
-            .ariaLabel($translate.instant('connect.disconnect.confirmation.title'))
-            .ok($translate.instant('connect.disconnect.confirmation.ok'))
-            .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
-            .targetEvent(event);
-        $mdDialog.show(confirm).then(function() {
-            socialService.close();
-        });
-    };
-
-    $scope.connectToogle = function(event, name){
-        var socialService = $injector.get(name);
-        if(socialService.isConnected()){
-            disconnectAction(socialService);
-        }else{
-            socialService.getToken().then(function(){
-
-            });
-        }
-    };
-
-    $scope.isConnected = function(name){
-      return $injector.get(name).isConnected();
-    };
-
-    $scope.isNotImplemented = function(name){
-        return !$injector.get(name).isImplemented();
-    };
+    return $resource(settings.endpoint + 'me');
 
 });
 'use strict';
@@ -811,3 +691,179 @@ angular.module('app').factory('twitter', function(Connection) {
     };
 
  */
+'use strict';
+
+angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me){
+
+    $scope.login = me.login;
+
+    $scope.toggleSidenav = function(menuId) {
+        $mdSidenav(menuId).toggle();
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval){
+
+    $scope.entries = [{
+        uiSref: 'friends',
+        label: 'sidenav.entry.label.friends',
+        icon: 'group'
+    },{
+        uiSref: 'connect',
+        label: 'sidenav.entry.label.connect',
+        icon: 'apps'
+    },{
+        uiSref: 'settings',
+        label: 'sidenav.entry.label.settings',
+        icon: 'settings_applications'
+    }];
+
+    var duration = 2000;
+    var i = 0;
+    var keys = Object.keys(settings.socials);
+
+    $scope.selectedIcon = settings.socials[keys[i]].icon;
+
+    $interval(function(){
+        $scope.selectedIcon = settings.socials[keys[i % keys.length]].icon;
+        i++;
+    }, duration);
+
+    $scope.option = {
+        rotation: 'none',
+        duration: duration,
+        easing : 'sine-out'
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog){
+
+    $scope.friends = [];
+    Friend.query().then(function(friends){
+        console.info(friends.length + ' friends loaded');
+        $scope.friends = friends;
+    }, function(error){
+        console.error('Friend loading error : ' + error);
+    }, function(friends){
+        $scope.friends = $scope.friends.concat(friends);
+    });
+
+    var icons = {
+        LOVE : 'favorite',
+        NOT_LOVE : 'favorite_outline',
+        SYNC_PROBLEM: 'sync_problem'
+    };
+
+    $scope.toogleLove = function(friend){
+
+        var initialLove = friend.love;
+
+        friend.love = !initialLove;
+        friend.$save().then(function(){
+
+        }, function(){
+            friend.love = undefined;
+            $timeout(function(){
+                friend.love = initialLove;
+            }, 3000);
+        });
+    };
+
+    $scope.getSocialIcon = function(social){
+        return settings.socials[social].icon;
+    };
+
+    $scope.getLoveIcon = function(friend){
+        if(friend.love === true){
+            return icons.LOVE;
+        }else if(friend.love === false){
+            return icons.NOT_LOVE;
+        }else if(friend.love === undefined){
+            return icons.SYNC_PROBLEM;
+        }
+    };
+
+    $scope.showFilter = function(ev){
+        $mdDialog.show({
+            controller: 'FriendsFilterCtrl',
+            templateUrl: 'src/main/content/friends/filter/view.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose:true
+        }).then(function(filter) {
+            $scope.filter = filter;
+        });
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope, $mdDialog){
+
+    $scope.socials = settings.socials;
+
+    $scope.cancel = function() {
+        $mdDialog.cancel();
+    };
+    $scope.submit = function(answer) {
+        $mdDialog.hide(answer);
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector){
+
+    $scope.connections = settings.socials;
+
+    var disconnectAction = function(socialService){
+        var confirm = $mdDialog.confirm()
+            .parent(angular.element(document.body))
+            .title($translate.instant('connect.disconnect.confirmation.title'))
+            .content($translate.instant('connect.disconnect.confirmation.content', {
+                name: $translate.instant('connect.label.' + name)
+            }))
+            .ariaLabel($translate.instant('connect.disconnect.confirmation.title'))
+            .ok($translate.instant('connect.disconnect.confirmation.ok'))
+            .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
+            .targetEvent(event);
+        $mdDialog.show(confirm).then(function() {
+            socialService.close();
+        });
+    };
+
+    $scope.connectToogle = function(event, name){
+        var socialService = $injector.get(name);
+        if(socialService.isConnected()){
+            disconnectAction(socialService);
+        }else{
+            socialService.getToken().then(function(){
+
+            });
+        }
+    };
+
+    $scope.isConnected = function(name){
+      return $injector.get(name).isConnected();
+    };
+
+    $scope.isNotImplemented = function(name){
+        return !$injector.get(name).isImplemented();
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('SettingsCtrl', function($scope, me){
+
+    $scope.me = me;
+
+    $scope.submit = function(){
+        $scope.me.$save();
+    };
+
+});
