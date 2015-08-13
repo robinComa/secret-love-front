@@ -10,7 +10,7 @@
                 </p>
             </md-subheader>
 
-            <md-list-item ng-repeat="friend in friends | orderBy:'name'  track by $index" ng-click="toogleLove(friend)">
+            <md-list-item ng-repeat="friend in friends | orderBy:'name' track by $index" ng-click="toogleLove(friend)">
                 <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
                 <p>
                     <ng-md-icon flex="10" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>

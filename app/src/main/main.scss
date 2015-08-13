@@ -34,7 +34,8 @@ md-sidenav {
   }
 }
 md-backdrop.md-sidenav-backdrop {
-  position: relative;
+  // Fix menu bug
+  display: none;
 }
 md-whiteframe{
   button{
