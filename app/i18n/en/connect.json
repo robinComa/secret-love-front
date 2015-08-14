@@ -6,7 +6,7 @@
   "connect.label.instagram": "Instagram",
   "connect.is.connected": "Is connected",
   "connect.is.not.connected": "Find friends",
-  "connect.is.not.implemented": "Not implemented",
+  "connect.is.not.implemented": "Coming soon",
   "connect.disconnect.confirmation.title": "Confirmation",
   "connect.disconnect.confirmation.content": "Do you want disconnect {{name}} from this application?",
   "connect.disconnect.confirmation.ok": "Disconnect friends",
