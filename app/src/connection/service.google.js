@@ -40,7 +40,7 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                 }else{
                     deferred.resolve(response.data.items.map(function(friend){
                         return new Friend({
-                            id: null,
+                            id: friend.id,
                             name: friend.displayName,
                             picture: friend.image.url,
                             type: 'googlePlus'

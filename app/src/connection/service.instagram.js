@@ -41,7 +41,7 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                             name += ' (' + friend.full_name + ')';
                         }
                         return new Friend({
-                            id: null,
+                            id: friend.id,
                             name: name,
                             picture: friend.profile_picture,
                             type: 'instagram'

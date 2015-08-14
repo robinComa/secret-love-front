@@ -36,7 +36,7 @@
 
             <md-divider ></md-divider>
 
-            <md-radio-group ng-model="filter.social" layout="row" layout-align="center center" layout-wrap>
+            <md-radio-group ng-model="filter.type" layout="row" layout-align="center center" layout-wrap>
                 <md-radio-button ng-repeat="(key, social) in socials" ng-value="key" aria-label="{{social.label | translate}}" flex="20">
                     <ng-md-icon icon="{{social.icon.name}}" ng-style="{fill: social.icon.color}" size="30"></ng-md-icon>
                 </md-radio-button>

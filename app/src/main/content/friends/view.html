@@ -17,11 +17,10 @@
         </md-card-content>
 
         <md-card-content ng-show="friends.length > 0 && filteringFriends.length > 0">
-
             <md-list class="friend-list">
 
                 <md-list-item
-                        ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.social} | orderBy:'name' as filteringFriends track by $index"
+                        ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.type} | orderBy:'name' as filteringFriends track by friend.id"
                         ng-click="toogleLove(friend)"
                         md-swipe-right="toogleFriendVisibility(friend)">
                     <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
@@ -33,7 +32,6 @@
                 <md-list-item></md-list-item>
 
             </md-list>
-
         </md-card-content>
 
         <md-button class="md-fab filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">

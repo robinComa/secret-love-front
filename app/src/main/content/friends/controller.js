@@ -5,9 +5,8 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     $scope.loading = true;
 
     $scope.friends = [];
-    Friend.query().then(function(friends){
+    Friend.query().then(function(){
         $scope.loading = false;
-        $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
@@ -84,7 +83,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
 
     };
 
-    $scope.filter = {
+    var filter = {
         visibility: true
     };
     $scope.showFilter = function(ev){
@@ -95,7 +94,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
             targetEvent: ev,
             clickOutsideToClose:true
         }).then(function(filter) {
-            $scope.filter = filter;
+            filter = filter;
         });
     };
 
