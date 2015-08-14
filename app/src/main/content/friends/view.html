@@ -17,28 +17,28 @@
         </md-card-content>
 
         <md-card-content ng-show="friends.length > 0 && filteringFriends.length > 0">
+
             <md-list class="friend-list">
 
                 <md-list-item
-                        ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.type} | orderBy:'name' as filteringFriends track by friend.id"
-                        ng-click="toogleLove(friend)"
-                        md-swipe-right="toogleFriendVisibility(friend)">
+                        layout="row"
+                        ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.type} | orderBy:'name' as filteringFriends track by friend.id">
                     <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
                     <ng-md-icon class="user-social" flex="10" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>
-                    <p>{{ friend.name }}</p>
-                    <ng-md-icon flex="10" icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
+                    <p flex>{{ friend.name }}</p>
+                    <ng-md-icon flex="15" icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40" ng-click="toogleLove(friend)"></ng-md-icon>
+                    <ng-md-icon flex="15" icon="visibility_off" style="fill: pink" size="40" ng-click="toggleFriendVisibility(friend)"></ng-md-icon>
                 </md-list-item>
 
-                <md-list-item></md-list-item>
+                <md-list-item hide-gt-md></md-list-item>
 
             </md-list>
         </md-card-content>
 
-        <md-button class="md-fab filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">
+        <md-button class="md-fab md-primary filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">
             <p><strong>{{filteringFriends.length}}</strong></p>
             <ng-md-icon icon="filter_list" ng-style="{fill: 'white'}" size="30"></ng-md-icon>
         </md-button>
 
     </md-card>
 </div>
-

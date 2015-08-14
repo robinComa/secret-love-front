@@ -15,19 +15,28 @@
   }
 }
 
+.display-btn{
+  position: fixed;
+  top: 70px;
+  right: 20px;
+  ng-md-icon{
+    position: absolute;
+    top: 10px;
+    left: 13px;
+  }
+}
+
 .friend-list{
   md-list-item{
-    > button{
-      padding-left: 0px;
-      p{
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      ng-md-icon.user-social{
-        position: absolute;
-        left: 32px;
-      }
+    padding-left: 0px;
+    p{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    ng-md-icon.user-social{
+      position: absolute;
+      left: 32px;
     }
   }
 }

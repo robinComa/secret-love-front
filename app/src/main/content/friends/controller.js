@@ -3,6 +3,7 @@
 angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog, $mdToast,$translate){
 
     $scope.loading = true;
+    $scope.displayModeAsList = true;
 
     $scope.friends = [];
     Friend.query().then(function(){
@@ -12,12 +13,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     }, function(friends){
         $scope.friends = $scope.friends.concat(friends);
     });
-
-    var icons = {
-        LOVE : 'favorite',
-        NOT_LOVE : 'favorite_outline',
-        SYNC_PROBLEM: 'sync_problem'
-    };
 
     $scope.toogleLove = function(friend){
 
@@ -51,26 +46,20 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
 
     $scope.getLoveIcon = function(friend){
         if(friend.love === true){
-            return icons.LOVE;
+            return 'favorite';
         }else if(friend.love === false){
-            return icons.NOT_LOVE;
+            return 'favorite_outline';
         }else if(friend.love === undefined){
-            return icons.SYNC_PROBLEM;
+            return 'sync_problem';
         }
     };
 
-    $scope.toogleFriendVisibility = function(friend){
+    $scope.toggleFriendVisibility = function(friend){
         friend.visibility = !friend.visibility;
-        var content = $translate.instant('friends.list.hide.toast.content', {
-            name: friend.name
-        });
-        if(friend.visibility){
-            content = $translate.instant('friends.list.show.toast.content', {
-                name: friend.name
-            });
-        }
         var toast = $mdToast.simple()
-            .content(content)
+            .content($translate.instant(friend.visibility ? 'friends.list.show.toast.content' : 'friends.list.hide.toast.content', {
+                name: friend.name
+            }))
             .action($translate.instant('friends.list.hide.toast.cancel'))
             .highlightAction(false)
             .position(settings.toast.position)

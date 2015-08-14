@@ -36,9 +36,10 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
             });
 
             $q.all(promises).then(function(friends){
-                deferred.resolve(friends.reduce(function(previous, current){
+                var friendsList = friends.reduce(function(previous, current){
                     return previous.concat(current);
-                }));
+                });
+                deferred.resolve(friendsList);
             });
         });
 
