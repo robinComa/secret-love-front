@@ -1,0 +1,25 @@
+<md-button class="md-icon-button" aria-label="{{'dialog.show.back.btn' | translate}}" ui-sref="dialog">
+    <ng-md-icon flex="10" icon="arrow_back" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+</md-button>
+
+<div layout="row">
+    <md-card flex offset-gt-md="25" flex-gt-md="50">
+
+        <md-content>
+
+            <md-list>
+                <md-subheader class="md-no-sticky">{{ dialog.friend.name }}</md-subheader>
+                <md-list-item class="md-3-line" ng-repeat="message in dialog.messages | orderBy:'when'" layout="row">
+                    <img ng-src="{{dialog.friend.picture}}" class="md-avatar" alt="{{dialog.friend.name}}"/>
+                    <ng-md-icon class="user-social" flex="10" icon="{{getSocialIcon(dialog.friend.type).name}}" ng-style="{fill: getSocialIcon(dialog.friend.type).color}" size="20"></ng-md-icon>
+                    <div layout="column" flex>
+                        <p><i>{{message.when | date}}</i></p>
+                        <p>{{message.what}}</p>
+                    </div>
+                </md-list-item>
+
+            </md-list>
+
+        </md-content>
+    </md-card>
+</div>

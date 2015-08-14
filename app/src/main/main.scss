@@ -17,11 +17,24 @@ md-toolbar{
     font-size: 14px;
   }
 }
+.md-button.md-fab{
+  ng-md-icon{
+    position: absolute;
+    top: 10px;
+    left: 13px;
+  }
+}
 
 @import "sidenav/style";
 
 .state-friends{
   @import "content/friends/style";
+}
+.state-dialog{
+  @import "content/dialog/style";
+}
+.state-dialog-show{
+  @import "content/dialog/show/style";
 }
 .state-connect{
   @import "content/connect/style";

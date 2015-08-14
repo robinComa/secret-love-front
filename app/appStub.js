@@ -15,6 +15,9 @@ angular.module('appStub', [
     $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
     $httpBackend.whenPOST(/friends$/).respond(200);
 
+    $httpBackend.whenGET(/dialogs$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
+    $httpBackend.whenPOST(/dialogs$/).respond(200);
+
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
     $httpBackend.whenDELETE(/.*/).passThrough();

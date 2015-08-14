@@ -35,6 +35,9 @@ angular.module('app', [
             resolve: {
                 me: function(Me){
                     return Me.get().$promise;
+                },
+                dialogs: function(Dialog){
+                    return Dialog.query().$promise;
                 }
             }
         }).state('friends', {
@@ -48,6 +51,39 @@ angular.module('app', [
                 content: {
                     templateUrl: 'src/main/content/friends/view.html',
                     controller: 'FriendsCtrl'
+                }
+            }
+        }).state('dialog', {
+            parent: 'main',
+            url: '/dialog',
+            views: {
+                sidenav: {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                content: {
+                    templateUrl: 'src/main/content/dialog/view.html',
+                    controller: 'DialogCtrl'
+                }
+            }
+        }).state('dialog-show', {
+            parent: 'dialog',
+            url: '/:id',
+            resolve: {
+                dialog: function(dialogs, $stateParams){
+                    return dialogs.filter(function(dialog){
+                        return dialog.id === parseInt($stateParams.id);
+                    })[0];
+                }
+            },
+            views: {
+                'sidenav@main': {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                'content@main': {
+                    templateUrl: 'src/main/content/dialog/show/view.html',
+                    controller: 'DialogShowCtrl'
                 }
             }
         }).state('connect', {
@@ -83,6 +119,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');
+    $translatePartialLoader.addPart('dialog');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
 
