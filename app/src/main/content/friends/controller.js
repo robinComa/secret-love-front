@@ -12,7 +12,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
-
+        console.log(friends.length + ' new friends loaded');
     });
 
     $scope.toogleLove = function(friend){
