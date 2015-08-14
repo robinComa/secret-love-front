@@ -83,7 +83,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
 
     };
 
-    var filter = {
+    $scope.filter = {
         visibility: true
     };
     $scope.showFilter = function(ev){
@@ -94,7 +94,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
             targetEvent: ev,
             clickOutsideToClose:true
         }).then(function(filter) {
-            filter = filter;
+            $scope.filter = filter;
         });
     };
 
