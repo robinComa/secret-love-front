@@ -40,6 +40,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         });
     };
 
+    $scope.openMenu = function($mdOpenMenu, ev) {
+        $mdOpenMenu(ev);
+    };
+
     $scope.getSocialIcon = function(social){
         return settings.socials[social].icon;
     };
