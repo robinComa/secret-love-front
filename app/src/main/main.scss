@@ -26,6 +26,7 @@ md-toolbar{
 }
 
 @import "sidenav/style";
+@import "../components/friend-preview/style";
 
 .state-friends{
   @import "content/friends/style";

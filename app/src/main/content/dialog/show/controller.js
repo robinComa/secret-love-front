@@ -4,8 +4,4 @@ angular.module('app').controller('DialogShowCtrl', function(settings,$scope, dia
 
     $scope.dialog = dialog;
 
-    $scope.getSocialIcon = function(social){
-        return settings.socials[social].icon;
-    };
-
 });

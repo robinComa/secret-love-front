@@ -23,9 +23,9 @@
                 <md-list-item
                         layout="row"
                         ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.type} | orderBy:'name' as filteringFriends track by friend.id">
-                    <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
-                    <ng-md-icon class="user-social" flex="10" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>
-                    <p flex>{{ friend.name }}</p>
+                    <friend-preview friend="friend" flex>
+                        <p>{{ friend.name }}</p>
+                    </friend-preview>
 
                     <md-menu md-position-mode="target-right target" md-offset="0 -7">
                         <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">

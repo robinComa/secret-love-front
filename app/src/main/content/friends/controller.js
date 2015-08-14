@@ -44,10 +44,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         $mdOpenMenu(ev);
     };
 
-    $scope.getSocialIcon = function(social){
-        return settings.socials[social].icon;
-    };
-
     $scope.getLoveIcon = function(friend){
         if(friend.love === true){
             return 'favorite';
