@@ -4,6 +4,7 @@
   "friends.filter.name.label": "Search by name",
   "friends.filter.button": "Filter action button",
   "friends.filter.love.label": "Love",
+  "friends.list.love.toast.content": "When {{name}} will click on you, you will match! Nobody knows that you're in love",
   "friends.filter.not.love.label": "Not love",
   "friends.filter.hide.label": "Hidden friends",
   "friends.filter.not.hide.label": "Not hidden friends",

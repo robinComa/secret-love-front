@@ -27,6 +27,17 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         friend.love = !initialLove;
         friend.$save().then(function(){
 
+            if(friend.love){
+                $mdToast.show(
+                    $mdToast.simple()
+                        .content($translate.instant('friends.list.love.toast.content', {
+                            name: friend.name
+                        }))
+                        .position(settings.toast.position)
+                        .hideDelay(settings.toast.hideDelay)
+                );
+            }
+
         }, function(){
             friend.love = undefined;
             $timeout(function(){
@@ -57,7 +68,8 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
             }))
             .action($translate.instant('friends.list.hide.toast.cancel'))
             .highlightAction(false)
-            .position(settings.toast.position);
+            .position(settings.toast.position)
+            .hideDelay(settings.toast.hideDelay);
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
                 friend.visibility = true;
