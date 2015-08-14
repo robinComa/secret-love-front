@@ -2,5 +2,8 @@
   "dialog.unread.title": "Unread",
   "dialog.read.title": "Read",
   "dialog.read.message.btn": "Read message",
-  "dialog.show.back.btn": "Back"
+  "dialog.show.back.btn": "Back",
+
+  "dialog.show.send.message.label": "Write a message...",
+  "dialog.show.send.message.submit.label": "Send message"
 }

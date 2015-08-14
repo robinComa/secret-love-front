@@ -3,9 +3,9 @@
 
         <md-content>
 
-            <md-list>
+            <md-list ng-if="unreadDialogs.length > 0">
                 <md-subheader class="md-no-sticky">{{'dialog.unread.title' | translate}} : {{unreadDialogs.length}}</md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="dialog in unreadDialogs">
+                <md-list-item class="md-3-line dialog-unread" ng-repeat="dialog in unreadDialogs">
                     <friend-preview friend="dialog.friend" flex>
                         <h3>{{ dialog.friend.name }}</h3>
                         <p>{{ dialog.messages[dialog.messages.length - 1].when | date}}</p>
@@ -18,9 +18,9 @@
 
             <md-divider></md-divider>
 
-            <md-list>
+            <md-list ng-if="readDialogs.length > 0">
                 <md-subheader class="md-no-sticky">{{'dialog.read.title' | translate}} : {{readDialogs.length}}</md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="dialog in readDialogs">
+                <md-list-item class="md-3-line dialog-read" ng-repeat="dialog in readDialogs">
                     <friend-preview friend="dialog.friend" flex>
                         <h3>{{ dialog.friend.name }}</h3>
                         <p>{{ dialog.messages[dialog.messages.length - 1].when | date}}</p>

@@ -19,6 +19,19 @@
 
             </md-list>
 
+            <md-divider></md-divider>
+
+            <form name="sendMessageForm" ng-submit="sendMessage()" novalidate>
+                <md-input-container flex>
+                    <label>{{'dialog.show.send.message.label' | translate}}</label>
+                    <textarea ng-model="newMessage.what" columns="1" md-maxlength="150" required></textarea>
+                </md-input-container>
+
+                <md-button class="md-fab md-primary submit-btn" aria-label="{{'dialog.show.send.message.submit.label' | translate}}" ng-disabled="!sendMessageForm.$valid">
+                    <ng-md-icon icon="message" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+                </md-button>
+            </form>
+
         </md-content>
     </md-card>
 </div>
