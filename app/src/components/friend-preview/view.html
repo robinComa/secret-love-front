@@ -1,7 +1,7 @@
 <div layout="row">
     <ng-md-icon class="friend-preview-social-icon" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>
     <img ng-src="{{friend.picture}}" class="avatar" alt="{{friend.name}}"/>
-    <div flex layout="row">
+    <div flex layout="row" layout-align="center center">
         <ng-transclude flex></ng-transclude>
         <ng-md-icon ng-if="friend.love" icon="favorite" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
     </div>
