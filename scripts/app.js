@@ -389,7 +389,7 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                 }else{
                     deferred.resolve(response.data.items.map(function(friend){
                         return new Friend({
-                            id: null,
+                            id: friend.id,
                             name: friend.displayName,
                             picture: friend.image.url,
                             type: 'googlePlus'
@@ -447,7 +447,7 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                             name += ' (' + friend.full_name + ')';
                         }
                         return new Friend({
-                            id: null,
+                            id: friend.id,
                             name: name,
                             picture: friend.profile_picture,
                             type: 'instagram'
@@ -755,9 +755,8 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     $scope.loading = true;
 
     $scope.friends = [];
-    Friend.query().then(function(friends){
+    Friend.query().then(function(){
         $scope.loading = false;
-        $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
@@ -797,16 +796,20 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     };
 
     $scope.getSocialIcon = function(social){
-        return settings.socials[social].icon;
+        if(social){
+            return settings.socials[social].icon;
+        }
     };
 
     $scope.getLoveIcon = function(friend){
-        if(friend.love === true){
-            return icons.LOVE;
-        }else if(friend.love === false){
-            return icons.NOT_LOVE;
-        }else if(friend.love === undefined){
-            return icons.SYNC_PROBLEM;
+        if(friend){
+            if(friend.love === true){
+                return icons.LOVE;
+            }else if(friend.love === false){
+                return icons.NOT_LOVE;
+            }else if(friend.love === undefined){
+                return icons.SYNC_PROBLEM;
+            }
         }
     };
 
