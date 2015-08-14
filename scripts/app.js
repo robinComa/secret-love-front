@@ -146,7 +146,12 @@ angular.module('appStub', [
     $httpBackend.whenPOST(/friends$/).respond(200);
 
     $httpBackend.whenGET(/dialogs$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
+
     $httpBackend.whenPOST(/dialogs$/).respond(200);
+    $httpBackend.whenPOST(/messages$/).respond(200);
+
+    $httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
+    $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -335,6 +340,13 @@ angular.module('app').factory('Dialog', function(settings, $resource){
 });
 'use strict';
 
+angular.module('app').factory('Message', function(settings, $resource){
+
+    return $resource(settings.endpoint + 'messages');
+
+});
+'use strict';
+
 angular.module('app').directive('friendPreview', function(settings){
     return {
         restrict: 'E',
@@ -452,14 +464,17 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                         }, deferred.reject);
                     });
                 }else{
-                    deferred.resolve(response.data.items.map(function(friend){
-                        return new Friend({
-                            id: friend.id,
-                            name: friend.displayName,
-                            picture: friend.image.url,
-                            type: 'googlePlus'
-                        });
-                    }));
+                    deferred.resolve(response.data.items.reduce(function(friends, friend){
+                        if(friend.objectType === 'person'){
+                            friends.push(new Friend({
+                                id: friend.id,
+                                name: friend.displayName,
+                                picture: friend.image.url,
+                                type: 'googlePlus'
+                            }));
+                        }
+                        return friends;
+                    }, []));
                 }
             }, deferred.reject);
             return deferred.promise;
@@ -788,7 +803,7 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
     },{
         uiSref: 'dialog',
         label: 'sidenav.entry.label.dialog',
-        icon: 'message'
+        icon: 'forum'
     },{
         uiSref: 'connect',
         label: 'sidenav.entry.label.connect',
@@ -819,18 +834,19 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog, $mdToast,$translate){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend, $mdBottomSheet, $mdToast,$translate){
 
     $scope.loading = true;
     $scope.displayModeAsList = true;
 
     $scope.friends = [];
-    Friend.query().then(function(){
+    Friend.query().then(function(friends){
         $scope.loading = false;
+        $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
-        $scope.friends = $scope.friends.concat(friends);
+        console.log(friends.length + ' new friends loaded');
     });
 
     $scope.toogleLove = function(friend){
@@ -895,12 +911,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         visibility: true
     };
     $scope.showFilter = function(ev){
-        $mdDialog.show({
-            controller: 'FriendsFilterCtrl',
+        $mdBottomSheet.show({
             templateUrl: 'src/main/content/friends/filter/view.html',
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose:true
+            controller: 'FriendsFilterCtrl',
+            targetEvent: ev
         }).then(function(filter) {
             $scope.filter = filter;
         });
@@ -909,7 +923,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
 });
 'use strict';
 
-angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope, $mdDialog){
+angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope, $mdBottomSheet){
 
     $scope.socials = settings.socials;
 
@@ -918,10 +932,10 @@ angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope,
     };
 
     $scope.cancel = function() {
-        $mdDialog.cancel();
+        $mdBottomSheet.cancel();
     };
     $scope.submit = function(answer) {
-        $mdDialog.hide(answer);
+        $mdBottomSheet.hide(answer);
     };
 
 });
@@ -1000,8 +1014,20 @@ angular.module('app').controller('DialogCtrl', function(settings, $scope, dialog
 });
 'use strict';
 
-angular.module('app').controller('DialogShowCtrl', function(settings,$scope, dialog){
+angular.module('app').controller('DialogShowCtrl', function(settings,$scope, dialog, Message){
+
+    dialog.read = true;
 
     $scope.dialog = dialog;
+
+    $scope.newMessage = new Message();
+
+    $scope.sendMessage = function(){
+        $scope.newMessage.$save().then(function(){
+            $scope.newMessage.when = (new Date()).getTime();
+            $scope.dialog.messages.push($scope.newMessage);
+            $scope.newMessage = new Message();
+        });
+    };
 
 });

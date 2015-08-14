@@ -37,10 +37,9 @@ md-backdrop.md-sidenav-backdrop {
   display: none; }
 
 friend-preview .avatar {
-  width: 40px;
-  height: 40px;
-  margin-right: 16px;
-  margin-left: 16px;
+  width: 50px;
+  height: 50px;
+  margin: 8px 16px 8px 16px;
   border-radius: 50%;
   box-sizing: content-box; }
 
@@ -57,24 +56,48 @@ friend-preview ng-transclude * {
     white-space: normal;
     margin-bottom: 10px; }
 
+md-bottom-sheet md-input-container {
+  padding-bottom: 0px; }
+
+md-bottom-sheet .radio-social md-radio-button {
+  height: 54px; }
+
+md-bottom-sheet .radio-social ng-md-icon {
+  position: absolute;
+  left: -34px;
+  top: 15px; }
+
 .state-friends .filter-btn {
   position: fixed;
   bottom: 20px;
   right: 20px; }
   .state-friends .filter-btn p {
+    font-size: 12px;
     color: pink;
     position: absolute;
-    top: -30px;
-    right: 10px; }
+    top: -28px;
+    right: 9px; }
 
 .state-friends .friend-list md-list-item {
   padding-left: 0px; }
 
+.state-friends md-menu {
+  height: 30px;
+  width: 35px; }
+
+.state-dialog .dialog-unread * {
+  font-weight: bold; }
+
+.state-dialog .dialog-read * {
+  font-weight: normal; }
+
 .state-dialog-show p.date {
   color: grey; }
 
-.state-dialog-show .md-icon-button {
-  margin-top: 20px; }
+.state-dialog-show .submit-btn {
+  position: absolute;
+  bottom: 30px;
+  right: 0px; }
 
 .state-connect md-whiteframe {
   padding-top: 10px;
