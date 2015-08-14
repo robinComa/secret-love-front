@@ -9,7 +9,7 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
     },{
         uiSref: 'dialog',
         label: 'sidenav.entry.label.dialog',
-        icon: 'message'
+        icon: 'forum'
     },{
         uiSref: 'connect',
         label: 'sidenav.entry.label.connect',

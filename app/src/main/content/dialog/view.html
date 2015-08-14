@@ -11,7 +11,7 @@
                         <p>{{ dialog.messages[dialog.messages.length - 1].when | date}}</p>
                     </friend-preview>
                     <md-button class="md-fab md-primary" ui-sref="dialog-show({id: dialog.id})" aria-label="{{'dialog.read.message.btn' | translate}}">
-                        <ng-md-icon icon="visibility" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+                        <ng-md-icon icon="forum" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
                     </md-button>
                 </md-list-item>
             </md-list>
@@ -25,8 +25,8 @@
                         <h3>{{ dialog.friend.name }}</h3>
                         <p>{{ dialog.messages[dialog.messages.length - 1].when | date}}</p>
                     </friend-preview>
-                    <md-button class="md-fab md-primary" ui-sref="dialog-show({id: dialog.id})" aria-label="{{'dialog.read.message.btn' | translate}}">
-                        <ng-md-icon icon="visibility" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+                    <md-button class="md-fab md-raised" ui-sref="dialog-show({id: dialog.id})" aria-label="{{'dialog.read.message.btn' | translate}}">
+                        <ng-md-icon icon="forum" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
                     </md-button>
                     </div>
                 </md-list-item>
