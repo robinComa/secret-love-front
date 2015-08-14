@@ -1,16 +1,13 @@
 <md-grid-list
-    md-cols-sm="1"
-    md-cols-md="1"
-    md-cols-lg="3"
-    md-cols-gt-lg="4"
-    md-row-height-sm="1:1"
-    md-row-height-md="1:1"
-    md-row-height-lg="3:4"
-    md-row-height-gt-lg="3:4"
+    md-cols-sm="2"
+    md-cols-md="2"
+    md-cols-lg="4"
+    md-cols-gt-lg="5"
+    md-row-height="3:4"
 >
     <md-grid-tile ng-repeat="(type, connection) in connections">
         <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="center center">
-            <ng-md-icon icon="{{connection.icon.name}}" style="fill: {{connection.icon.color}}" size="200"></ng-md-icon>
+            <ng-md-icon icon="{{connection.icon.name}}" style="fill: {{connection.icon.color}}" size="100"></ng-md-icon>
             <md-button
                     class="md-raised"
                     ng-class="{'md-primary': !isConnected(type)}"
