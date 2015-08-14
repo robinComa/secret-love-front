@@ -274,9 +274,10 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
             });
 
             $q.all(promises).then(function(friends){
-                deferred.resolve(friends.reduce(function(previous, current){
+                var friendsList = friends.reduce(function(previous, current){
                     return previous.concat(current);
-                }));
+                });
+                deferred.resolve(friendsList);
             });
         });
 
@@ -763,12 +764,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         $scope.friends = $scope.friends.concat(friends);
     });
 
-    var icons = {
-        LOVE : 'favorite',
-        NOT_LOVE : 'favorite_outline',
-        SYNC_PROBLEM: 'sync_problem'
-    };
-
     $scope.toogleLove = function(friend){
 
         var initialLove = friend.love;
@@ -796,35 +791,25 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     };
 
     $scope.getSocialIcon = function(social){
-        if(social){
-            return settings.socials[social].icon;
-        }
+        return settings.socials[social].icon;
     };
 
     $scope.getLoveIcon = function(friend){
-        if(friend){
-            if(friend.love === true){
-                return icons.LOVE;
-            }else if(friend.love === false){
-                return icons.NOT_LOVE;
-            }else if(friend.love === undefined){
-                return icons.SYNC_PROBLEM;
-            }
+        if(friend.love === true){
+            return 'favorite';
+        }else if(friend.love === false){
+            return 'favorite_outline';
+        }else if(friend.love === undefined){
+            return 'sync_problem';
         }
     };
 
-    $scope.toogleFriendVisibility = function(friend){
+    $scope.toggleFriendVisibility = function(friend){
         friend.visibility = !friend.visibility;
-        var content = $translate.instant('friends.list.hide.toast.content', {
-            name: friend.name
-        });
-        if(friend.visibility){
-            content = $translate.instant('friends.list.show.toast.content', {
-                name: friend.name
-            });
-        }
         var toast = $mdToast.simple()
-            .content(content)
+            .content($translate.instant(friend.visibility ? 'friends.list.show.toast.content' : 'friends.list.hide.toast.content', {
+                name: friend.name
+            }))
             .action($translate.instant('friends.list.hide.toast.cancel'))
             .highlightAction(false)
             .position(settings.toast.position)
