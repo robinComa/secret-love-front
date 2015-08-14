@@ -32,12 +32,12 @@
                             <ng-md-icon flex="15" icon="more_vert" style="fill: pink" size="30"></ng-md-icon>
                         </md-button>
                         <md-menu-content width="2">
-                            <md-menu-item>
+                            <md-menu-item ng-if="friend.visibility">
                                 <md-button aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend)">
                                     <ng-md-icon icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
                                 </md-button>
                             </md-menu-item>
-                            <md-menu-item>
+                            <md-menu-item ng-if="!friend.love">
                                 <md-button ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
                                     <ng-md-icon icon="{{friend.visibility ? 'visibility_off' : 'visibility'}}" style="fill: pink" size="40"></ng-md-icon>
                                 </md-button>
