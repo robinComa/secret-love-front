@@ -25,7 +25,7 @@
     "angular-material": "0.10.1",
     "angular-material-icons": "0.5.0",
     "svg-morpheus": "0.1.8",
-    "angular-leaflet-directive": "0.8.5"
+    "animate.css": "3.4.0"
   },
   "resolutions": {
     "angular": "1.4.1"

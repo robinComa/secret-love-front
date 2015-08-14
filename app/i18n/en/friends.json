@@ -10,8 +10,10 @@
   "friends.filter.not.hide.label": "Not hidden friends",
   "friends.list.filter.dialog.cancel": "Cancel",
   "friends.list.filter.dialog.submit": "Apply filters",
+  "friends.filter.no.friend.description": "No results, try another filter.",
   "friends.no.friend.title": "You have no friends yet",
   "friends.list.hide.toast.content": "{{name}} will be hide from your main list",
+  "friends.list.show.toast.content": "{{name}} will be present on your main list",
   "friends.list.hide.toast.cancel": "Cancel",
   "friends.no.friend.description": "You can access to your contacts from your favorite social application. Connect to it in order to show all your contacts into this screen to be able to match with somebody!",
   "friends.no.friend.button": "Connect your social applications now!"

@@ -60,21 +60,28 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         }
     };
 
-    $scope.hideFriend = function(friend){
-        friend.visibility = false;
-        var toast = $mdToast.simple()
-            .content($translate.instant('friends.list.hide.toast.content', {
+    $scope.toogleFriendVisibility = function(friend){
+        friend.visibility = !friend.visibility;
+        var content = $translate.instant('friends.list.hide.toast.content', {
+            name: friend.name
+        });
+        if(friend.visibility){
+            content = $translate.instant('friends.list.show.toast.content', {
                 name: friend.name
-            }))
+            });
+        }
+        var toast = $mdToast.simple()
+            .content(content)
             .action($translate.instant('friends.list.hide.toast.cancel'))
             .highlightAction(false)
             .position(settings.toast.position)
             .hideDelay(settings.toast.hideDelay);
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
-                friend.visibility = true;
+                friend.visibility = !friend.visibility;
             }
         });
+
     };
 
     $scope.filter = {
