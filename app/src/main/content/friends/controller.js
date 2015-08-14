@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog, $mdToast,$translate){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend, $mdBottomSheet, $mdToast,$translate){
 
     $scope.loading = true;
     $scope.displayModeAsList = true;
@@ -77,12 +77,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         visibility: true
     };
     $scope.showFilter = function(ev){
-        $mdDialog.show({
-            controller: 'FriendsFilterCtrl',
+        $mdBottomSheet.show({
             templateUrl: 'src/main/content/friends/filter/view.html',
-            parent: angular.element(document.body),
-            targetEvent: ev,
-            clickOutsideToClose:true
+            controller: 'FriendsFilterCtrl',
+            targetEvent: ev
         }).then(function(filter) {
             $scope.filter = filter;
         });

@@ -1,48 +1,38 @@
-<md-dialog aria-label="Mango (Fruit)">
+<md-bottom-sheet class="md-list md-has-header">
     <form name="filterForm" ng-submit="submit(filter)">
 
-        <md-toolbar>
-            <div class="md-toolbar-tools">
-                <h2>{{'friends.filter.title' | translate}}</h2>
-            </div>
-        </md-toolbar>
+        <md-input-container>
+            <label>{{'friends.filter.name.label' | translate}}</label>
+            <input ng-model="filter.search" type="text"/>
+        </md-input-container>
 
-        <md-dialog-content>
+        <md-radio-group class="radio-social" ng-model="filter.type" layout="row" layout-align="center center" layout-wrap>
+            <md-radio-button ng-repeat="(key, social) in socials" ng-value="key" aria-label="{{social.label | translate}}" flex="5">
+                <ng-md-icon icon="{{social.icon.name}}" ng-style="{fill: social.icon.color}" size="30"></ng-md-icon>
+            </md-radio-button>
+        </md-radio-group>
 
-            <md-input-container>
-                <label>{{'friends.filter.name.label' | translate}}</label>
-                <input ng-model="filter.search" type="text"/>
-            </md-input-container>
+        <md-divider></md-divider>
 
-            <md-radio-group ng-model="filter.love" layout="row" layout-align="center center" layout-wrap>
-                <md-radio-button ng-value="true" aria-label="{{'friends.filter.love.label' | translate}}" flex="30">
-                    <ng-md-icon icon="favorite" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
-                </md-radio-button>
-                <md-radio-button ng-value="false" aria-label="{{'friends.filter.not.love.label' | translate}}" flex="30">
-                    <ng-md-icon icon="favorite_outline" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
-                </md-radio-button>
-            </md-radio-group>
+        <md-radio-group ng-model="filter.love" layout="row" layout-align="center center" layout-wrap>
+            <md-radio-button ng-value="true" aria-label="{{'friends.filter.love.label' | translate}}" flex="30">
+                <ng-md-icon icon="favorite" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+            </md-radio-button>
+            <md-radio-button ng-value="false" aria-label="{{'friends.filter.not.love.label' | translate}}" flex="30">
+                <ng-md-icon icon="favorite_outline" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+            </md-radio-button>
+        </md-radio-group>
 
-            <md-divider ></md-divider>
+        <md-divider ></md-divider>
 
-            <md-radio-group ng-model="filter.visibility" layout="row" layout-align="center center" layout-wrap>
-                <md-radio-button ng-value="true" aria-label="{{'friends.filter.hide.label' | translate}}" flex="30">
-                    <ng-md-icon icon="visibility" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
-                </md-radio-button>
-                <md-radio-button ng-value="false" aria-label="{{'friends.filter.not.hide.label' | translate}}" flex="30">
-                    <ng-md-icon icon="visibility_off" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
-                </md-radio-button>
-            </md-radio-group>
-
-            <md-divider ></md-divider>
-
-            <md-radio-group ng-model="filter.type" layout="row" layout-align="center center" layout-wrap>
-                <md-radio-button ng-repeat="(key, social) in socials" ng-value="key" aria-label="{{social.label | translate}}" flex="20">
-                    <ng-md-icon icon="{{social.icon.name}}" ng-style="{fill: social.icon.color}" size="30"></ng-md-icon>
-                </md-radio-button>
-            </md-radio-group>
-
-        </md-dialog-content>
+        <md-radio-group ng-model="filter.visibility" layout="row" layout-align="center center" layout-wrap>
+            <md-radio-button ng-value="true" aria-label="{{'friends.filter.hide.label' | translate}}" flex="30">
+                <ng-md-icon icon="visibility" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+            </md-radio-button>
+            <md-radio-button ng-value="false" aria-label="{{'friends.filter.not.hide.label' | translate}}" flex="30">
+                <ng-md-icon icon="visibility_off" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+            </md-radio-button>
+        </md-radio-group>
 
         <div class="md-actions" layout="row">
             <span flex></span>
@@ -54,4 +44,4 @@
             </md-button>
         </div>
     </form>
-</md-dialog>
+</md-bottom-sheet>

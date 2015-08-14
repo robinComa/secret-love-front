@@ -1,0 +1,15 @@
+md-bottom-sheet{
+  md-input-container{
+    padding-bottom: 0px;
+  }
+  .radio-social{
+    md-radio-button{
+      height: 54px;
+    }
+    ng-md-icon{
+      position: absolute;
+      left: -34px;
+      top: 15px;
+    }
+  }
+}

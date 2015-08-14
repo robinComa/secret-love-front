@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope, $mdDialog){
+angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope, $mdBottomSheet){
 
     $scope.socials = settings.socials;
 
@@ -9,10 +9,10 @@ angular.module('app').controller('FriendsFilterCtrl', function(settings, $scope,
     };
 
     $scope.cancel = function() {
-        $mdDialog.cancel();
+        $mdBottomSheet.cancel();
     };
     $scope.submit = function(answer) {
-        $mdDialog.hide(answer);
+        $mdBottomSheet.hide(answer);
     };
 
 });
