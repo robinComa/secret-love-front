@@ -38,14 +38,17 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                         }, deferred.reject);
                     });
                 }else{
-                    deferred.resolve(response.data.items.map(function(friend){
-                        return new Friend({
-                            id: friend.id,
-                            name: friend.displayName,
-                            picture: friend.image.url,
-                            type: 'googlePlus'
-                        });
-                    }));
+                    deferred.resolve(response.data.items.reduce(function(friends, friend){
+                        if(friend.objectType === 'person'){
+                            friends.push(new Friend({
+                                id: friend.id,
+                                name: friend.displayName,
+                                picture: friend.image.url,
+                                type: 'googlePlus'
+                            }));
+                        }
+                        return friends;
+                    }, []));
                 }
             }, deferred.reject);
             return deferred.promise;
