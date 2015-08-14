@@ -57,7 +57,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
             }))
             .action($translate.instant('friends.list.hide.toast.cancel'))
             .highlightAction(false)
-            .position('bottom right');
+            .position(settings.toast.position);
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
                 friend.visibility = true;

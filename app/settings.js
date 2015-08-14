@@ -5,6 +5,9 @@
 
     angular.module('app').constant('settings', {
         endpoint: 'rest-api/',
+        toast: {
+            position: 'top right'
+        },
         socials: {
             googlePlus: {
                 label: 'connect.label.google-plus',

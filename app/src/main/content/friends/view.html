@@ -15,7 +15,7 @@
 
         <md-list class="friend-list">
 
-            <md-list-item ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.social} | orderBy:'name' track by $index" ng-click="toogleLove(friend)" md-swipe-right="hideFriend(friend)">
+            <md-list-item ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.social} | orderBy:'name' as filteringFriends track by $index" ng-click="toogleLove(friend)" md-swipe-right="hideFriend(friend)">
                 <img ng-src="{{friend.picture}}" class="md-avatar" alt="{{friend.name}}"/>
                 <ng-md-icon class="user-social" flex="10" icon="{{getSocialIcon(friend.type).name}}" ng-style="{fill: getSocialIcon(friend.type).color}" size="20"></ng-md-icon>
                 <p>{{ friend.name }}</p>
@@ -27,7 +27,7 @@
         </md-list>
 
         <md-button class="md-fab filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">
-            <p><strong>{{(friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.social}).length}}</strong></p>
+            <p><strong>{{filteringFriends.length}}</strong></p>
             <ng-md-icon icon="filter_list" ng-style="{fill: 'white'}" size="30"></ng-md-icon>
         </md-button>
 
