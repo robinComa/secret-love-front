@@ -6,12 +6,13 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     $scope.displayModeAsList = true;
 
     $scope.friends = [];
-    Friend.query().then(function(){
+    Friend.query().then(function(friends){
         $scope.loading = false;
+        $scope.friends = friends;
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
-        $scope.friends = $scope.friends.concat(friends);
+
     });
 
     $scope.toogleLove = function(friend){
