@@ -11,4 +11,8 @@ angular.module('app').controller('SettingsCtrl', function($scope, me){
         });
     };
 
+    $scope.disconnect = function(){
+
+    };
+
 });

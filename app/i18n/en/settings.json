@@ -10,5 +10,6 @@
   "settings.email.placeholder": "Email",
   "settings.email.error.required": "Email is required",
   "settings.email.error.email": "Your email is not a valid email",
-  "settings.form.submit.label": "Save changes"
+  "settings.form.submit.label": "Save changes",
+  "settings.disconnect.btn.label": "Disconnect"
 }
