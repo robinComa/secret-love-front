@@ -55,8 +55,11 @@ md-backdrop.md-sidenav-backdrop {
     position: absolute;
     left: 32px; }
 
-.state-connect md-whiteframe button {
+.state-connect md-whiteframe {
+  padding-top: 10px;
   width: 90%; }
+  .state-connect md-whiteframe button {
+    width: 90%; }
 
 .state-settings md-input-container ng-md-icon {
   position: absolute;

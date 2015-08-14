@@ -154,6 +154,10 @@ angular.module('appStub').service('GetJsonFile', function(){
 
     angular.module('app').constant('settings', {
         endpoint: 'rest-api/',
+        toast: {
+            hideDelay: 3000,
+            position: 'top left'
+        },
         socials: {
             googlePlus: {
                 label: 'connect.label.google-plus',
@@ -773,6 +777,17 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         friend.love = !initialLove;
         friend.$save().then(function(){
 
+            if(friend.love){
+                $mdToast.show(
+                    $mdToast.simple()
+                        .content($translate.instant('friends.list.love.toast.content', {
+                            name: friend.name
+                        }))
+                        .position(settings.toast.position)
+                        .hideDelay(settings.toast.hideDelay)
+                );
+            }
+
         }, function(){
             friend.love = undefined;
             $timeout(function(){
@@ -795,20 +810,28 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         }
     };
 
-    $scope.hideFriend = function(friend){
-        friend.visibility = false;
-        var toast = $mdToast.simple()
-            .content($translate.instant('friends.list.hide.toast.content', {
+    $scope.toogleFriendVisibility = function(friend){
+        friend.visibility = !friend.visibility;
+        var content = $translate.instant('friends.list.hide.toast.content', {
+            name: friend.name
+        });
+        if(friend.visibility){
+            content = $translate.instant('friends.list.show.toast.content', {
                 name: friend.name
-            }))
+            });
+        }
+        var toast = $mdToast.simple()
+            .content(content)
             .action($translate.instant('friends.list.hide.toast.cancel'))
             .highlightAction(false)
-            .position('bottom right');
+            .position(settings.toast.position)
+            .hideDelay(settings.toast.hideDelay);
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
-                friend.visibility = true;
+                friend.visibility = !friend.visibility;
             }
         });
+
     };
 
     $scope.filter = {
