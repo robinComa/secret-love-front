@@ -13,6 +13,11 @@ md-toolbar .login {
   color: pink;
   font-size: 14px; }
 
+.md-button.md-fab ng-md-icon {
+  position: absolute;
+  top: 10px;
+  left: 13px; }
+
 md-sidenav md-list-item a.md-button {
   width: 100%;
   padding: 0px 30px 0px 30px;
@@ -31,6 +36,27 @@ md-sidenav .socialCarousel {
 md-backdrop.md-sidenav-backdrop {
   display: none; }
 
+friend-preview .avatar {
+  width: 40px;
+  height: 40px;
+  margin-right: 16px;
+  margin-left: 16px;
+  border-radius: 50%;
+  box-sizing: content-box; }
+
+friend-preview ng-md-icon.friend-preview-social-icon {
+  position: absolute; }
+
+friend-preview ng-transclude * {
+  padding: 0px;
+  margin: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+  friend-preview ng-transclude *.no-wrap {
+    white-space: normal;
+    margin-bottom: 10px; }
+
 .state-friends .filter-btn {
   position: fixed;
   bottom: 20px;
@@ -40,20 +66,15 @@ md-backdrop.md-sidenav-backdrop {
     position: absolute;
     top: -30px;
     right: 10px; }
-  .state-friends .filter-btn ng-md-icon {
-    position: absolute;
-    top: 10px;
-    left: 13px; }
 
-.state-friends .friend-list md-list-item > button {
+.state-friends .friend-list md-list-item {
   padding-left: 0px; }
-  .state-friends .friend-list md-list-item > button p {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; }
-  .state-friends .friend-list md-list-item > button ng-md-icon.user-social {
-    position: absolute;
-    left: 32px; }
+
+.state-dialog-show p.date {
+  color: grey; }
+
+.state-dialog-show .md-icon-button {
+  margin-top: 20px; }
 
 .state-connect md-whiteframe {
   padding-top: 10px;

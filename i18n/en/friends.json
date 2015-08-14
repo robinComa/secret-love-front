@@ -1,20 +1,25 @@
 {
+  "friends.no.friend.title": "You have no friends yet",
+  "friends.no.friend.description": "You can access to your contacts from your favorite social application. Connect to it in order to show all your contacts into this screen to be able to match with somebody!",
+  "friends.no.friend.button": "Connect your social applications now!",
+
   "friends.list.title.count": "Nb of friends loaded",
+  "friends.list.love.toast.content": "When {{name}} will click on you, you will match! Nobody knows that you're in love",
+  "friends.list.filter.dialog.cancel": "Cancel",
+  "friends.list.filter.dialog.submit": "Apply filters",
+  "friends.list.hide.toast.content": "{{name}} will be hide from your main list",
+  "friends.list.show.toast.content": "{{name}} will be present on your main list",
+  "friends.list.hide.toast.cancel": "Cancel",
+  "friends.list.menu.action.toggle.love": "In love?",
+  "friends.list.menu.action.toggle.visibility": "Show / hide",
+
   "friends.filter.title": "Friends filter",
   "friends.filter.name.label": "Search by name",
   "friends.filter.button": "Filter action button",
   "friends.filter.love.label": "Love",
-  "friends.list.love.toast.content": "When {{name}} will click on you, you will match! Nobody knows that you're in love",
   "friends.filter.not.love.label": "Not love",
   "friends.filter.hide.label": "Hidden friends",
   "friends.filter.not.hide.label": "Not hidden friends",
-  "friends.list.filter.dialog.cancel": "Cancel",
-  "friends.list.filter.dialog.submit": "Apply filters",
-  "friends.filter.no.friend.description": "No results, try another filter.",
-  "friends.no.friend.title": "You have no friends yet",
-  "friends.list.hide.toast.content": "{{name}} will be hide from your main list",
-  "friends.list.show.toast.content": "{{name}} will be present on your main list",
-  "friends.list.hide.toast.cancel": "Cancel",
-  "friends.no.friend.description": "You can access to your contacts from your favorite social application. Connect to it in order to show all your contacts into this screen to be able to match with somebody!",
-  "friends.no.friend.button": "Connect your social applications now!"
+  "friends.filter.no.friend.description": "No results, try another filter."
+
 }

@@ -35,6 +35,9 @@ angular.module('app', [
             resolve: {
                 me: function(Me){
                     return Me.get().$promise;
+                },
+                dialogs: function(Dialog){
+                    return Dialog.query().$promise;
                 }
             }
         }).state('friends', {
@@ -48,6 +51,39 @@ angular.module('app', [
                 content: {
                     templateUrl: 'src/main/content/friends/view.html',
                     controller: 'FriendsCtrl'
+                }
+            }
+        }).state('dialog', {
+            parent: 'main',
+            url: '/dialog',
+            views: {
+                sidenav: {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                content: {
+                    templateUrl: 'src/main/content/dialog/view.html',
+                    controller: 'DialogCtrl'
+                }
+            }
+        }).state('dialog-show', {
+            parent: 'dialog',
+            url: '/:id',
+            resolve: {
+                dialog: function(dialogs, $stateParams){
+                    return dialogs.filter(function(dialog){
+                        return dialog.id === parseInt($stateParams.id);
+                    })[0];
+                }
+            },
+            views: {
+                'sidenav@main': {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                'content@main': {
+                    templateUrl: 'src/main/content/dialog/show/view.html',
+                    controller: 'DialogShowCtrl'
                 }
             }
         }).state('connect', {
@@ -83,6 +119,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');
+    $translatePartialLoader.addPart('dialog');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
 
@@ -107,6 +144,9 @@ angular.module('appStub', [
 
     $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
     $httpBackend.whenPOST(/friends$/).respond(200);
+
+    $httpBackend.whenGET(/dialogs$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
+    $httpBackend.whenPOST(/dialogs$/).respond(200);
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -285,6 +325,30 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
     };
 
     return Friend;
+});
+'use strict';
+
+angular.module('app').factory('Dialog', function(settings, $resource){
+
+    return $resource(settings.endpoint + 'dialogs');
+
+});
+'use strict';
+
+angular.module('app').directive('friendPreview', function(settings){
+    return {
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            friend: '=friend'
+        },
+        templateUrl: 'src/components/friend-preview/view.html',
+        link: function($scope){
+            $scope.getSocialIcon = function(social){
+                return settings.socials[social].icon;
+            };
+        }
+    };
 });
 'use strict';
 
@@ -722,6 +786,10 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
         label: 'sidenav.entry.label.friends',
         icon: 'group'
     },{
+        uiSref: 'dialog',
+        label: 'sidenav.entry.label.dialog',
+        icon: 'message'
+    },{
         uiSref: 'connect',
         label: 'sidenav.entry.label.connect',
         icon: 'apps'
@@ -754,6 +822,7 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend,$mdDialog, $mdToast,$translate){
 
     $scope.loading = true;
+    $scope.displayModeAsList = true;
 
     $scope.friends = [];
     Friend.query().then(function(){
@@ -790,8 +859,8 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         });
     };
 
-    $scope.getSocialIcon = function(social){
-        return settings.socials[social].icon;
+    $scope.openMenu = function($mdOpenMenu, ev) {
+        $mdOpenMenu(ev);
     };
 
     $scope.getLoveIcon = function(friend){
@@ -910,5 +979,29 @@ angular.module('app').controller('SettingsCtrl', function($scope, me){
             me.email = $scope.meCopy.email;
         });
     };
+
+    $scope.disconnect = function(){
+
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('DialogCtrl', function(settings, $scope, dialogs){
+
+    $scope.unreadDialogs = dialogs.filter(function(message){
+        return !message.read;
+    });
+
+    $scope.readDialogs = dialogs.filter(function(message){
+        return message.read;
+    });
+
+});
+'use strict';
+
+angular.module('app').controller('DialogShowCtrl', function(settings,$scope, dialog){
+
+    $scope.dialog = dialog;
 
 });
