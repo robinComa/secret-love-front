@@ -76,14 +76,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     $scope.filter = {
         visibility: true
     };
-    $scope.showFilter = function(ev){
-        $mdBottomSheet.show({
-            templateUrl: 'src/main/content/friends/filter/view.html',
-            controller: 'FriendsFilterCtrl',
-            targetEvent: ev
-        }).then(function(filter) {
-            $scope.filter = filter;
-        });
-    };
+
 
 });

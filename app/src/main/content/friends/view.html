@@ -20,9 +20,16 @@
 
             <md-list class="friend-list">
 
+                <md-list-item>
+                    <md-input-container flex="100">
+                        <label>{{'friends.filter.name.label' | translate}}</label>
+                        <input ng-model="filter.search" type="text"/>
+                    </md-input-container>
+                </md-list-item>
+
                 <md-list-item
                         layout="row"
-                        ng-repeat="friend in friends | filter:{visibility:filter.visibility} | filter:{love:filter.love} | filter:filter.search | filter:{type:filter.type} | orderBy:'name' as filteringFriends track by friend.id">
+                        ng-repeat="friend in friends | filter:filter.search | friendFilter:filter | orderBy:'name' as filteringFriends track by friend.id">
                     <friend-preview friend="friend" flex>
                         <p>{{ friend.name }}</p>
                     </friend-preview>
@@ -46,15 +53,11 @@
                     </md-menu>
                 </md-list-item>
 
-                <md-list-item hide-gt-md></md-list-item>
-
             </md-list>
+
         </md-card-content>
 
-        <md-button class="md-fab md-primary filter-btn" aria-label="{{'friends.filter.button' | translate}}" ng-click="showFilter($event)">
-            <p><strong>{{filteringFriends.length}}</strong></p>
-            <ng-md-icon icon="search" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
-        </md-button>
+        <friends-filter ng-show="friends.length > 0 && !loading" filter="filter" result="filteringFriends.length"></friends-filter>
 
     </md-card>
 </div>

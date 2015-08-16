@@ -1,15 +1,29 @@
-md-bottom-sheet{
-  md-input-container{
-    padding-bottom: 0px;
-  }
-  .radio-social{
-    md-radio-button{
-      height: 54px;
+friends-filter{
+  right: 20px;
+  position: fixed;
+  bottom: 20px;
+  md-fab-speed-dial{
+    md-fab-trigger{
+      button {
+        p {
+          font-size: 12px;
+          color: pink;
+          position: absolute;
+          top: -28px;
+          right: 9px;
+        }
+      }
     }
-    ng-md-icon{
-      position: absolute;
-      left: -34px;
-      top: 15px;
+    button{
+
+      &.md-mini{
+        ng-md-icon{
+          position: absolute;
+          top: 6px;
+          left: 10px;
+        }
+      }
+
     }
   }
 }
