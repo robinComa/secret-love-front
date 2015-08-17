@@ -123,7 +123,6 @@ angular.module('app', [
     $translatePartialLoader.addPart('dialog');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
-    alert('toto')
 
     $timeout(function(){
         $translate.refresh();
