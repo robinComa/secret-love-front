@@ -377,7 +377,9 @@ angular.module('app').directive('friendPreview', function(settings){
         templateUrl: 'src/components/friend-preview/view.html',
         link: function($scope){
             $scope.getSocialIcon = function(social){
-                return settings.socials[social].icon;
+                if(social){
+                    return settings.socials[social].icon;
+                }
             };
         }
     };
@@ -854,15 +856,32 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend, $mdBottomSheet, $mdToast,$translate){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, $filter, Friend, $mdBottomSheet, $mdToast,$translate){
 
     $scope.loading = true;
-    $scope.displayModeAsList = true;
+
+    $scope.filter = {
+        visibility: true,
+        love: [true, false],
+        type: ['instagram', 'googlePlus']
+    };
+
+    var filter = function(friends, filter){
+        return $filter('friendFilter')(friends, filter);
+    };
+
+    $scope.$watch(function(){
+        return $scope.filter;
+    }, function(val){
+        $scope.filteringFriends = filter($scope.friends, val);
+    }, true);
 
     $scope.friends = [];
+    $scope.filteringFriends = [];
     Friend.query().then(function(friends){
         $scope.loading = false;
-        $scope.friends = friends;
+        $scope.friends = filter(friends, $scope.filter);
+        $scope.filteringFriends = filter(friends, $scope.filter);
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
@@ -927,22 +946,20 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
 
     };
 
-    $scope.filter = {
-        visibility: true
-    };
-
-
 });
 'use strict';
 
-angular.module('app').filter('friendFilter', function() {
+angular.module('app').filter('friendFilter', function($filter) {
     return function( items, filter ) {
-        return items.filter(function(item){
+        var friends = items.filter(function(item){
             var keep = filter.visibility === item.visibility;
             keep = keep && filter.love.indexOf(item.love) !== -1;
             keep = keep && filter.type.indexOf(item.type) !== -1;
             return keep;
         });
+        friends = $filter('filter')(friends, filter.search);
+        friends = $filter('orderBy')(friends, 'name');
+        return friends;
     };
 });
 'use strict';
@@ -957,12 +974,6 @@ angular.module('app').directive('friendsFilter', function(settings){
         },
         link: function(scope, el){
             scope.socials = settings.socials;
-
-            scope.filter = {
-                visibility: true,
-                love: [true, false],
-                type: ['instagram', 'googlePlus']
-            };
 
             scope.isOpen = false;
 

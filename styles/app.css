@@ -56,12 +56,14 @@ friend-preview ng-transclude * {
     white-space: normal;
     margin-bottom: 10px; }
 
-.state-friends .friend-list md-list-item {
-  padding-left: 0px; }
-
-.state-friends md-menu {
-  height: 30px;
-  width: 35px; }
+.state-friends md-card-content {
+  padding: 0px 0px 0px 10px; }
+  .state-friends md-card-content md-virtual-repeat-container .repeated-item {
+    box-sizing: border-box;
+    height: 55px; }
+    .state-friends md-card-content md-virtual-repeat-container .repeated-item md-menu {
+      height: 30px;
+      width: 35px; }
 
 .state-friends friends-filter {
   right: 20px;
