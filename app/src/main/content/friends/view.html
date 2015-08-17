@@ -1,6 +1,6 @@
 <md-progress-linear ng-if="loading" md-mode="indeterminate"></md-progress-linear>
 
-<div layout="column" flex>
+<div layout="row" flex>
     <md-card flex offset-gt-md="25" flex-gt-md="50">
 
         <md-card-content ng-if="friends.length === 0 && !loading">
@@ -12,16 +12,14 @@
             </md-button>
         </md-card-content>
 
-        <md-card-content ng-if="friends.length > 0 && filteringFriends.length === 0 && !loading">
-            <p>{{ 'friends.filter.no.friend.description' | translate }}</p>
-        </md-card-content>
-
-        <md-card-content ng-if="filteringFriends.length > 0" flex layout="column">
+        <md-card-content ng-if="friends.length > 0" flex layout="column">
 
             <md-input-container flex="10">
                 <label>{{'friends.filter.name.label' | translate}}</label>
                 <input ng-model="filter.search" type="text"/>
             </md-input-container>
+
+            <p ng-if="friends.length > 0 && filteringFriends.length === 0 && !loading">{{ 'friends.filter.no.friend.description' | translate }}</p>
 
             <md-virtual-repeat-container flex>
                 <div
