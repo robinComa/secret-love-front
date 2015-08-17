@@ -60,8 +60,21 @@ gulp.task('jshint', function() {
         .pipe($.jshint.reporter('fail'));
 });
 
+gulp.task('manifest', function(){
+    return gulp.src(['dist/**/*'])
+        .pipe($.manifest({
+            hash: true,
+            preferOnline: false,
+            network: ['*'],
+            basePath: 'dist/',
+            filename: 'app.manifest',
+            exclude: 'app.manifest'
+        }))
+        .pipe(gulp.dest('dist/'));
+});
+
 gulp.task('dist', ['jshint', 'clean'], function(callback){
-    runSequence(['html', 'template', 'i18n', 'stub'], callback);
+    runSequence(['html', 'template', 'i18n', 'stub'], 'manifest', callback);
 });
 
 gulp.task('deploy', ['dist'], function () {
