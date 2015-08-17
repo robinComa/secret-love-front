@@ -1,0 +1,14 @@
+{
+  "connect.label.twitter": "Twitter",
+  "connect.label.googlePlus": "Google+",
+  "connect.label.facebook": "Facebook",
+  "connect.label.linkedin": "LinkedIn",
+  "connect.label.instagram": "Instagram",
+  "connect.is.connected": "Connecté",
+  "connect.is.not.connected": "Trouver des amis",
+  "connect.is.not.implemented": "Prochainement",
+  "connect.disconnect.confirmation.title": "Confirmation",
+  "connect.disconnect.confirmation.content": "Voulez vous déconnecter {{name}} de l'application?",
+  "connect.disconnect.confirmation.ok": "Déconnecter mes amis",
+  "connect.disconnect.confirmation.cancel": "Annuler"
+}

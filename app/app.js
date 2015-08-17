@@ -9,12 +9,13 @@ angular.module('app', [
     'ngMaterial',
     'ngMdIcons',
     'ngMessages'
-]).config(function($translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
+]).config(function(LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
 
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'i18n/{lang}/{part}.json'
     });
-    $translateProvider.preferredLanguage('en');
+
+    $translateProvider.preferredLanguage(LanguageProvider.getPreferredLanguage());
     $translateProvider.cloakClassName('hidden');
     $translateProvider.useSanitizeValueStrategy(null);
 

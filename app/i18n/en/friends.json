@@ -3,7 +3,6 @@
   "friends.no.friend.description": "You can access to your contacts from your favorite social application. Connect to it in order to show all your contacts into this screen to be able to match with somebody!",
   "friends.no.friend.button": "Connect your social applications now!",
 
-  "friends.list.title.count": "Nb of friends loaded",
   "friends.list.love.toast.content": "When {{name}} will click on you, you will match! Nobody knows that you're in love",
   "friends.list.filter.dialog.cancel": "Cancel",
   "friends.list.filter.dialog.submit": "Apply filters",
