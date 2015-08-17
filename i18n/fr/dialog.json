@@ -1,0 +1,9 @@
+{
+  "dialog.unread.title": "Non lu",
+  "dialog.read.title": "Lu",
+  "dialog.read.message.btn": "Lire le message",
+  "dialog.show.back.btn": "Retour",
+
+  "dialog.show.send.message.label": "Ecrire un message...",
+  "dialog.show.send.message.submit.label": "Envoyer le message"
+}

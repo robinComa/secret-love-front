@@ -1,0 +1,15 @@
+{
+  "settings.login.placeholder": "Identifiant",
+  "settings.login.error.required": "L'identifiant est obligatoire",
+  "settings.login.error.maxlength": "Trop long",
+  "settings.login.error.minlength": "Trop court",
+  "settings.password.placeholder": "Mot de passe",
+  "settings.password.error.required": "Le mot de passe est obligatoire",
+  "settings.password.error.maxlength": "Trop long",
+  "settings.password.error.minlength": "Trop court",
+  "settings.email.placeholder": "Email",
+  "settings.email.error.required": "L'email est obligatoire",
+  "settings.email.error.email": "L'email n'est pas valide",
+  "settings.form.submit.label": "Enregistrer les changement",
+  "settings.disconnect.btn.label": "Se déconnecter"
+}

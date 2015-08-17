@@ -1,0 +1,23 @@
+{
+  "friends.no.friend.title": "Vous n'avez pas encore d'amis",
+  "friends.no.friend.description": "Vous pouvez récupérer les contacts de vos autres applications. Connectez vous à elles pour les voirs afin d'augmenter vos chances de match!",
+  "friends.no.friend.button": "Connectez vos applications maintenant!",
+
+  "friends.list.love.toast.content": "Lorsqu {{name}} cliquera sur vous, il y aura un match! Personne ne sera au courant de votre amour!",
+  "friends.list.filter.dialog.cancel": "Annuler",
+  "friends.list.filter.dialog.submit": "Appliquer le filtre",
+  "friends.list.hide.toast.content": "{{name}} va disparaitre de cette liste",
+  "friends.list.show.toast.content": "{{name}} va réapparaître dans cette liste",
+  "friends.list.hide.toast.cancel": "Annuler",
+  "friends.list.menu.action.toggle.love": "Amoureux?",
+  "friends.list.menu.action.toggle.visibility": "Voir / Masquer",
+
+  "friends.filter.name.label": "Chercher par nom",
+  "friends.filter.button": "Boutton d'action de filtre",
+  "friends.filter.love.label": "Amoureux",
+  "friends.filter.not.love.label": "Pas amoureux",
+  "friends.filter.hide.label": "Amis masqués",
+  "friends.filter.not.hide.label": "Amis visibles",
+  "friends.filter.no.friend.description": "Pas de résultats, essayer un autre filtre."
+
+}

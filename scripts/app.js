@@ -9,12 +9,13 @@ angular.module('app', [
     'ngMaterial',
     'ngMdIcons',
     'ngMessages'
-]).config(function($translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
+]).config(function(LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
 
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'i18n/{lang}/{part}.json'
     });
-    $translateProvider.preferredLanguage('en');
+
+    $translateProvider.preferredLanguage(LanguageProvider.getPreferredLanguage());
     $translateProvider.cloakClassName('hidden');
     $translateProvider.useSanitizeValueStrategy(null);
 
@@ -343,6 +344,25 @@ angular.module('app').factory('Dialog', function(settings, $resource){
 angular.module('app').factory('Message', function(settings, $resource){
 
     return $resource(settings.endpoint + 'messages');
+
+});
+'use strict';
+
+angular.module('app').provider('Language', function(){
+
+    this.getPreferredLanguage = function(){
+        var browserLang = navigator.language || navigator.userLanguage;
+        switch (browserLang){
+            case 'fr':
+                return 'fr';
+            default:
+                return 'en';
+        }
+    };
+
+    this.$get = function(){
+
+    };
 
 });
 'use strict';
