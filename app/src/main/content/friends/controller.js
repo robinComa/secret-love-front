@@ -1,14 +1,31 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, Friend, $mdBottomSheet, $mdToast,$translate){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, $filter, Friend, $mdBottomSheet, $mdToast,$translate){
 
     $scope.loading = true;
-    $scope.displayModeAsList = true;
+
+    $scope.filter = {
+        visibility: true,
+        love: [true, false],
+        type: ['instagram', 'googlePlus']
+    };
+
+    var filter = function(friends, filter){
+        return $filter('friendFilter')(friends, filter);
+    };
+
+    $scope.$watch(function(){
+        return $scope.filter;
+    }, function(val){
+        $scope.filteringFriends = filter($scope.friends, val);
+    }, true);
 
     $scope.friends = [];
+    $scope.filteringFriends = [];
     Friend.query().then(function(friends){
         $scope.loading = false;
-        $scope.friends = friends;
+        $scope.friends = filter(friends, $scope.filter);
+        $scope.filteringFriends = filter(friends, $scope.filter);
     }, function(error){
         console.error('Friend loading error : ' + error);
     }, function(friends){
@@ -72,10 +89,5 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         });
 
     };
-
-    $scope.filter = {
-        visibility: true
-    };
-
 
 });

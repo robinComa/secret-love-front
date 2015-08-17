@@ -11,12 +11,6 @@ angular.module('app').directive('friendsFilter', function(settings){
         link: function(scope, el){
             scope.socials = settings.socials;
 
-            scope.filter = {
-                visibility: true,
-                love: [true, false],
-                type: ['instagram', 'googlePlus']
-            };
-
             scope.isOpen = false;
 
             scope.$watch(function(){

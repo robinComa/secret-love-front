@@ -13,6 +13,6 @@
 <section layout="row" flex>
     <md-sidenav ui-view="sidenav"  md-swipe-left="toggleSidenav('left')" layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')"></md-sidenav>
     <div layout="column" id="content" layout-fill flex flex-md="72">
-        <md-content ui-view="content" class="state-{{state.current.name}}" layout="column"></md-content>
+        <md-content ui-view="content" class="state-{{state.current.name}}" layout="column" flex></md-content>
     </div>
 </section>

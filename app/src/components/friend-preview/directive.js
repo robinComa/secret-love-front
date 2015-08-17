@@ -10,7 +10,9 @@ angular.module('app').directive('friendPreview', function(settings){
         templateUrl: 'src/components/friend-preview/view.html',
         link: function($scope){
             $scope.getSocialIcon = function(social){
-                return settings.socials[social].icon;
+                if(social){
+                    return settings.socials[social].icon;
+                }
             };
         }
     };
