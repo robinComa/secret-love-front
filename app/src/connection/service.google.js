@@ -28,7 +28,9 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
             $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
                 params: {
                     access_token: token,
-                    callback: 'JSON_CALLBACK'
+                    callback: 'JSON_CALLBACK',
+                    maxResults: 100,
+                    fields : 'items(id, displayName,image/url,objectType),nextPageToken'
                 }
             }).then(function(response){
                 if(response.data.error && (response.data.error.code === LIMIT_TOKEN_STATUS || response.data.error.code === UNAUTH_STATUS)){
