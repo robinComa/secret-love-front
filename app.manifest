@@ -1,0 +1,33 @@
+CACHE MANIFEST
+
+
+CACHE:
+index.html
+scripts/app.js
+scripts/templates.js
+scripts/vendor.js
+styles/app.css
+styles/vendor.css
+i18n/en/common.json
+i18n/en/connect.json
+i18n/en/dialog.json
+i18n/en/friends.json
+i18n/en/settings.json
+i18n/en/sidenav.json
+i18n/fr/common.json
+i18n/fr/connect.json
+i18n/fr/dialog.json
+i18n/fr/friends.json
+i18n/fr/settings.json
+i18n/fr/sidenav.json
+stub/dialogs/GET.json
+stub/friends/GET.json
+stub/friends/googlePlus.json
+stub/friends/instagram.json
+stub/me/GET-x.json
+
+
+NETWORK:
+*
+
+# hash: 6cbc48d785ab083e44d254a5cd01e5d7865b812e256cee3f33394b1db9ca9f13
