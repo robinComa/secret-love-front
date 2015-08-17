@@ -1,4 +1,4 @@
 # find-me
 
 ## Applications Links
-- Demo : [github pages](http://robinComa.github.io/find-me/#/)
+- Demo : [github pages](http://robincoma.github.io/secret-love/#/)
