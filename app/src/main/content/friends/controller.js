@@ -7,7 +7,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     $scope.filter = {
         visibility: true,
         love: [true, false],
-        type: ['instagram', 'googlePlus']
+        type: ['instagram', 'googlePlus', 'facebook']
     };
 
     var filter = function(friends, filter){

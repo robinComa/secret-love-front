@@ -3,6 +3,7 @@
 angular.module('app').provider('Connection', function(settings){
 
     var STORAGE_ITEM_TOKEN_NAME_PREFIX = 'access_token_';
+    var STORAGE_ITEM_CODE_NAME_PREFIX = 'access_code_';
 
     var findPatternInURI = function(pattern){
         var reg = window.location.href.match(pattern);
@@ -12,7 +13,11 @@ angular.module('app').provider('Connection', function(settings){
     for(var i in settings.socials){
         var hash = findPatternInURI(settings.socials[i].auth.patternURI);
         if(hash){
-            localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+            if(settings.socials[i].auth.isCode){
+                localStorage.setItem(STORAGE_ITEM_CODE_NAME_PREFIX + i, hash);
+            }else{
+                localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+            }
             break;
         }
     }
@@ -21,12 +26,20 @@ angular.module('app').provider('Connection', function(settings){
       return function(args){
 
           var STORAGE_ITEM_TOKEN_NAME = STORAGE_ITEM_TOKEN_NAME_PREFIX + args.name;
+          var STORAGE_ITEM_CODE_NAME = STORAGE_ITEM_CODE_NAME_PREFIX + args.name;
 
           this.getToken = function(){
             var deferred = $q.defer();
             var token = localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
+            var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
             if(token){
                 deferred.resolve(token);
+            }else if(code){
+                args.getTokenWithCode(code).then(function(token){
+                    localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
+                    localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
+                    deferred.resolve(token);
+                });
             }else{
                 args.sendTokenRequest();
                 deferred.reject(token);
@@ -38,6 +51,7 @@ angular.module('app').provider('Connection', function(settings){
               var deferred = $q.defer();
               args.sendConnectionClose().then(function(){
                   localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+                  localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
                   deferred.resolve();
               }, deferred.reject);
               return deferred.promise;
