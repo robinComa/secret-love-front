@@ -5,17 +5,31 @@ angular.module('app').factory('twitter', function(settings, Connection, $q, $htt
         name: 'twitter',
         isImplemented: true,
         sendTokenRequest: function(){
-            $http({
-                method: 'GET',
-                url: 'https://api.twitter.com/1.1/',
+            var timestamp = (new Date().getTime()).toString();
+            var oauth_timestamp = timestamp.substring(0, timestamp.length - 3);
+
+            var authorization = 'OAuth oauth_callback="' + settings.socials.twitter.auth.redirectUri + '",';
+            authorization += 'oauth_consumer_key="' + settings.socials.twitter.auth.clientId + '",';
+            authorization += 'oauth_nonce="8317b2ae48c58507f3563df90874335b",';
+            authorization += 'oauth_signature="RcJu7Hg%2BFihZ8DwIzJqbFivrJOA%3D",';
+            authorization += 'oauth_signature_method="HMAC-SHA1",';
+            authorization += 'oauth_timestamp="' + oauth_timestamp + '",';
+            authorization += 'oauth_version="1.0"';
+            console.log(authorization)
+            console.log(new Date().getTime() / 1000)
+            $http.post('https://api.twitter.com/oauth/request_token', {
                 headers: {
-                    Authorization: 'OAuth oauth_consumer_key="r9e5QZVVUIu3ChTXr1w08fm5T", oauth_nonce="d31b6bf4d95ef689cf81ed3341ee8e55", oauth_signature="27Vj%2FRCSisaYyfNJtDSFpG0bd%2FU%3D", oauth_signature_method="HMAC-SHA1", oauth_timestamp="1439931848", oauth_version="1.0"'
+                    Authorization: authorization
                 }
             }).then(function(data){
                 console.log(data);
             }, function(data){
                 console.log(data);
             });
+            //var url = 'https://api.twitter.com/oauth/authorize';
+            //url += '?oauth_token=';
+            //url += settings.socials.twitter.auth.clientId;
+            //window.location = url;
         },
         getTokenWithCode: function(code){
             var deferred = $q.defer();

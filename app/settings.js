@@ -42,7 +42,7 @@
                     patternURI: /^#access_token_unknow=([^&]+)/,
                     clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
                     clientSecret: 'tWwdJUrW4bnKsfkhXzKpzYw03LYKFZiu3fn2ePA18l2unk6DNN',
-                    redirectUri: origin + '#/friends',
+                    redirectUri: origin,
                     scope: ['user_friends']
                 },
                 icon: {
@@ -56,7 +56,6 @@
                     isCode: true,
                     patternURI: /\?code=([^&]*)#/,
                     clientId: '1642970339309039',
-                    clientSecret: '22c45254414542a179b813b60928f653',
                     redirectUri: origin,
                     scope: ['user_friends']
                 },
