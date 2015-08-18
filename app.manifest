@@ -2,32 +2,32 @@ CACHE MANIFEST
 
 
 CACHE:
-index.html
-scripts/app.js
-scripts/templates.js
-scripts/vendor.js
-styles/app.css
-styles/vendor.css
-i18n/en/common.json
-i18n/en/connect.json
-i18n/en/dialog.json
-i18n/en/friends.json
-i18n/en/settings.json
-i18n/en/sidenav.json
-i18n/fr/common.json
-i18n/fr/connect.json
-i18n/fr/dialog.json
-i18n/fr/friends.json
-i18n/fr/settings.json
-i18n/fr/sidenav.json
-stub/dialogs/GET.json
-stub/friends/GET.json
-stub/friends/googlePlus.json
-stub/friends/instagram.json
-stub/me/GET-x.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/index.html
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/app.js
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/templates.js
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/vendor.js
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/app.css
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/vendor.css
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/common.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/connect.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/dialog.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/friends.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/settings.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/sidenav.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/common.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/connect.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/dialog.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/friends.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/settings.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/sidenav.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/dialogs/GET.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/friends/GET.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/friends/googlePlus.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/friends/instagram.json
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/me/GET-x.json
 
 
 NETWORK:
 *
 
-# hash: 58784b56b5914ad37585d516d12ad50873f8ab7b66506106c58b6d7d94895bfa
+# hash: f40ce962b0836b9be3793a9a3198910ad06080de7bd1ca03b57f626aacabf125

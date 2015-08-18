@@ -151,8 +151,8 @@ angular.module('appStub', [
     $httpBackend.whenPOST(/dialogs$/).respond(200);
     $httpBackend.whenPOST(/messages$/).respond(200);
 
-    $httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
-    $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
+    //$httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
+    //$httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -247,9 +247,10 @@ angular.module('appStub').service('GetJsonFile', function(){
             facebook: {
                 label: 'connect.label.facebook',
                 auth: {
+                    isCode: true,
                     patternURI: /\?code=([^&]*)#/,
-                    clientId: '463627307038698',
-                    clientSecret: 'c300b7e8922bfaeb84a84ca01e32245d',
+                    clientId: '1642970339309039',
+                    clientSecret: '22c45254414542a179b813b60928f653',
                     redirectUri: origin,
                     scope: ['user_friends']
                 },
@@ -389,6 +390,7 @@ angular.module('app').directive('friendPreview', function(settings){
 angular.module('app').provider('Connection', function(settings){
 
     var STORAGE_ITEM_TOKEN_NAME_PREFIX = 'access_token_';
+    var STORAGE_ITEM_CODE_NAME_PREFIX = 'access_code_';
 
     var findPatternInURI = function(pattern){
         var reg = window.location.href.match(pattern);
@@ -398,7 +400,11 @@ angular.module('app').provider('Connection', function(settings){
     for(var i in settings.socials){
         var hash = findPatternInURI(settings.socials[i].auth.patternURI);
         if(hash){
-            localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+            if(settings.socials[i].auth.isCode){
+                localStorage.setItem(STORAGE_ITEM_CODE_NAME_PREFIX + i, hash);
+            }else{
+                localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+            }
             break;
         }
     }
@@ -407,12 +413,20 @@ angular.module('app').provider('Connection', function(settings){
       return function(args){
 
           var STORAGE_ITEM_TOKEN_NAME = STORAGE_ITEM_TOKEN_NAME_PREFIX + args.name;
+          var STORAGE_ITEM_CODE_NAME = STORAGE_ITEM_CODE_NAME_PREFIX + args.name;
 
           this.getToken = function(){
             var deferred = $q.defer();
             var token = localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
+            var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
             if(token){
                 deferred.resolve(token);
+            }else if(code){
+                args.getTokenWithCode(code).then(function(token){
+                    localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
+                    localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
+                    deferred.resolve(token);
+                });
             }else{
                 args.sendTokenRequest();
                 deferred.reject(token);
@@ -424,6 +438,7 @@ angular.module('app').provider('Connection', function(settings){
               var deferred = $q.defer();
               args.sendConnectionClose().then(function(){
                   localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
+                  localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
                   deferred.resolve();
               }, deferred.reject);
               return deferred.promise;
@@ -476,7 +491,9 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
             $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
                 params: {
                     access_token: token,
-                    callback: 'JSON_CALLBACK'
+                    callback: 'JSON_CALLBACK',
+                    maxResults: 100,
+                    fields : 'items(id, displayName,image/url,objectType),nextPageToken'
                 }
             }).then(function(response){
                 if(response.data.error && (response.data.error.code === LIMIT_TOKEN_STATUS || response.data.error.code === UNAUTH_STATUS)){
@@ -566,100 +583,61 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
 });
 'use strict';
 
-angular.module('app').factory('facebook', function(Connection, $http) {
+angular.module('app').factory('facebook', function(settings, Connection, Friend, $http, $q) {
 
     return new Connection({
         name: 'facebook',
-        isImplemented: false,
+        isImplemented: true,
         sendTokenRequest: function(){
-            throw 'Not Implemented';
+            var url = 'https://www.facebook.com/v2.0/dialog/oauth';
+            url += '?app_id=' + settings.socials.facebook.auth.clientId;
+            url += '&redirect_uri=' + settings.socials.facebook.auth.redirectUri;
+            url += '&scope=' + settings.socials.facebook.auth.scope.join(',');
+            window.location = url;
+            return $q.when();
+        },
+        getTokenWithCode: function(code){
+            var deferred = $q.defer();
+            $http({
+                method: 'GET',
+                url: 'https://graph.facebook.com/oauth/access_token',
+                params: {
+                    code: code,
+                    client_id: settings.socials.facebook.auth.clientId,
+                    client_secret: settings.socials.facebook.auth.clientSecret,
+                    redirect_uri: settings.socials.facebook.auth.redirectUri
+                }
+            }).then(function(resp){
+                var token = resp.data.match(/access_token\=([^&]+)/)[1];
+                deferred.resolve(token);
+            });
+            return deferred.promise;
         },
         sendConnectionClose: function(){
-            throw 'Not Implemented';
+            return $q.when();
         },
         getFriends: function(token){
-            return $http.jsonp('https://graph.facebook.com/v2.4/me/friends?fields=id,name,picture', {
+            var deferred = $q.defer();
+            $http.jsonp('https://graph.facebook.com/v2.4/me/taggable_friends?limit=1000&fields=id,name,picture', {
                 params: {
                     access_token: token,
                     callback: 'JSON_CALLBACK'
                 }
+            }).then(function(response){
+                deferred.resolve(response.data.data.map(function(friend){
+                    return new Friend({
+                        id: friend.id,
+                        name: friend.name,
+                        picture: friend.picture.data.url,
+                        type: 'facebook'
+                    });
+                }));
             });
+            return deferred.promise;
         }
     });
 
 });
-/**
- * var adaptToModel = function(dto){
-        return new FriendModel(dto.id, dto.name, dto.picture.data.url, 'facebook');
-    };
-
- this.adaptToModels = function(dto){
-        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
-    };
- *
- *
-angular.module('app').provider('$facebook', function(settings){
-
-    var STORAGE_ITEM_CODE_NAME = 'access_code_facebook';
-    var STORAGE_ITEM_TOKEN_NAME = 'access_token_facebook';
-
-    var getUriToken = function(hash){
-        var reg = hash.match(/\?code=([^&]*)#/);
-        return reg && reg[1] ? reg[1] : null;
-    };
-    var code = getUriToken(window.location.href);
-
-    if(code){
-        window.localStorage.setItem(STORAGE_ITEM_CODE_NAME, code);
-    }
-    code = window.localStorage.getItem(STORAGE_ITEM_CODE_NAME);
-
-    var token = window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
-
-    this.$get = function($q, $http){
-
-        return {
-            getToken: function(){
-                var deferred = $q.defer();
-                if(token){
-                    deferred.resolve(token);
-                }else if(code){
-                    $http({
-                        method: 'GET',
-                        url: 'https://graph.facebook.com/oauth/access_token',
-                        params: {
-                            code: code,
-                            client_id: settings.socials.facebook.auth.clientId,
-                            client_secret: settings.socials.facebook.auth.clientSecret,
-                            redirect_uri: settings.socials.facebook.auth.redirectUri
-                        }
-                    }).then(function(resp){
-                        token = resp.data.match(/access_token\=([^&]+)/)[1];
-                        window.localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
-                        window.localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
-                        code = null;
-                        deferred.resolve(token);
-                    }, deferred.reject);
-                }
-                return deferred.promise;
-            },
-            connect: function(){
-                if(code){
-                    return $q.when(code);
-                }else{
-                    var url = 'https://www.facebook.com/v2.0/dialog/oauth';
-                    url += '?app_id=' + settings.socials.facebook.auth.clientId;
-                    url += '&redirect_uri=' + settings.socials.facebook.auth.redirectUri;
-                    url += '&scope=' + settings.socials.facebook.auth.scope.join(',');
-                    window.location = url;
-                    return $q.when();
-                }
-            }
-        };
-
-    };
-
-});*/
 'use strict';
 
 angular.module('app').factory('linkedin', function(Connection, $http) {
@@ -863,7 +841,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
     $scope.filter = {
         visibility: true,
         love: [true, false],
-        type: ['instagram', 'googlePlus']
+        type: ['instagram', 'googlePlus', 'facebook']
     };
 
     var filter = function(friends, filter){
