@@ -41,6 +41,7 @@
                 auth: {
                     patternURI: /^#access_token_unknow=([^&]+)/,
                     clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
+                    clientSecret: 'tWwdJUrW4bnKsfkhXzKpzYw03LYKFZiu3fn2ePA18l2unk6DNN',
                     redirectUri: origin + '#/friends',
                     scope: ['user_friends']
                 },
