@@ -211,7 +211,7 @@ angular.module('appStub').service('GetJsonFile', function(){
                     patternURI: /&access_token=([^&]+)/,
                     clientId: '205281637316-ad74m4l932db0j969qottrafu4sb08rs.apps.googleusercontent.com',
                     redirectUri: origin,
-                    scope: ['profile']
+                    scope: ['https://www.googleapis.com/auth/plus.login']
                 },
                 icon: {
                     name: 'google-plus',
