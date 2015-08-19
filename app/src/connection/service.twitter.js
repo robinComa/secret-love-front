@@ -15,8 +15,8 @@ angular.module('app').factory('twitter', function(settings, Connection, $q, $htt
             authorization += 'oauth_signature_method="HMAC-SHA1",';
             authorization += 'oauth_timestamp="' + oauth_timestamp + '",';
             authorization += 'oauth_version="1.0"';
-            console.log(authorization)
-            console.log(new Date().getTime() / 1000)
+            console.log(authorization);
+            console.log(new Date().getTime() / 1000);
             $http.post('https://api.twitter.com/oauth/request_token', {
                 headers: {
                     Authorization: authorization
@@ -33,6 +33,7 @@ angular.module('app').factory('twitter', function(settings, Connection, $q, $htt
         },
         getTokenWithCode: function(code){
             var deferred = $q.defer();
+            deferred.resolve(code);
             return deferred.promise;
         },
         sendConnectionClose: function(){
