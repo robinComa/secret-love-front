@@ -14,7 +14,7 @@
                 label: 'connect.label.google-plus',
                 auth: {
                     patternURI: /&access_token=([^&]+)/,
-                    clientId: '631974897480.apps.googleusercontent.com',
+                    clientId: '205281637316-ad74m4l932db0j969qottrafu4sb08rs.apps.googleusercontent.com',
                     redirectUri: origin,
                     scope: ['profile']
                 },
