@@ -251,6 +251,7 @@ angular.module('appStub').service('GetJsonFile', function(){
                     isCode: true,
                     patternURI: /\?code=([^&]*)#/,
                     clientId: '1642970339309039',
+                    clientSecret: '22c45254414542a179b813b60928f653',
                     redirectUri: origin,
                     scope: ['user_friends']
                 },
