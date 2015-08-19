@@ -209,7 +209,7 @@ angular.module('appStub').service('GetJsonFile', function(){
                 label: 'connect.label.google-plus',
                 auth: {
                     patternURI: /&access_token=([^&]+)/,
-                    clientId: '631974897480.apps.googleusercontent.com',
+                    clientId: '205281637316-ad74m4l932db0j969qottrafu4sb08rs.apps.googleusercontent.com',
                     redirectUri: origin,
                     scope: ['profile']
                 },
@@ -236,7 +236,8 @@ angular.module('appStub').service('GetJsonFile', function(){
                 auth: {
                     patternURI: /^#access_token_unknow=([^&]+)/,
                     clientId: 'r9e5QZVVUIu3ChTXr1w08fm5T',
-                    redirectUri: origin + '#/friends',
+                    clientSecret: 'tWwdJUrW4bnKsfkhXzKpzYw03LYKFZiu3fn2ePA18l2unk6DNN',
+                    redirectUri: origin,
                     scope: ['user_friends']
                 },
                 icon: {
@@ -250,7 +251,6 @@ angular.module('appStub').service('GetJsonFile', function(){
                     isCode: true,
                     patternURI: /\?code=([^&]*)#/,
                     clientId: '1642970339309039',
-                    clientSecret: '22c45254414542a179b813b60928f653',
                     redirectUri: origin,
                     scope: ['user_friends']
                 },
@@ -276,6 +276,7 @@ angular.module('appStub').service('GetJsonFile', function(){
         }
     });
 })();
+
 'use strict';
 
 angular.module('app').factory('Me', function(settings, $resource){
@@ -754,32 +755,54 @@ angular.module('app').provider('$linkedin', function(settings){
  */
 'use strict';
 
-angular.module('app').factory('twitter', function(Connection) {
+angular.module('app').factory('twitter', function(settings, Connection, $q, $http) {
     return new Connection({
         name: 'twitter',
-        isImplemented: false,
+        isImplemented: true,
         sendTokenRequest: function(){
-            throw 'Not Implemented';
+            var timestamp = (new Date().getTime()).toString();
+            var oauth_timestamp = timestamp.substring(0, timestamp.length - 3);
+
+            var authorization = 'OAuth oauth_callback="' + settings.socials.twitter.auth.redirectUri + '",';
+            authorization += 'oauth_consumer_key="' + settings.socials.twitter.auth.clientId + '",';
+            authorization += 'oauth_nonce="8317b2ae48c58507f3563df90874335b",';
+            authorization += 'oauth_signature="RcJu7Hg%2BFihZ8DwIzJqbFivrJOA%3D",';
+            authorization += 'oauth_signature_method="HMAC-SHA1",';
+            authorization += 'oauth_timestamp="' + oauth_timestamp + '",';
+            authorization += 'oauth_version="1.0"';
+            console.log(authorization);
+            console.log(new Date().getTime() / 1000);
+            $http.post('https://api.twitter.com/oauth/request_token', {
+                headers: {
+                    Authorization: authorization
+                }
+            }).then(function(data){
+                console.log(data);
+            }, function(data){
+                console.log(data);
+            });
+            //var url = 'https://api.twitter.com/oauth/authorize';
+            //url += '?oauth_token=';
+            //url += settings.socials.twitter.auth.clientId;
+            //window.location = url;
+        },
+        getTokenWithCode: function(code){
+            var deferred = $q.defer();
+            deferred.resolve(code);
+            return deferred.promise;
         },
         sendConnectionClose: function(){
-            throw 'Not Implemented';
+            return $q.when();
         },
         getFriends: function(){
-            throw 'Not Implemented';
+            var deferred = $q.defer();
+            // https://dev.twitter.com/rest/tools/console
+            // https://api.twitter.com/1.1/friends/ids.json
+            // https://api.twitter.com/1.1/users/lookup.json?user_id=6693582,F1717226282,2277815413
+            return deferred.promise;
         }
     });
 });
-
-/**
- var adaptToModel = function(dto){
-        return new FriendModel(null, dto.username + ' (' + dto.full_name + ')', dto.profile_picture, 'twitter');
-    };
-
- this.adaptToModels = function(dto){
-        return dto && dto.data && dto.data.data ? dto.data.data.map(adaptToModel) : [];
-    };
-
- */
 'use strict';
 
 angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $state){
