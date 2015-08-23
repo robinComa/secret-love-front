@@ -18,6 +18,12 @@ md-toolbar .login {
   top: 10px;
   left: 13px; }
 
+md-input-container ng-md-icon {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  fill: pink; }
+
 md-sidenav md-list-item a.md-button {
   width: 100%;
   padding: 0px 30px 0px 30px;
@@ -56,29 +62,56 @@ friend-preview ng-transclude * {
     white-space: normal;
     margin-bottom: 10px; }
 
-.state-friends md-card-content {
+.state-friends-list .btn-toggle-list-face,
+.state-friends-face .btn-toggle-list-face {
+  position: fixed;
+  top: 40px;
+  left: calc(50% - 40px); }
+
+.state-friends-list md-card-content {
   padding: 0px 0px 0px 10px; }
-  .state-friends md-card-content md-virtual-repeat-container .repeated-item {
+  .state-friends-list md-card-content md-virtual-repeat-container .repeated-item {
     box-sizing: border-box;
     height: 55px; }
-    .state-friends md-card-content md-virtual-repeat-container .repeated-item md-menu {
+    .state-friends-list md-card-content md-virtual-repeat-container .repeated-item md-menu {
       height: 30px;
       width: 35px; }
 
-.state-friends friends-filter {
+.state-friends-list friends-filter {
   right: 20px;
   position: fixed;
   bottom: 20px; }
-  .state-friends friends-filter md-fab-speed-dial md-fab-trigger button p {
-    font-size: 12px;
-    color: pink;
-    position: absolute;
-    top: -28px;
-    right: 9px; }
-  .state-friends friends-filter md-fab-speed-dial button.md-mini ng-md-icon {
+  .state-friends-list friends-filter md-fab-speed-dial button.md-mini ng-md-icon {
     position: absolute;
     top: 6px;
     left: 10px; }
+  .state-friends-list friends-filter .btn-length {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    color: pink;
+    font-weight: bold; }
+
+.state-friends-face md-card-content h1 {
+  margin-top: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  text-align: center; }
+
+.state-friends-face md-card-content img {
+  border-radius: 50%;
+  height: 200px;
+  width: 200px; }
+
+.state-friends-face md-card-content .md-button.md-fab.md-mini ng-md-icon {
+  top: 6px;
+  left: 6px; }
+
+.state-friends-face md-card-content .md-button.md-fab ng-md-icon {
+  top: 8px;
+  left: 8px; }
 
 .state-dialog .dialog-unread * {
   font-weight: bold; }
@@ -99,9 +132,3 @@ friend-preview ng-transclude * {
   width: 90%; }
   .state-connect md-whiteframe button {
     width: 90%; }
-
-.state-settings md-input-container ng-md-icon {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  fill: pink; }

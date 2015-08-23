@@ -25,7 +25,7 @@ angular.module('app', [
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
-    $urlRouterProvider.otherwise('/friends');
+    $urlRouterProvider.otherwise('/friends/list');
 
     $stateProvider
         .state('main', {
@@ -42,6 +42,7 @@ angular.module('app', [
                 }
             }
         }).state('friends', {
+            abstract: true,
             parent: 'main',
             url: '/friends',
             views: {
@@ -54,6 +55,16 @@ angular.module('app', [
                     controller: 'FriendsCtrl'
                 }
             }
+        }).state('friends-list', {
+            parent: 'friends',
+            url: '/list',
+            templateUrl: 'src/main/content/friends/list/view.html',
+            controller: 'FriendsListCtrl'
+        }).state('friends-face', {
+            parent: 'friends',
+            url: '/face',
+            templateUrl: 'src/main/content/friends/face/view.html',
+            controller: 'FriendsFaceCtrl'
         }).state('dialog', {
             parent: 'main',
             url: '/dialog',
@@ -151,8 +162,9 @@ angular.module('appStub', [
     $httpBackend.whenPOST(/dialogs$/).respond(200);
     $httpBackend.whenPOST(/messages$/).respond(200);
 
-    //$httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
-    //$httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
+    $httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
+    $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
+    $httpBackend.whenJSONP(/https:\/\/graph.facebook.com\/v2.4\/me\/taggable_friends/).respond(GetJsonFile.synchronously('stub/friends/facebook.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -821,7 +833,7 @@ angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $s
 angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval){
 
     $scope.entries = [{
-        uiSref: 'friends',
+        uiSref: 'friends-list',
         label: 'sidenav.entry.label.friends',
         icon: 'group'
     },{
@@ -858,9 +870,33 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, $filter, Friend, $mdBottomSheet, $mdToast,$translate){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout){
+
+    var isListState = function(){
+        return $state.current.name === 'friends-list';
+    };
+
+    $scope.toggleListFace = function(){
+        if(isListState()){
+            $state.go('friends-face');
+        }else{
+            $state.go('friends-list');
+        }
+    };
+
+    $scope.listOrFaceIcon = function(){
+        return isListState() ? 'face': 'list';
+    };
 
     $scope.loading = true;
+
+    $scope.friends = [];
+    Friend.query().then(function(){
+        $scope.loading = false;
+    }, function(){}, function(friends){
+        $scope.friends = $scope.friends.concat(friends);
+        updateFilteringFriends();
+    });
 
     $scope.filter = {
         visibility: true,
@@ -872,23 +908,13 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         return $filter('friendFilter')(friends, filter);
     };
 
+    var updateFilteringFriends = function(){
+        $scope.filteringFriends = filter($scope.friends, $scope.filter);
+    };
+
     $scope.$watch(function(){
         return $scope.filter;
-    }, function(val){
-        $scope.filteringFriends = filter($scope.friends, val);
-    }, true);
-
-    $scope.friends = [];
-    $scope.filteringFriends = [];
-    Friend.query().then(function(friends){
-        $scope.loading = false;
-        $scope.friends = filter(friends, $scope.filter);
-        $scope.filteringFriends = filter(friends, $scope.filter);
-    }, function(error){
-        console.error('Friend loading error : ' + error);
-    }, function(friends){
-        console.log(friends.length + ' new friends loaded');
-    });
+    }, updateFilteringFriends, true);
 
     $scope.toogleLove = function(friend){
 
@@ -916,20 +942,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         });
     };
 
-    $scope.openMenu = function($mdOpenMenu, ev) {
-        $mdOpenMenu(ev);
-    };
-
-    $scope.getLoveIcon = function(friend){
-        if(friend.love === true){
-            return 'favorite';
-        }else if(friend.love === false){
-            return 'favorite_outline';
-        }else if(friend.love === undefined){
-            return 'sync_problem';
-        }
-    };
-
     $scope.toggleFriendVisibility = function(friend){
         friend.visibility = !friend.visibility;
         var toast = $mdToast.simple()
@@ -945,7 +957,25 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
                 friend.visibility = !friend.visibility;
             }
         });
+    };
 
+});
+'use strict';
+
+angular.module('app').controller('FriendsListCtrl', function($scope){
+
+    $scope.openMenu = function($mdOpenMenu, ev) {
+        $mdOpenMenu(ev);
+    };
+
+    $scope.getLoveIcon = function(friend){
+        if(friend.love === true){
+            return 'favorite';
+        }else if(friend.love === false){
+            return 'favorite_outline';
+        }else if(friend.love === undefined){
+            return 'sync_problem';
+        }
     };
 
 });
@@ -953,6 +983,9 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
 
 angular.module('app').filter('friendFilter', function($filter) {
     return function( items, filter ) {
+        if(!items){
+            return [];
+        }
         var friends = items.filter(function(item){
             var keep = filter.visibility === item.visibility;
             keep = keep && filter.love.indexOf(item.love) !== -1;
@@ -969,7 +1002,7 @@ angular.module('app').filter('friendFilter', function($filter) {
 angular.module('app').directive('friendsFilter', function(settings){
     return {
         restrict: 'E',
-        templateUrl: 'src/main/content/friends/filter/view.html',
+        templateUrl: 'src/main/content/friends/list/filter/view.html',
         scope: {
             filter: '=',
             result: '='
@@ -1006,7 +1039,6 @@ angular.module('app').directive('friendsFilter', function(settings){
                 }else{
                     scope.filter.love.push(value);
                 }
-                return ;
             };
             scope.loveIsSelected = function(love){
                 return scope.filter.love.indexOf(love) !== -1;
@@ -1017,6 +1049,24 @@ angular.module('app').directive('friendsFilter', function(settings){
             };
         }
     };
+
+});
+'use strict';
+
+angular.module('app').controller('FriendsFaceCtrl', function($scope){
+
+    $scope.filter = {
+        visibility: true,
+        love: [false],
+        type: ['instagram', 'googlePlus', 'facebook']
+    };
+
+    $scope.$watch(function(){
+        return $scope.filteringFriends;
+    }, function(friends){
+        var ramdomIndex = Math.floor(Math.random()*friends.length);
+        $scope.friend = friends[ramdomIndex];
+    }, true);
 
 });
 'use strict';
