@@ -24,13 +24,28 @@ md-toolbar{
     left: 13px;
   }
 }
+md-input-container{
+  ng-md-icon{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    fill: pink;
+  }
+}
 
 @import "sidenav/style";
 @import "../components/friend-preview/style";
 
-.state-friends{
+.state-friends-list,
+.state-friends-face{
   @import "content/friends/style";
-  @import "content/friends/filter/style";
+}
+.state-friends-list{
+  @import "content/friends/list/style";
+  @import "content/friends/list/filter/style";
+}
+.state-friends-face{
+  @import "content/friends/face/style";
 }
 .state-dialog{
   @import "content/dialog/style";

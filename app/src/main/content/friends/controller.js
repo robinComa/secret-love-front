@@ -1,8 +1,32 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $timeout, $filter, Friend, $mdBottomSheet, $mdToast,$translate){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout){
+
+    var isListState = function(){
+        return $state.current.name === 'friends-list';
+    };
+
+    $scope.toggleListFace = function(){
+        if(isListState()){
+            $state.go('friends-face');
+        }else{
+            $state.go('friends-list');
+        }
+    };
+
+    $scope.listOrFaceIcon = function(){
+        return isListState() ? 'face': 'list';
+    };
 
     $scope.loading = true;
+
+    $scope.friends = [];
+    Friend.query().then(function(){
+        $scope.loading = false;
+    }, function(){}, function(friends){
+        $scope.friends = $scope.friends.concat(friends);
+        updateFilteringFriends();
+    });
 
     $scope.filter = {
         visibility: true,
@@ -14,23 +38,13 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         return $filter('friendFilter')(friends, filter);
     };
 
+    var updateFilteringFriends = function(){
+        $scope.filteringFriends = filter($scope.friends, $scope.filter);
+    };
+
     $scope.$watch(function(){
         return $scope.filter;
-    }, function(val){
-        $scope.filteringFriends = filter($scope.friends, val);
-    }, true);
-
-    $scope.friends = [];
-    $scope.filteringFriends = [];
-    Friend.query().then(function(friends){
-        $scope.loading = false;
-        $scope.friends = filter(friends, $scope.filter);
-        $scope.filteringFriends = filter(friends, $scope.filter);
-    }, function(error){
-        console.error('Friend loading error : ' + error);
-    }, function(friends){
-        console.log(friends.length + ' new friends loaded');
-    });
+    }, updateFilteringFriends, true);
 
     $scope.toogleLove = function(friend){
 
@@ -58,20 +72,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
         });
     };
 
-    $scope.openMenu = function($mdOpenMenu, ev) {
-        $mdOpenMenu(ev);
-    };
-
-    $scope.getLoveIcon = function(friend){
-        if(friend.love === true){
-            return 'favorite';
-        }else if(friend.love === false){
-            return 'favorite_outline';
-        }else if(friend.love === undefined){
-            return 'sync_problem';
-        }
-    };
-
     $scope.toggleFriendVisibility = function(friend){
         friend.visibility = !friend.visibility;
         var toast = $mdToast.simple()
@@ -87,7 +87,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $time
                 friend.visibility = !friend.visibility;
             }
         });
-
     };
 
 });

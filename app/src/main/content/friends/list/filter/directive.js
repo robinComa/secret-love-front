@@ -3,7 +3,7 @@
 angular.module('app').directive('friendsFilter', function(settings){
     return {
         restrict: 'E',
-        templateUrl: 'src/main/content/friends/filter/view.html',
+        templateUrl: 'src/main/content/friends/list/filter/view.html',
         scope: {
             filter: '=',
             result: '='
@@ -40,7 +40,6 @@ angular.module('app').directive('friendsFilter', function(settings){
                 }else{
                     scope.filter.love.push(value);
                 }
-                return ;
             };
             scope.loveIsSelected = function(love){
                 return scope.filter.love.indexOf(love) !== -1;

@@ -25,7 +25,7 @@ angular.module('app', [
 
     $mdThemingProvider.alwaysWatchTheme(true);
 
-    $urlRouterProvider.otherwise('/friends');
+    $urlRouterProvider.otherwise('/friends/list');
 
     $stateProvider
         .state('main', {
@@ -42,6 +42,7 @@ angular.module('app', [
                 }
             }
         }).state('friends', {
+            abstract: true,
             parent: 'main',
             url: '/friends',
             views: {
@@ -54,6 +55,16 @@ angular.module('app', [
                     controller: 'FriendsCtrl'
                 }
             }
+        }).state('friends-list', {
+            parent: 'friends',
+            url: '/list',
+            templateUrl: 'src/main/content/friends/list/view.html',
+            controller: 'FriendsListCtrl'
+        }).state('friends-face', {
+            parent: 'friends',
+            url: '/face',
+            templateUrl: 'src/main/content/friends/face/view.html',
+            controller: 'FriendsFaceCtrl'
         }).state('dialog', {
             parent: 'main',
             url: '/dialog',

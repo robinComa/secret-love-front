@@ -3,17 +3,6 @@ friends-filter{
   position: fixed;
   bottom: 20px;
   md-fab-speed-dial{
-    md-fab-trigger{
-      button {
-        p {
-          font-size: 12px;
-          color: pink;
-          position: absolute;
-          top: -28px;
-          right: 9px;
-        }
-      }
-    }
     button{
 
       &.md-mini{
@@ -25,5 +14,12 @@ friends-filter{
       }
 
     }
+  }
+  .btn-length{
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    color: pink;
+    font-weight: bold;
   }
 }

@@ -3,7 +3,7 @@
   "friends.no.friend.description": "Vous pouvez récupérer les contacts de vos autres applications. Connectez vous à elles pour les voirs afin d'augmenter vos chances de match!",
   "friends.no.friend.button": "Connectez vos applications maintenant!",
 
-  "friends.list.love.toast.content": "Lorsqu {{name}} cliquera sur vous, il y aura un match! Personne ne sera au courant de votre amour!",
+  "friends.list.love.toast.content": "Lorsque {{name}} cliquera sur vous, il y aura un match! Personne ne sera au courant de votre amour!",
   "friends.list.filter.dialog.cancel": "Annuler",
   "friends.list.filter.dialog.submit": "Appliquer le filtre",
   "friends.list.hide.toast.content": "{{name}} va disparaitre de cette liste",

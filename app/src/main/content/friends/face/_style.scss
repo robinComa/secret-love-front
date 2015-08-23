@@ -1,0 +1,31 @@
+md-card-content{
+
+  h1{
+    margin-top: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: center;
+  }
+
+  img{
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+  }
+
+  .md-button.md-fab{
+    &.md-mini{
+      ng-md-icon {
+        top: 6px;
+        left: 6px;
+      }
+    }
+    ng-md-icon {
+      top: 8px;
+      left: 8px;
+    }
+  }
+
+}

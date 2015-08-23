@@ -1,0 +1,18 @@
+<md-card flex offset-gt-md="25" flex-gt-md="50" ng-if="friend">
+
+    <md-card-content layout="column"layout-align="center center">
+        <h1>{{ friend.name }}</h1>
+
+        <img ng-src="{{friend.picture}}" alt="{{ friend.name }}" flex/>
+
+        <div layout="row"layout-align="center center">
+            <md-button class="md-fab md-raised md-mini" ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
+                <ng-md-icon icon="visibility_off" style="fill: pink" size="30"></ng-md-icon>
+            </md-button>
+            <md-button class="md-fab md-primary" aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend)">
+                <ng-md-icon icon="favorite" style="fill: pink" size="40"></ng-md-icon>
+            </md-button>
+        </div>
+    </md-card-content>
+
+</md-card>

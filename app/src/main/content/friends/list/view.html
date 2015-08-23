@@ -1,0 +1,56 @@
+<md-card flex offset-gt-md="25" flex-gt-md="50">
+
+    <md-card-content ng-if="friends.length === 0 && !loading">
+        <h1>{{ 'friends.no.friend.title' | translate }} :'(</h1>
+        <p>{{ 'friends.no.friend.description' | translate }}</p>
+
+        <md-button ui-sref="connect" class="md-raised md-primary" aria-label="{{'friends.no.friend.button' | translate}}">
+            {{'friends.no.friend.button' | translate}}
+        </md-button>
+    </md-card-content>
+
+    <md-card-content ng-if="friends.length > 0" flex layout="column">
+
+        <md-input-container flex="10">
+            <label>{{'friends.filter.name.label' | translate}}</label>
+            <input ng-model="filter.search" type="text"/>
+            <ng-md-icon ng-click="filter.search = ''" ng-if="filter.search" icon="clear" size="50"></ng-md-icon>
+        </md-input-container>
+
+        <p ng-if="friends.length > 0 && filteringFriends.length === 0 && !loading">{{ 'friends.filter.no.friend.description' | translate }}</p>
+
+        <md-virtual-repeat-container flex>
+            <div
+                class="repeated-item" layout="row"
+                md-virtual-repeat="friend in filteringFriends">
+
+                <friend-preview friend="friend" flex>
+                    <p>{{ friend.name }}</p>
+                </friend-preview>
+
+                <md-menu md-position-mode="target-right target" md-offset="0 -7">
+                    <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
+                        <ng-md-icon flex="15" icon="more_vert" style="fill: pink" size="30"></ng-md-icon>
+                    </md-button>
+                    <md-menu-content width="2">
+                        <md-menu-item ng-if="friend.visibility">
+                            <md-button aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend)">
+                                <ng-md-icon icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item ng-if="!friend.love">
+                            <md-button ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
+                                <ng-md-icon icon="{{friend.visibility ? 'visibility_off' : 'visibility'}}" style="fill: pink" size="40"></ng-md-icon>
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+
+            </div>
+        </md-virtual-repeat-container>
+
+    </md-card-content>
+
+    <friends-filter ng-show="friends.length > 0 && !loading" filter="filter" result="filteringFriends.length"></friends-filter>
+
+</md-card>

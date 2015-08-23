@@ -3,7 +3,7 @@
 angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval){
 
     $scope.entries = [{
-        uiSref: 'friends',
+        uiSref: 'friends-list',
         label: 'sidenav.entry.label.friends',
         icon: 'group'
     },{

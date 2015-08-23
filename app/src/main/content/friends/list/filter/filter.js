@@ -2,6 +2,9 @@
 
 angular.module('app').filter('friendFilter', function($filter) {
     return function( items, filter ) {
+        if(!items){
+            return [];
+        }
         var friends = items.filter(function(item){
             var keep = filter.visibility === item.visibility;
             keep = keep && filter.love.indexOf(item.love) !== -1;

@@ -1,0 +1,13 @@
+md-card-content{
+  padding: 0px 0px 0px 10px;
+  md-virtual-repeat-container {
+    .repeated-item {
+      box-sizing: border-box;
+      height: 55px;
+      md-menu{
+        height: 30px;
+        width: 35px;
+      }
+    }
+  }
+}
