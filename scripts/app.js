@@ -916,6 +916,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $stat
         return $scope.filter;
     }, updateFilteringFriends, true);
 
+    $scope.$watch(function(){
+        return $scope.filteringFriends;
+    }, updateFilteringFriends, true);
+
     $scope.toogleLove = function(friend){
 
         var initialLove = friend.love;
