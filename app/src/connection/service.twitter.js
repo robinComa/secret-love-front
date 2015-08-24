@@ -3,7 +3,7 @@
 angular.module('app').factory('twitter', function(settings, Connection, $q, $http) {
     return new Connection({
         name: 'twitter',
-        isImplemented: true,
+        isImplemented: false,
         sendTokenRequest: function(){
             var timestamp = (new Date().getTime()).toString();
             var oauth_timestamp = timestamp.substring(0, timestamp.length - 3);

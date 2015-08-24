@@ -16,11 +16,14 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
             .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
             .targetEvent(event);
         $mdDialog.show(confirm).then(function() {
+            $scope.connectionModel[name] = false;
             socialService.close();
+        }, function(){
+            $scope.connectionModel[name] = true;
         });
     };
 
-    $scope.connectToogle = function(event, name){
+    $scope.toggleConnection = function(name){
         var socialService = $injector.get(name);
         if(socialService.isConnected()){
             disconnectAction(socialService, name);
@@ -38,5 +41,10 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
     $scope.isNotImplemented = function(name){
         return !$injector.get(name).isImplemented();
     };
+
+    $scope.connectionModel = {};
+    for(var type in settings.socials){
+        $scope.connectionModel[type] = $scope.isConnected(type);
+    }
 
 });

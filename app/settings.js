@@ -10,6 +10,21 @@
             position: 'bottom left'
         },
         socials: {
+            facebook: {
+                label: 'connect.label.facebook',
+                auth: {
+                    isCode: true,
+                    patternURI: /\?code=([^&]*)#/,
+                    clientId: '1642970339309039',
+                    clientSecret: '22c45254414542a179b813b60928f653',
+                    redirectUri: origin,
+                    scope: ['user_friends']
+                },
+                icon: {
+                    name: 'facebook',
+                    color: '#3B5998'
+                }
+            },
             googlePlus: {
                 label: 'connect.label.google-plus',
                 auth: {
@@ -48,21 +63,6 @@
                 icon: {
                     name: 'twitter',
                     color: '#1AB2E8'
-                }
-            },
-            facebook: {
-                label: 'connect.label.facebook',
-                auth: {
-                    isCode: true,
-                    patternURI: /\?code=([^&]*)#/,
-                    clientId: '1642970339309039',
-                    clientSecret: '22c45254414542a179b813b60928f653',
-                    redirectUri: origin,
-                    scope: ['user_friends']
-                },
-                icon: {
-                    name: 'facebook',
-                    color: '#3B5998'
                 }
             },
             linkedin: {

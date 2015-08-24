@@ -15,6 +15,7 @@ angular.module('app').provider('Connection', function(settings){
         if(hash){
             if(settings.socials[i].auth.isCode){
                 localStorage.setItem(STORAGE_ITEM_CODE_NAME_PREFIX + i, hash);
+                window.location = window.location.href.split('?')[0] + '#/';
             }else{
                 localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
             }
@@ -66,7 +67,17 @@ angular.module('app').provider('Connection', function(settings){
           };
 
           this.getFriends = function(){
-              return $q.when(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), this.getToken, this.close) : []);
+              var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
+              var deferred = $q.defer();
+              if(code){
+                  var connection = this;
+                  connection.getToken().then(function(){
+                      deferred.resolve(connection.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), connection.getToken, connection.close) : []);
+                  });
+              }else{
+                  deferred.resolve(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), this.getToken, this.close) : []);
+              }
+              return deferred.promise;
           };
 
       };
