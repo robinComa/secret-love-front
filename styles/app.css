@@ -103,7 +103,8 @@ friend-preview ng-transclude * {
 .state-friends-face md-card-content img {
   border-radius: 50%;
   height: 200px;
-  width: 200px; }
+  width: 200px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
 
 .state-friends-face md-card-content .md-button.md-fab.md-mini ng-md-icon {
   top: 6px;
@@ -127,8 +128,7 @@ friend-preview ng-transclude * {
   bottom: 30px;
   right: 0px; }
 
-.state-connect md-whiteframe {
-  padding-top: 10px;
-  width: 90%; }
-  .state-connect md-whiteframe button {
-    width: 90%; }
+.state-connect p,
+.state-connect ng-md-icon {
+  margin-left: 10px;
+  margin-right: 10px; }

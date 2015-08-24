@@ -5,7 +5,7 @@
   "connect.label.linkedin": "LinkedIn",
   "connect.label.instagram": "Instagram",
   "connect.is.connected": "Connecté",
-  "connect.is.not.connected": "Trouver des amis",
+  "connect.is.not.connected": "Ajouter mes amis",
   "connect.is.not.implemented": "Prochainement",
   "connect.disconnect.confirmation.title": "Confirmation",
   "connect.disconnect.confirmation.content": "Voulez vous déconnecter {{name}} de l'application?",

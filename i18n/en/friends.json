@@ -18,6 +18,9 @@
   "friends.filter.not.love.label": "Not love",
   "friends.filter.hide.label": "Hidden friends",
   "friends.filter.not.hide.label": "Not hidden friends",
-  "friends.filter.no.friend.description": "No results, try another filter."
+  "friends.filter.no.friend.description": "No results, try another filter.",
+
+  "friends.face.no.result": "You have already check all your friends!",
+  "friends.face.next": "Next friend"
 
 }

@@ -162,9 +162,9 @@ angular.module('appStub', [
     $httpBackend.whenPOST(/dialogs$/).respond(200);
     $httpBackend.whenPOST(/messages$/).respond(200);
 
-    $httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
-    $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
-    $httpBackend.whenJSONP(/https:\/\/graph.facebook.com\/v2.4\/me\/taggable_friends/).respond(GetJsonFile.synchronously('stub/friends/facebook.json'));
+    //$httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
+    //$httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
+    //$httpBackend.whenJSONP(/https:\/\/graph.facebook.com\/v2.4\/me\/taggable_friends/).respond(GetJsonFile.synchronously('stub/friends/facebook.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -213,10 +213,25 @@ angular.module('appStub').service('GetJsonFile', function(){
     angular.module('app').constant('settings', {
         endpoint: 'rest-api/',
         toast: {
-            hideDelay: 3000,
-            position: 'top left'
+            hideDelay: 5000,
+            position: 'bottom left'
         },
         socials: {
+            facebook: {
+                label: 'connect.label.facebook',
+                auth: {
+                    isCode: true,
+                    patternURI: /\?code=([^&]*)#/,
+                    clientId: '1642970339309039',
+                    clientSecret: '22c45254414542a179b813b60928f653',
+                    redirectUri: origin,
+                    scope: ['user_friends']
+                },
+                icon: {
+                    name: 'facebook',
+                    color: '#3B5998'
+                }
+            },
             googlePlus: {
                 label: 'connect.label.google-plus',
                 auth: {
@@ -255,21 +270,6 @@ angular.module('appStub').service('GetJsonFile', function(){
                 icon: {
                     name: 'twitter',
                     color: '#1AB2E8'
-                }
-            },
-            facebook: {
-                label: 'connect.label.facebook',
-                auth: {
-                    isCode: true,
-                    patternURI: /\?code=([^&]*)#/,
-                    clientId: '1642970339309039',
-                    clientSecret: '22c45254414542a179b813b60928f653',
-                    redirectUri: origin,
-                    scope: ['user_friends']
-                },
-                icon: {
-                    name: 'facebook',
-                    color: '#3B5998'
                 }
             },
             linkedin: {
@@ -416,6 +416,7 @@ angular.module('app').provider('Connection', function(settings){
         if(hash){
             if(settings.socials[i].auth.isCode){
                 localStorage.setItem(STORAGE_ITEM_CODE_NAME_PREFIX + i, hash);
+                window.location = window.location.href.split('?')[0] + '#/';
             }else{
                 localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
             }
@@ -467,7 +468,17 @@ angular.module('app').provider('Connection', function(settings){
           };
 
           this.getFriends = function(){
-              return $q.when(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), this.getToken, this.close) : []);
+              var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
+              var deferred = $q.defer();
+              if(code){
+                  var connection = this;
+                  connection.getToken().then(function(){
+                      deferred.resolve(connection.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), connection.getToken, connection.close) : []);
+                  });
+              }else{
+                  deferred.resolve(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), this.getToken, this.close) : []);
+              }
+              return deferred.promise;
           };
 
       };
@@ -771,7 +782,7 @@ angular.module('app').provider('$linkedin', function(settings){
 angular.module('app').factory('twitter', function(settings, Connection, $q, $http) {
     return new Connection({
         name: 'twitter',
-        isImplemented: true,
+        isImplemented: false,
         sendTokenRequest: function(){
             var timestamp = (new Date().getTime()).toString();
             var oauth_timestamp = timestamp.substring(0, timestamp.length - 3);
@@ -898,11 +909,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $stat
         updateFilteringFriends();
     });
 
-    $scope.filter = {
-        visibility: true,
-        love: [true, false],
-        type: ['instagram', 'googlePlus', 'facebook']
-    };
+    $scope.filter = {};
 
     var filter = function(friends, filter){
         return $filter('friendFilter')(friends, filter);
@@ -970,6 +977,12 @@ angular.module('app').controller('FriendsListCtrl', function($scope){
 
     $scope.openMenu = function($mdOpenMenu, ev) {
         $mdOpenMenu(ev);
+    };
+
+    $scope.$parent.filter = {
+        visibility: true,
+        love: [true, false],
+        type: ['instagram', 'googlePlus', 'facebook']
     };
 
     $scope.getLoveIcon = function(friend){
@@ -1059,18 +1072,24 @@ angular.module('app').directive('friendsFilter', function(settings){
 
 angular.module('app').controller('FriendsFaceCtrl', function($scope){
 
-    $scope.filter = {
+    $scope.$parent.filter = {
         visibility: true,
         love: [false],
         type: ['instagram', 'googlePlus', 'facebook']
     };
 
+    $scope.refreshFace = function(friends){
+        if(friends.length > 0){
+            var randomIndex = Math.floor(Math.random()*friends.length);
+            $scope.friend = friends[randomIndex];
+        }else{
+            $scope.friend = null;
+        }
+    };
+
     $scope.$watch(function(){
         return $scope.filteringFriends;
-    }, function(friends){
-        var ramdomIndex = Math.floor(Math.random()*friends.length);
-        $scope.friend = friends[ramdomIndex];
-    }, true);
+    }, $scope.refreshFace, true);
 
 });
 'use strict';
@@ -1091,11 +1110,14 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
             .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
             .targetEvent(event);
         $mdDialog.show(confirm).then(function() {
+            $scope.connectionModel[name] = false;
             socialService.close();
+        }, function(){
+            $scope.connectionModel[name] = true;
         });
     };
 
-    $scope.connectToogle = function(event, name){
+    $scope.toggleConnection = function(name){
         var socialService = $injector.get(name);
         if(socialService.isConnected()){
             disconnectAction(socialService, name);
@@ -1113,6 +1135,11 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
     $scope.isNotImplemented = function(name){
         return !$injector.get(name).isImplemented();
     };
+
+    $scope.connectionModel = {};
+    for(var type in settings.socials){
+        $scope.connectionModel[type] = $scope.isConnected(type);
+    }
 
 });
 'use strict';
