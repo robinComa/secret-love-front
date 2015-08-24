@@ -1,9 +1,29 @@
 <md-content>
     <md-list>
-        <md-list-item ng-repeat="entry in entries">
-            <md-button class="md-primary" ui-sref="{{entry.uiSref}}" ng-click="toggleSidenav('left')" aria-label="{{entry.label | translate}}">
-                {{entry.label | translate}}
-                <ng-md-icon icon="{{entry.icon}}" size="30"></ng-md-icon>
+        <md-list-item>
+            <md-button class="md-primary" ui-sref="friends-list" ng-click="toggleSidenav('left')" aria-label="{{'sidenav.entry.label.friends' | translate}}">
+                {{'sidenav.entry.label.friends' | translate}}
+                <ng-md-icon icon="group" size="30"></ng-md-icon>
+            </md-button>
+        </md-list-item>
+        <md-list-item>
+            <md-button class="md-primary" ui-sref="secret-box" ng-click="toggleSidenav('left')" aria-label="{{'sidenav.entry.label.secretbox' | translate}}">
+                {{'sidenav.entry.label.secretbox' | translate}}
+                <span class="nb-secret-box-news">{{nbSecretBoxNews}}</span>
+                <ng-md-icon icon="favorite_outline" size="14" class="icon-love"></ng-md-icon>
+                <ng-md-icon icon="markunread_mailbox" size="30"></ng-md-icon>
+            </md-button>
+        </md-list-item>
+        <md-list-item>
+            <md-button class="md-primary" ui-sref="connect" ng-click="toggleSidenav('left')" aria-label="{{'sidenav.entry.label.connect' | translate}}">
+                {{'sidenav.entry.label.connect' | translate}}
+                <ng-md-icon icon="apps" size="30"></ng-md-icon>
+            </md-button>
+        </md-list-item>
+        <md-list-item>
+            <md-button class="md-primary" ui-sref="settings" ng-click="toggleSidenav('left')" aria-label="{{'sidenav.entry.label.settings' | translate}}">
+                {{'sidenav.entry.label.settings' | translate}}
+                <ng-md-icon icon="settings_applications" size="30"></ng-md-icon>
             </md-button>
         </md-list-item>
     </md-list>

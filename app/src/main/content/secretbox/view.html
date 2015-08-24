@@ -1,0 +1,34 @@
+<div layout="row">
+    <md-card flex offset-gt-md="25" flex-gt-md="50">
+
+        <md-card-content ng-if="friends.length === 0" flex>
+            <body-message-action
+                    title-label="secretbox.no.friend.title"
+                    message-label="secretbox.no.friend.description"
+                    action-label="secretbox.no.friend.button"
+                    action="friends-list">
+            </body-message-action>
+        </md-card-content>
+
+        <md-card-content ng-if="secretBox.length > 0" flex layout="column">
+
+            <md-list>
+                <md-list-item ng-repeat="secret in secretBox | orderByFresh track by secret.messages" ng-class="{unread: secret.hasNews}">
+                    <friend-preview friend="secret.friend" flex>
+                        <ng-md-icon ng-if="secret.friend.verified" icon="verified_user" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
+                        <ng-md-icon ng-if="secret.friend.inLove" icon="favorite" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
+                        <ng-md-icon ng-if="!secret.friend.inLove" icon="favorite_outline" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
+                        <p>{{ secret.friend.name }}</p>
+                        <time>{{secret.lastUpdate | date:'short'}}</time>
+                    </friend-preview>
+                    <md-button ng-if="secret.friend.inLove" class="md-fab md-raised" ui-sref="secret-box-dialog({id: secret.messages})" aria-label="{{'dialog.read.message.btn' | translate}}">
+                        <ng-md-icon icon="forum" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+                    </md-button>
+                    <md-divider ng-if="!$last"></md-divider>
+                </md-list-item>
+            </md-list>
+
+        </md-card-content>
+
+    </md-card>
+</div>

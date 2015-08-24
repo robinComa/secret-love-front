@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout, SecretBox){
 
     var isListState = function(){
         return $state.current.name === 'friends-list';
@@ -51,7 +51,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $stat
         var initialLove = friend.love;
 
         friend.love = !initialLove;
-        friend.$save().then(function(){
+        SecretBox.save(friend).$promise.then(function(){
 
             if(friend.love){
                 $mdToast.show(

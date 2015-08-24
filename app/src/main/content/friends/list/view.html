@@ -1,12 +1,12 @@
 <md-card flex offset-gt-md="25" flex-gt-md="50">
 
     <md-card-content ng-if="friends.length === 0 && !loading">
-        <h1>{{ 'friends.no.friend.title' | translate }} :'(</h1>
-        <p>{{ 'friends.no.friend.description' | translate }}</p>
-
-        <md-button ui-sref="connect" class="md-raised md-primary" aria-label="{{'friends.no.friend.button' | translate}}">
-            {{'friends.no.friend.button' | translate}}
-        </md-button>
+        <body-message-action
+                title-label="friends.no.friend.title"
+                message-label="friends.no.friend.description"
+                action-label="friends.no.friend.button"
+                action="connect">
+        </body-message-action>
     </md-card-content>
 
     <md-card-content ng-if="friends.length > 0" flex layout="column">

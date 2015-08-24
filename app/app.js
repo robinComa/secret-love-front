@@ -37,8 +37,8 @@ angular.module('app', [
                 me: function(Me){
                     return Me.get().$promise;
                 },
-                dialogs: function(Dialog){
-                    return Dialog.query().$promise;
+                secretBox: function(SecretBox){
+                    return SecretBox.query().$promise;
                 }
             }
         }).state('friends', {
@@ -65,37 +65,31 @@ angular.module('app', [
             url: '/face',
             templateUrl: 'src/main/content/friends/face/view.html',
             controller: 'FriendsFaceCtrl'
-        }).state('dialog', {
+        }).state('secret-box', {
             parent: 'main',
-            url: '/dialog',
+            url: '/secretbox',
             views: {
                 sidenav: {
                     templateUrl: 'src/main/sidenav/view.html',
                     controller: 'SidenavCtrl'
                 },
                 content: {
-                    templateUrl: 'src/main/content/dialog/view.html',
-                    controller: 'DialogCtrl'
+                    templateUrl: 'src/main/content/secretbox/view.html',
+                    controller: 'SecretBoxCtrl'
                 }
             }
-        }).state('dialog-show', {
-            parent: 'dialog',
+        }).state('secret-box-dialog', {
+            parent: 'secret-box',
             url: '/:id',
             resolve: {
-                dialog: function(dialogs, $stateParams){
-                    return dialogs.filter(function(dialog){
-                        return dialog.id === parseInt($stateParams.id);
-                    })[0];
+                dialog: function(Dialog, $stateParams){
+                    return Dialog.get({id: $stateParams.id}).$promise;
                 }
             },
             views: {
-                'sidenav@main': {
-                    templateUrl: 'src/main/sidenav/view.html',
-                    controller: 'SidenavCtrl'
-                },
                 'content@main': {
-                    templateUrl: 'src/main/content/dialog/show/view.html',
-                    controller: 'DialogShowCtrl'
+                    templateUrl: 'src/main/content/secretbox/dialog/view.html',
+                    controller: 'DialogCtrl'
                 }
             }
         }).state('connect', {
@@ -131,6 +125,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');
+    $translatePartialLoader.addPart('secretbox');
     $translatePartialLoader.addPart('dialog');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');

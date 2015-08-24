@@ -1,24 +1,10 @@
 'use strict';
 
-angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval){
+angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval, secretBox){
 
-    $scope.entries = [{
-        uiSref: 'friends-list',
-        label: 'sidenav.entry.label.friends',
-        icon: 'group'
-    },{
-        uiSref: 'dialog',
-        label: 'sidenav.entry.label.dialog',
-        icon: 'forum'
-    },{
-        uiSref: 'connect',
-        label: 'sidenav.entry.label.connect',
-        icon: 'apps'
-    },{
-        uiSref: 'settings',
-        label: 'sidenav.entry.label.settings',
-        icon: 'settings_applications'
-    }];
+    $scope.nbSecretBoxNews = secretBox.filter(function(secret){
+        return secret.hasNews;
+    }).length;
 
     var duration = 2000;
     var i = 0;

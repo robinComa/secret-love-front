@@ -1,14 +1,13 @@
 'use strict';
 
-angular.module('app').factory('Friend', function(settings, $q, $resource, $injector, $http){
+angular.module('app').factory('Friend', function(settings, $q, $resource, $injector, $http, SecretBox){
 
     var Friend = $resource(settings.endpoint + 'friends');
 
     Friend.query = function(){
         var deferred = $q.defer();
 
-        $http.get(settings.endpoint + 'friends').then(function(response){
-            var loveFriends = response.data;
+        SecretBox.query().$promise.then(function(loveFriends){
 
             var promises = [];
 

@@ -1,8 +1,6 @@
 'use strict';
 
-angular.module('app').controller('DialogShowCtrl', function(settings,$scope, dialog, Message){
-
-    dialog.read = true;
+angular.module('app').controller('DialogCtrl', function(settings,$scope, dialog, Message){
 
     $scope.dialog = dialog;
 

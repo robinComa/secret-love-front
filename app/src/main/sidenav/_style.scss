@@ -6,9 +6,26 @@ md-sidenav {
       margin: 0px 0px 0px 0px;
       text-align: left;
       font-weight: bold;
+      .nb-secret-box-news{
+        position: absolute;
+        top: 4px;
+        right: 65px;
+        border: 3px solid pink;
+        border-radius: 50%;
+        height: 25px;
+        width: 25px;
+        line-height: 1.5;
+        text-align: center;
+      }
       ng-md-icon{
         float: right;
         fill: pink;
+        &.icon-love{
+          position: absolute;
+          top: 2px;
+          right: 33px;
+          fill: white;
+        }
       }
     }
   }

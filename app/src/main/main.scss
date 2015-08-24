@@ -35,6 +35,7 @@ md-input-container{
 
 @import "sidenav/style";
 @import "../components/friend-preview/style";
+@import "../components/body-message-action/style";
 
 .state-friends-list,
 .state-friends-face{
@@ -47,11 +48,11 @@ md-input-container{
 .state-friends-face{
   @import "content/friends/face/style";
 }
-.state-dialog{
-  @import "content/dialog/style";
+.state-secret-box{
+  @import "content/secretbox/style";
 }
-.state-dialog-show{
-  @import "content/dialog/show/style";
+.state-secret-box-dialog{
+  @import "content/secretbox/dialog/style";
 }
 .state-connect{
   @import "content/connect/style";

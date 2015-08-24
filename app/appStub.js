@@ -12,10 +12,10 @@ angular.module('appStub', [
     $httpBackend.whenGET(/me$/).respond(GetJsonFile.synchronously('stub/me/GET-x.json'));
     $httpBackend.whenPOST(/me$/).respond(200);
 
-    $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
-    $httpBackend.whenPOST(/friends$/).respond(200);
+    $httpBackend.whenGET(/secretbox$/).respond(GetJsonFile.synchronously('stub/secretbox/GET.json'));
+    $httpBackend.whenPOST(/secretbox$/).respond(200);
 
-    $httpBackend.whenGET(/dialogs$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
+    $httpBackend.whenGET(/dialogs\/.*$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
 
     $httpBackend.whenPOST(/dialogs$/).respond(200);
     $httpBackend.whenPOST(/messages$/).respond(200);
