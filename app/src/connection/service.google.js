@@ -42,15 +42,10 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                 }else{
                     deferred.resolve(response.data.items.reduce(function(friends, friend){
                         if(friend.objectType === 'person'){
-                            var picture = friend.image.url;
-                            var match = picture.match(/sz\=([0-9]+)/);
-                            if(match[1]){
-                                picture = picture.replace(match[0], 'sz=200');
-                            }
                             friends.push(new Friend({
                                 id: friend.id,
                                 name: friend.displayName,
-                                picture: picture,
+                                picture: friend.image.url,
                                 type: 'googlePlus'
                             }));
                         }

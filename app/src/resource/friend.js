@@ -12,9 +12,13 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
 
             var promises = [];
 
+            var equals = function(friend1, friend2){
+                return friend1.id === friend2.id && friend1.name === friend2.name;
+            };
+
             var areInLove = function(loveFriends, friend){
                 return loveFriends.some(function(loveFriend){
-                    return angular.equals(loveFriend, friend);
+                    return equals(loveFriend, friend);
                 });
             };
 
