@@ -7,7 +7,12 @@
     <md-card-content layout="column" layout-align="center center" ng-if="friend">
         <h1>{{ friend.name }}</h1>
 
-        <img ng-src="{{friend.picture}}" alt="{{ friend.name }}" flex/>
+        <div layout="row" layout-align="center center">
+            <img ng-src="{{friend.picture}}" alt="{{ friend.name }}" flex/>
+            <md-button aria-label="{{'friends.face.next' | translate}}" class="next md-icon-button" ng-click="refreshFace(filteringFriends)">
+                <ng-md-icon icon="chevron_right" style="fill: pink" size="180"></ng-md-icon>
+            </md-button>
+        </div>
 
         <div layout="row" layout-align="center center">
             <md-button class="md-fab md-primary" ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
@@ -17,10 +22,6 @@
                 <ng-md-icon icon="favorite" style="fill: pink" size="40"></ng-md-icon>
             </md-button>
         </div>
-
-        <md-button class="md-fab md-raised md-mini md-primary btn-refresh" aria-label="{{'friends.face.next' | translate}}" ng-click="refreshFace(filteringFriends)">
-            <ng-md-icon icon="help" style="fill: white" size="40"></ng-md-icon>
-        </md-button>
 
     </md-card-content>
 

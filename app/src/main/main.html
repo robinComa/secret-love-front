@@ -6,8 +6,8 @@
             </md-tooltip>
             <ng-md-icon icon="view_headline" size="30"></ng-md-icon>
         </md-button>
-        <h1 flex="50" ui-sref="friends">{{'common.navbar.title' | translate}}</h1>
-        <p class="login">{{me.login}}</p>
+        <h1 flex="50"><a ui-sref="friends">{{'common.navbar.title' | translate}}</a></h1>
+        <a ui-sref="settings" class="login">{{me.login}}</a>
     </div>
 </md-toolbar>
 <section layout="row" flex>
