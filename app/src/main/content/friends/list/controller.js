@@ -8,7 +8,7 @@ angular.module('app').controller('FriendsListCtrl', function($scope){
 
     $scope.$parent.filter = {
         visibility: true,
-        love: [true, false],
+        love: [false],
         type: ['instagram', 'googlePlus', 'facebook']
     };
 

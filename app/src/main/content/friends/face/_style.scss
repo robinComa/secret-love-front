@@ -14,13 +14,14 @@ md-card-content{
     height: 150px;
     width: 150px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    margin-bottom: 40px;
   }
 
   .md-button.md-fab{
     &.md-mini{
       ng-md-icon {
-        top: 6px;
-        left: 6px;
+        top: 0px;
+        left: 0px;
       }
     }
     ng-md-icon {
