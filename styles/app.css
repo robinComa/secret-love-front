@@ -93,7 +93,7 @@ friend-preview ng-transclude * {
     font-weight: bold; }
 
 .state-friends-face md-card-content h1 {
-  margin-top: 50px;
+  margin-top: 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -102,8 +102,8 @@ friend-preview ng-transclude * {
 
 .state-friends-face md-card-content img {
   border-radius: 50%;
-  height: 200px;
-  width: 200px;
+  height: 150px;
+  width: 150px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
 
 .state-friends-face md-card-content .md-button.md-fab.md-mini ng-md-icon {
