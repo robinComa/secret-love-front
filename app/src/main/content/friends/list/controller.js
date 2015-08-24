@@ -6,6 +6,12 @@ angular.module('app').controller('FriendsListCtrl', function($scope){
         $mdOpenMenu(ev);
     };
 
+    $scope.$parent.filter = {
+        visibility: true,
+        love: [true, false],
+        type: ['instagram', 'googlePlus', 'facebook']
+    };
+
     $scope.getLoveIcon = function(friend){
         if(friend.love === true){
             return 'favorite';

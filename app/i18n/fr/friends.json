@@ -18,6 +18,10 @@
   "friends.filter.not.love.label": "Pas amoureux",
   "friends.filter.hide.label": "Amis masqués",
   "friends.filter.not.hide.label": "Amis visibles",
-  "friends.filter.no.friend.description": "Pas de résultats, essayer un autre filtre."
+  "friends.filter.no.friend.description": "Pas de résultats, essayer un autre filtre.",
+
+  "friends.face.no.result": "Vous avez déjà passé en revue tous vos amis!",
+  "friends.face.next": "Ami suivant"
+
 
 }

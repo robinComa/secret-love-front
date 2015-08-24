@@ -28,11 +28,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $stat
         updateFilteringFriends();
     });
 
-    $scope.filter = {
-        visibility: true,
-        love: [true, false],
-        type: ['instagram', 'googlePlus', 'facebook']
-    };
+    $scope.filter = {};
 
     var filter = function(friends, filter){
         return $filter('friendFilter')(friends, filter);

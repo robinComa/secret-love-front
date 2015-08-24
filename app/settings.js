@@ -6,8 +6,8 @@
     angular.module('app').constant('settings', {
         endpoint: 'rest-api/',
         toast: {
-            hideDelay: 3000,
-            position: 'top left'
+            hideDelay: 5000,
+            position: 'bottom left'
         },
         socials: {
             googlePlus: {
