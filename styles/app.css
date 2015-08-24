@@ -30,9 +30,24 @@ md-sidenav md-list-item a.md-button {
   margin: 0px 0px 0px 0px;
   text-align: left;
   font-weight: bold; }
+  md-sidenav md-list-item a.md-button .nb-secret-box-news {
+    position: absolute;
+    top: 4px;
+    right: 65px;
+    border: 3px solid pink;
+    border-radius: 50%;
+    height: 25px;
+    width: 25px;
+    line-height: 1.5;
+    text-align: center; }
   md-sidenav md-list-item a.md-button ng-md-icon {
     float: right;
     fill: pink; }
+    md-sidenav md-list-item a.md-button ng-md-icon.icon-love {
+      position: absolute;
+      top: 2px;
+      right: 33px;
+      fill: white; }
 
 md-sidenav .socialCarousel {
   position: fixed;
@@ -61,6 +76,9 @@ friend-preview ng-transclude * {
   friend-preview ng-transclude *.no-wrap {
     white-space: normal;
     margin-bottom: 10px; }
+
+body-message-action h1, body-message-action p {
+  text-align: center; }
 
 .state-friends-list .btn-toggle-list-face,
 .state-friends-face .btn-toggle-list-face {
@@ -123,16 +141,17 @@ friend-preview ng-transclude * {
     top: -40px;
     left: -50px; }
 
-.state-dialog .dialog-unread * {
+.state-secret-box .unread p {
   font-weight: bold; }
 
-.state-dialog .dialog-read * {
-  font-weight: normal; }
+.state-secret-box time {
+  color: grey;
+  font-size: 10px; }
 
-.state-dialog-show p.date {
+.state-secret-box-dialog p.date {
   color: grey; }
 
-.state-dialog-show .submit-btn {
+.state-secret-box-dialog .submit-btn {
   position: absolute;
   bottom: 30px;
   right: 0px; }

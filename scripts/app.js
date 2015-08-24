@@ -37,8 +37,8 @@ angular.module('app', [
                 me: function(Me){
                     return Me.get().$promise;
                 },
-                dialogs: function(Dialog){
-                    return Dialog.query().$promise;
+                secretBox: function(SecretBox){
+                    return SecretBox.query().$promise;
                 }
             }
         }).state('friends', {
@@ -65,37 +65,31 @@ angular.module('app', [
             url: '/face',
             templateUrl: 'src/main/content/friends/face/view.html',
             controller: 'FriendsFaceCtrl'
-        }).state('dialog', {
+        }).state('secret-box', {
             parent: 'main',
-            url: '/dialog',
+            url: '/secretbox',
             views: {
                 sidenav: {
                     templateUrl: 'src/main/sidenav/view.html',
                     controller: 'SidenavCtrl'
                 },
                 content: {
-                    templateUrl: 'src/main/content/dialog/view.html',
-                    controller: 'DialogCtrl'
+                    templateUrl: 'src/main/content/secretbox/view.html',
+                    controller: 'SecretBoxCtrl'
                 }
             }
-        }).state('dialog-show', {
-            parent: 'dialog',
+        }).state('secret-box-dialog', {
+            parent: 'secret-box',
             url: '/:id',
             resolve: {
-                dialog: function(dialogs, $stateParams){
-                    return dialogs.filter(function(dialog){
-                        return dialog.id === parseInt($stateParams.id);
-                    })[0];
+                dialog: function(Dialog, $stateParams){
+                    return Dialog.get({id: $stateParams.id}).$promise;
                 }
             },
             views: {
-                'sidenav@main': {
-                    templateUrl: 'src/main/sidenav/view.html',
-                    controller: 'SidenavCtrl'
-                },
                 'content@main': {
-                    templateUrl: 'src/main/content/dialog/show/view.html',
-                    controller: 'DialogShowCtrl'
+                    templateUrl: 'src/main/content/secretbox/dialog/view.html',
+                    controller: 'DialogCtrl'
                 }
             }
         }).state('connect', {
@@ -131,6 +125,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');
+    $translatePartialLoader.addPart('secretbox');
     $translatePartialLoader.addPart('dialog');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
@@ -154,10 +149,10 @@ angular.module('appStub', [
     $httpBackend.whenGET(/me$/).respond(GetJsonFile.synchronously('stub/me/GET-x.json'));
     $httpBackend.whenPOST(/me$/).respond(200);
 
-    $httpBackend.whenGET(/friends$/).respond(GetJsonFile.synchronously('stub/friends/GET.json'));
-    $httpBackend.whenPOST(/friends$/).respond(200);
+    $httpBackend.whenGET(/secretbox$/).respond(GetJsonFile.synchronously('stub/secretbox/GET.json'));
+    $httpBackend.whenPOST(/secretbox$/).respond(200);
 
-    $httpBackend.whenGET(/dialogs$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
+    $httpBackend.whenGET(/dialogs\/.*$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
 
     $httpBackend.whenPOST(/dialogs$/).respond(200);
     $httpBackend.whenPOST(/messages$/).respond(200);
@@ -299,21 +294,24 @@ angular.module('app').factory('Me', function(settings, $resource){
 });
 'use strict';
 
-angular.module('app').factory('Friend', function(settings, $q, $resource, $injector, $http){
+angular.module('app').factory('Friend', function(settings, $q, $resource, $injector, $http, SecretBox){
 
     var Friend = $resource(settings.endpoint + 'friends');
 
     Friend.query = function(){
         var deferred = $q.defer();
 
-        $http.get(settings.endpoint + 'friends').then(function(response){
-            var loveFriends = response.data;
+        SecretBox.query().$promise.then(function(loveFriends){
 
             var promises = [];
 
+            var equals = function(friend1, friend2){
+                return friend1.id === friend2.id && friend1.name === friend2.name;
+            };
+
             var areInLove = function(loveFriends, friend){
                 return loveFriends.some(function(loveFriend){
-                    return angular.equals(loveFriend, friend);
+                    return equals(loveFriend, friend);
                 });
             };
 
@@ -349,9 +347,9 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
 });
 'use strict';
 
-angular.module('app').factory('Dialog', function(settings, $resource){
+angular.module('app').factory('SecretBox', function(settings, $resource){
 
-    return $resource(settings.endpoint + 'dialogs');
+    return $resource(settings.endpoint + 'secretbox');
 
 });
 'use strict';
@@ -359,6 +357,13 @@ angular.module('app').factory('Dialog', function(settings, $resource){
 angular.module('app').factory('Message', function(settings, $resource){
 
     return $resource(settings.endpoint + 'messages');
+
+});
+'use strict';
+
+angular.module('app').factory('Dialog', function(settings, $resource){
+
+    return $resource(settings.endpoint + 'dialogs/:id', {'id': '@id'});
 
 });
 'use strict';
@@ -396,6 +401,23 @@ angular.module('app').directive('friendPreview', function(settings){
                     return settings.socials[social].icon;
                 }
             };
+        }
+    };
+});
+'use strict';
+
+angular.module('app').directive('bodyMessageAction', function(){
+    return {
+        restrict: 'E',
+        scope: {
+            titleLabel: '@',
+            messageLabel: '@',
+            action: '@',
+            actionLabel: '@'
+        },
+        templateUrl: 'src/components/body-message-action/view.html',
+        link: function(){
+
         }
     };
 });
@@ -530,15 +552,10 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                 }else{
                     deferred.resolve(response.data.items.reduce(function(friends, friend){
                         if(friend.objectType === 'person'){
-                            var picture = friend.image.url;
-                            var match = picture.match(/sz\=([0-9]+)/);
-                            if(match[1]){
-                                picture = picture.replace(match[0], 'sz=200');
-                            }
                             friends.push(new Friend({
                                 id: friend.id,
                                 name: friend.displayName,
-                                picture: picture,
+                                picture: friend.image.url,
                                 type: 'googlePlus'
                             }));
                         }
@@ -846,25 +863,11 @@ angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $s
 });
 'use strict';
 
-angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval){
+angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval, secretBox){
 
-    $scope.entries = [{
-        uiSref: 'friends-list',
-        label: 'sidenav.entry.label.friends',
-        icon: 'group'
-    },{
-        uiSref: 'dialog',
-        label: 'sidenav.entry.label.dialog',
-        icon: 'forum'
-    },{
-        uiSref: 'connect',
-        label: 'sidenav.entry.label.connect',
-        icon: 'apps'
-    },{
-        uiSref: 'settings',
-        label: 'sidenav.entry.label.settings',
-        icon: 'settings_applications'
-    }];
+    $scope.nbSecretBoxNews = secretBox.filter(function(secret){
+        return secret.hasNews;
+    }).length;
 
     var duration = 2000;
     var i = 0;
@@ -886,7 +889,7 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout){
+angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout, SecretBox){
 
     var isListState = function(){
         return $state.current.name === 'friends-list';
@@ -937,7 +940,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $stat
         var initialLove = friend.love;
 
         friend.love = !initialLove;
-        friend.$save().then(function(){
+        SecretBox.save(friend).$promise.then(function(){
 
             if(friend.love){
                 $mdToast.show(
@@ -1167,22 +1170,25 @@ angular.module('app').controller('SettingsCtrl', function($scope, me){
 });
 'use strict';
 
-angular.module('app').controller('DialogCtrl', function(settings, $scope, dialogs){
+angular.module('app').controller('SecretBoxCtrl', function($scope, secretBox){
 
-    $scope.unreadDialogs = dialogs.filter(function(message){
-        return !message.read;
-    });
-
-    $scope.readDialogs = dialogs.filter(function(message){
-        return message.read;
-    });
+    $scope.secretBox = secretBox;
 
 });
 'use strict';
 
-angular.module('app').controller('DialogShowCtrl', function(settings,$scope, dialog, Message){
+angular.module('app').filter('orderByFresh', function() {
+    return function( items ) {
+        return items.sort(function(a, b){
+            var aStamp = a.lastUpdate  / (a.hasNews ? 1 : 1000);
+            var bStamp = b.lastUpdate  / (b.hasNews ? 1 : 1000);
+            return (aStamp - bStamp) < 0 ? 1 : -1;
+        });
+    };
+});
+'use strict';
 
-    dialog.read = true;
+angular.module('app').controller('DialogCtrl', function(settings,$scope, dialog, Message){
 
     $scope.dialog = dialog;
 

@@ -1,0 +1,28 @@
+[
+  {
+    "friend": {
+      "id": "582801370",
+      "name": "mauddenis (Maud Denis)",
+      "picture": "https://igcdn-photos-e-a.akamaihd.net/hphotos-ak-xaf1/t51.2885-19/11327931_1603528506566028_2127164996_a.jpg",
+      "type": "instagram",
+      "verified": false,
+      "inLove": false
+    },
+    "lastUpdate": 1234567890123,
+    "hasNews": false,
+    "messages": null
+  },
+  {
+    "friend": {
+      "id": "112722703101178383990",
+      "name": "Maud Denis",
+      "picture": "https://lh5.googleusercontent.com/-NojJ3MKYi7g/AAAAAAAAAAI/AAAAAAAAACA/gIMqiKs1om0/photo.jpg?sz=50",
+      "type": "googlePlus",
+      "verified": true,
+      "inLove": true
+    },
+    "lastUpdate": 1234557890123,
+    "hasNews": true,
+    "messages": "88uu5678hgca9ojij76xcfgvijijhj9879"
+  }
+]
