@@ -104,15 +104,24 @@ friend-preview ng-transclude * {
   border-radius: 50%;
   height: 150px;
   width: 150px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26); }
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  margin: 20px 0px 40px 0px; }
 
 .state-friends-face md-card-content .md-button.md-fab.md-mini ng-md-icon {
-  top: 6px;
-  left: 6px; }
+  top: 0px;
+  left: 0px; }
 
 .state-friends-face md-card-content .md-button.md-fab ng-md-icon {
   top: 8px;
   left: 8px; }
+
+.state-friends-face md-card-content .md-button.next {
+  height: 100px;
+  width: 70px; }
+  .state-friends-face md-card-content .md-button.next ng-md-icon {
+    position: absolute;
+    top: -40px;
+    left: -50px; }
 
 .state-dialog .dialog-unread * {
   font-weight: bold; }

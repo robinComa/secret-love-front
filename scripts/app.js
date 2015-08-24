@@ -530,10 +530,15 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
                 }else{
                     deferred.resolve(response.data.items.reduce(function(friends, friend){
                         if(friend.objectType === 'person'){
+                            var picture = friend.image.url;
+                            var match = picture.match(/sz\=([0-9]+)/);
+                            if(match[1]){
+                                picture = picture.replace(match[0], 'sz=200');
+                            }
                             friends.push(new Friend({
                                 id: friend.id,
                                 name: friend.displayName,
-                                picture: friend.image.url,
+                                picture: picture,
                                 type: 'googlePlus'
                             }));
                         }
@@ -981,7 +986,7 @@ angular.module('app').controller('FriendsListCtrl', function($scope){
 
     $scope.$parent.filter = {
         visibility: true,
-        love: [true, false],
+        love: [false],
         type: ['instagram', 'googlePlus', 'facebook']
     };
 
