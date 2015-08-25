@@ -1,7 +1,7 @@
 md-card-content{
 
   h1{
-    margin-top: 20px;
+    margin: 30px 0px 30px 0px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -14,21 +14,9 @@ md-card-content{
     height: 150px;
     width: 150px;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-    margin: 20px 0px 40px 0px;
+    margin: 0px;
   }
 
-  .md-button.md-fab{
-    &.md-mini{
-      ng-md-icon {
-        top: 0px;
-        left: 0px;
-      }
-    }
-    ng-md-icon {
-      top: 8px;
-      left: 8px;
-    }
-  }
   .md-button.next{
     height: 100px;
     width: 70px;
@@ -37,6 +25,33 @@ md-card-content{
       top: -40px;
       left: -50px;
     }
+  }
+
+  .btn-toolbar-choice{
+    margin-top: 40px;
+    .md-button.md-fab{
+      &.md-mini{
+        ng-md-icon {
+          top: 0px;
+          left: 0px;
+        }
+      }
+      ng-md-icon {
+        top: 8px;
+        left: 8px;
+      }
+    }
+  }
+
+  .btn-length{
+    line-height: 40px;
+    width: 40px;
+    height: 40px;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    color: pink;
+    font-weight: bold;
   }
 
 }

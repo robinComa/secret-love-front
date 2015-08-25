@@ -14,7 +14,7 @@
             </md-button>
         </div>
 
-        <div layout="row" layout-align="center center">
+        <div layout="row" layout-align="center center" class="btn-toolbar-choice">
             <md-button class="md-fab md-primary" ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
                 <ng-md-icon icon="visibility_off" style="fill: pink" size="40"></ng-md-icon>
             </md-button>
@@ -22,6 +22,10 @@
                 <ng-md-icon icon="favorite" style="fill: pink" size="40"></ng-md-icon>
             </md-button>
         </div>
+
+        <md-button class="btn-length md-fab md-raised md-mini" aria-label="length">
+            {{filteringFriends.length}}
+        </md-button>
 
     </md-card-content>
 
