@@ -18,7 +18,7 @@
             <md-button class="md-fab md-primary" ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
                 <ng-md-icon icon="visibility_off" style="fill: pink" size="40"></ng-md-icon>
             </md-button>
-            <md-button class="md-fab md-primary" aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend)">
+            <md-button class="md-fab md-primary" aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend, $event)">
                 <ng-md-icon icon="favorite" style="fill: pink" size="40"></ng-md-icon>
             </md-button>
         </div>

@@ -3,6 +3,10 @@
   "friends.no.friend.description": "You can access to your contacts from your favorite social application. Connect to it in order to show all your contacts into this screen to be able to match with somebody!",
   "friends.no.friend.button": "Connect your social applications now!",
 
+  "friends.no.more.love.dialog.title": "No more love",
+  "friends.no.more.love.dialog.content": "Wait for next month or buy loves on the market",
+  "friends.no.more.love.dialog.action": "Ok",
+
   "friends.list.love.toast.content": "{{name}} is now on your secret box",
   "friends.list.filter.dialog.cancel": "Cancel",
   "friends.list.filter.dialog.submit": "Apply filters",

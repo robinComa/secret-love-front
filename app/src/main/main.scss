@@ -3,13 +3,13 @@ body{
 }
 
 md-toolbar{
-  button.md-button{
+  button.md-button.btn-toggle-sidenav{
     position: absolute;
     left: 5px;
     top: 15px;
     min-width: 50px;
     [icon]{
-      fill: white;
+      fill: pink;
     }
   }
   .login{
@@ -34,8 +34,9 @@ md-input-container{
 }
 
 @import "sidenav/style";
-@import "../components/friend-preview/style";
+@import "../components/basket-content/style";
 @import "../components/body-message-action/style";
+@import "../components/friend-preview/style";
 
 .state-friends-list,
 .state-friends-face{

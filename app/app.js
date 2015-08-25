@@ -129,6 +129,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('dialog');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
+    $translatePartialLoader.addPart('basket');
 
     $timeout(function(){
         $translate.refresh();

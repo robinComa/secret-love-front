@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout, SecretBox){
+angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $state, Friend, $filter, $mdToast, $mdDialog, $translate, $timeout, SecretBox){
 
     var isListState = function(){
         return $state.current.name === 'friends-list';
@@ -46,30 +46,45 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $stat
         return $scope.filteringFriends;
     }, updateFilteringFriends, true);
 
-    $scope.toogleLove = function(friend){
+    $scope.toogleLove = function(friend, ev){
 
         var initialLove = friend.love;
 
-        friend.love = !initialLove;
-        SecretBox.save(friend).$promise.then(function(){
+        if(!initialLove.love && me.basket.loves < 1){
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title($translate.instant('friends.no.more.love.dialog.title') + ' :\'(')
+                    .content($translate.instant('friends.no.more.love.dialog.content'))
+                    .ariaLabel($translate.instant('friends.no.more.love.dialog.content'))
+                    .ok($translate.instant('friends.no.more.love.dialog.action'))
+                    .targetEvent(ev)
+            );
+        }else{
+            friend.love = !initialLove;
 
-            if(friend.love){
-                $mdToast.show(
-                    $mdToast.simple()
-                        .content($translate.instant('friends.list.love.toast.content', {
-                            name: friend.name
-                        }))
-                        .position(settings.toast.position)
-                        .hideDelay(settings.toast.hideDelay)
-                );
-            }
+            SecretBox.save(friend).$promise.then(function(){
 
-        }, function(){
-            friend.love = undefined;
-            $timeout(function(){
-                friend.love = initialLove;
-            }, 3000);
-        });
+                me.basket.loves--;
+
+                if(friend.love){
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .content($translate.instant('friends.list.love.toast.content', {
+                                name: friend.name
+                            }))
+                            .position(settings.toast.position)
+                            .hideDelay(settings.toast.hideDelay)
+                    );
+                }
+
+            }, function(){
+                friend.love = undefined;
+                $timeout(function(){
+                    friend.love = initialLove;
+                }, 3000);
+            });
+        }
     };
 
     $scope.toggleFriendVisibility = function(friend){

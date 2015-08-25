@@ -1,0 +1,9 @@
+<p class="label-love-length">{{basket.loves}}</p>
+<ng-md-icon icon="favorite" style="fill: pink" size="25" class="icon-love"></ng-md-icon>
+<ng-md-icon ng-if="moveMinusOne" icon="exposure_minus_1" style="fill: pink" size="20" class="icon-minus-one"></ng-md-icon>
+
+<md-button title="{{'basket.shopping.link.label' | translate}}"
+           aria-label="{{'basket.shopping.link.label' | translate}}"
+           class="md-icon-button btn-shopping">
+    <ng-md-icon icon="add_shopping_cart" style="fill: pink" size="30"></ng-md-icon>
+</md-button>

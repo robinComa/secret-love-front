@@ -34,7 +34,7 @@
                     </md-button>
                     <md-menu-content width="2">
                         <md-menu-item ng-if="friend.visibility">
-                            <md-button aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend)">
+                            <md-button aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend, $event)">
                                 <ng-md-icon icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
                             </md-button>
                         </md-menu-item>
