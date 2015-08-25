@@ -3,6 +3,10 @@
   "friends.no.friend.description": "Vous pouvez récupérer les contacts de vos autres applications. Connectez vous à elles pour les voirs afin d'augmenter vos chances de match!",
   "friends.no.friend.button": "Connectez vos applications maintenant!",
 
+  "friends.no.more.love.dialog.title": "Plus aucun love",
+  "friends.no.more.love.dialog.content": "Attendez le mois prochain ou achetez des loves dans la boutique",
+  "friends.no.more.love.dialog.action": "Ok",
+
   "friends.list.love.toast.content": "{{name}} est maintenant dans votre secret box!",
   "friends.list.filter.dialog.cancel": "Annuler",
   "friends.list.filter.dialog.submit": "Appliquer le filtre",

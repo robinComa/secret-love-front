@@ -1,13 +1,13 @@
 body {
   font-family: 'Roboto Condensed', sans-serif; }
 
-md-toolbar button.md-button {
+md-toolbar button.md-button.btn-toggle-sidenav {
   position: absolute;
   left: 5px;
   top: 15px;
   min-width: 50px; }
-  md-toolbar button.md-button [icon] {
-    fill: white; }
+  md-toolbar button.md-button.btn-toggle-sidenav [icon] {
+    fill: pink; }
 
 md-toolbar .login {
   color: pink;
@@ -57,6 +57,27 @@ md-sidenav .socialCarousel {
 md-backdrop.md-sidenav-backdrop {
   display: none; }
 
+basket-content .label-love-length {
+  font-size: 12px;
+  color: pink;
+  position: absolute;
+  top: -5px;
+  right: 58px;
+  border-radius: 50%;
+  padding: 2px; }
+
+basket-content .md-icon-button.btn-shopping {
+  height: 30px;
+  width: 30px; }
+
+basket-content .icon-minus-one {
+  position: absolute;
+  top: 35px;
+  right: 55px; }
+
+body-message-action h1, body-message-action p {
+  text-align: center; }
+
 friend-preview .avatar {
   width: 50px;
   height: 50px;
@@ -76,9 +97,6 @@ friend-preview ng-transclude * {
   friend-preview ng-transclude *.no-wrap {
     white-space: normal;
     margin-bottom: 10px; }
-
-body-message-action h1, body-message-action p {
-  text-align: center; }
 
 .state-friends-list .btn-toggle-list-face,
 .state-friends-face .btn-toggle-list-face {
@@ -111,7 +129,7 @@ body-message-action h1, body-message-action p {
     font-weight: bold; }
 
 .state-friends-face md-card-content h1 {
-  margin-top: 20px;
+  margin: 30px 0px 30px 0px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -123,15 +141,7 @@ body-message-action h1, body-message-action p {
   height: 150px;
   width: 150px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-  margin: 20px 0px 40px 0px; }
-
-.state-friends-face md-card-content .md-button.md-fab.md-mini ng-md-icon {
-  top: 0px;
-  left: 0px; }
-
-.state-friends-face md-card-content .md-button.md-fab ng-md-icon {
-  top: 8px;
-  left: 8px; }
+  margin: 0px; }
 
 .state-friends-face md-card-content .md-button.next {
   height: 100px;
@@ -140,6 +150,25 @@ body-message-action h1, body-message-action p {
     position: absolute;
     top: -40px;
     left: -50px; }
+
+.state-friends-face md-card-content .btn-toolbar-choice {
+  margin-top: 40px; }
+  .state-friends-face md-card-content .btn-toolbar-choice .md-button.md-fab.md-mini ng-md-icon {
+    top: 0px;
+    left: 0px; }
+  .state-friends-face md-card-content .btn-toolbar-choice .md-button.md-fab ng-md-icon {
+    top: 8px;
+    left: 8px; }
+
+.state-friends-face md-card-content .btn-length {
+  line-height: 40px;
+  width: 40px;
+  height: 40px;
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  color: pink;
+  font-weight: bold; }
 
 .state-secret-box .unread p {
   font-weight: bold; }

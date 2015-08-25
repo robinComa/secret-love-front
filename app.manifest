@@ -8,6 +8,7 @@ scripts/templates.js
 scripts/vendor.js
 styles/app.css
 styles/vendor.css
+i18n/en/basket.json
 i18n/en/common.json
 i18n/en/connect.json
 i18n/en/dialog.json
@@ -15,6 +16,7 @@ i18n/en/friends.json
 i18n/en/secretbox.json
 i18n/en/settings.json
 i18n/en/sidenav.json
+i18n/fr/basket.json
 i18n/fr/common.json
 i18n/fr/connect.json
 i18n/fr/dialog.json
@@ -33,4 +35,4 @@ stub/secretbox/GET.json
 NETWORK:
 *
 
-# hash: 6683fe2e3a1363f0c69d91f3db3f63f92572e181bc278efbe450f0a858f79f2c
+# hash: f8d5b58be4bee540b4b45c4b8a29b2f23bdf1ed4d325e84107a5db7b45bef611

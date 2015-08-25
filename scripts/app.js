@@ -129,6 +129,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('dialog');
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
+    $translatePartialLoader.addPart('basket');
 
     $timeout(function(){
         $translate.refresh();
@@ -387,20 +388,25 @@ angular.module('app').provider('Language', function(){
 });
 'use strict';
 
-angular.module('app').directive('friendPreview', function(settings){
+angular.module('app').directive('basketContent', function($timeout){
     return {
         restrict: 'E',
-        transclude: true,
         scope: {
-            friend: '=friend'
+            basket: '=basket'
         },
-        templateUrl: 'src/components/friend-preview/view.html',
+        templateUrl: 'src/components/basket-content/view.html',
         link: function($scope){
-            $scope.getSocialIcon = function(social){
-                if(social){
-                    return settings.socials[social].icon;
+
+            $scope.$watch(function(){
+                return $scope.basket.loves;
+            }, function(val, oldVal){
+                if(val !== oldVal){
+                    $scope.moveMinusOne = true;
+                    $timeout(function(){
+                        $scope.moveMinusOne = false;
+                    }, 2000);
                 }
-            };
+            });
         }
     };
 });
@@ -418,6 +424,25 @@ angular.module('app').directive('bodyMessageAction', function(){
         templateUrl: 'src/components/body-message-action/view.html',
         link: function(){
 
+        }
+    };
+});
+'use strict';
+
+angular.module('app').directive('friendPreview', function(settings){
+    return {
+        restrict: 'E',
+        transclude: true,
+        scope: {
+            friend: '=friend'
+        },
+        templateUrl: 'src/components/friend-preview/view.html',
+        link: function($scope){
+            $scope.getSocialIcon = function(social){
+                if(social){
+                    return settings.socials[social].icon;
+                }
+            };
         }
     };
 });
@@ -889,7 +914,7 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, $scope, $state, Friend, $filter, $mdToast, $translate, $timeout, SecretBox){
+angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $state, Friend, $filter, $mdToast, $mdDialog, $translate, $timeout, SecretBox){
 
     var isListState = function(){
         return $state.current.name === 'friends-list';
@@ -935,30 +960,45 @@ angular.module('app').controller('FriendsCtrl', function(settings, $scope, $stat
         return $scope.filteringFriends;
     }, updateFilteringFriends, true);
 
-    $scope.toogleLove = function(friend){
+    $scope.toogleLove = function(friend, ev){
 
         var initialLove = friend.love;
 
-        friend.love = !initialLove;
-        SecretBox.save(friend).$promise.then(function(){
+        if(!initialLove.love && me.basket.loves < 1){
+            $mdDialog.show(
+                $mdDialog.alert()
+                    .clickOutsideToClose(true)
+                    .title($translate.instant('friends.no.more.love.dialog.title') + ' :\'(')
+                    .content($translate.instant('friends.no.more.love.dialog.content'))
+                    .ariaLabel($translate.instant('friends.no.more.love.dialog.content'))
+                    .ok($translate.instant('friends.no.more.love.dialog.action'))
+                    .targetEvent(ev)
+            );
+        }else{
+            friend.love = !initialLove;
 
-            if(friend.love){
-                $mdToast.show(
-                    $mdToast.simple()
-                        .content($translate.instant('friends.list.love.toast.content', {
-                            name: friend.name
-                        }))
-                        .position(settings.toast.position)
-                        .hideDelay(settings.toast.hideDelay)
-                );
-            }
+            SecretBox.save(friend).$promise.then(function(){
 
-        }, function(){
-            friend.love = undefined;
-            $timeout(function(){
-                friend.love = initialLove;
-            }, 3000);
-        });
+                me.basket.loves--;
+
+                if(friend.love){
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .content($translate.instant('friends.list.love.toast.content', {
+                                name: friend.name
+                            }))
+                            .position(settings.toast.position)
+                            .hideDelay(settings.toast.hideDelay)
+                    );
+                }
+
+            }, function(){
+                friend.love = undefined;
+                $timeout(function(){
+                    friend.love = initialLove;
+                }, 3000);
+            });
+        }
     };
 
     $scope.toggleFriendVisibility = function(friend){
