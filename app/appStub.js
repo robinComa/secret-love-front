@@ -14,6 +14,7 @@ angular.module('appStub', [
 
     $httpBackend.whenGET(/secretbox$/).respond(GetJsonFile.synchronously('stub/secretbox/GET.json'));
     $httpBackend.whenPOST(/secretbox$/).respond(200);
+    $httpBackend.whenDELETE(/secretbox\/.+\/.+$/).respond(200);
 
     $httpBackend.whenGET(/dialogs\/.*$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
 

@@ -1,10 +1,13 @@
 'use strict';
 
-angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval, secretBox){
+angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval, SecretBox){
 
-    $scope.nbSecretBoxNews = secretBox.filter(function(secret){
-        return secret.hasNews;
-    }).length;
+    SecretBox.query().then(function(secretBox){
+        $scope.secretBox = secretBox;
+        $scope.nbSecretBoxNews = $scope.secretBox.filter(function(secret){
+            return secret.hasNews;
+        }).length;
+    });
 
     var duration = 2000;
     var i = 0;

@@ -36,9 +36,6 @@ angular.module('app', [
             resolve: {
                 me: function(Me){
                     return Me.get().$promise;
-                },
-                secretBox: function(SecretBox){
-                    return SecretBox.query().$promise;
                 }
             }
         }).state('friends', {
@@ -75,7 +72,12 @@ angular.module('app', [
                 },
                 content: {
                     templateUrl: 'src/main/content/secretbox/view.html',
-                    controller: 'SecretBoxCtrl'
+                    controller: 'SecretBoxCtrl',
+                    resolve: {
+                        secretBox: function(SecretBox){
+                            return SecretBox.query();
+                        }
+                    }
                 }
             }
         }).state('secret-box-dialog', {

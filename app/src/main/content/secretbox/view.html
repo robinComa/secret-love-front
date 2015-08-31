@@ -13,7 +13,7 @@
         <md-card-content ng-if="secretBox.length > 0" flex layout="column">
 
             <md-list>
-                <md-list-item ng-repeat="secret in secretBox | orderByFresh track by secret.messages" ng-class="{unread: secret.hasNews}">
+                <md-list-item ng-repeat="secret in secretBox | orderByFresh track by secret.lastUpdate" ng-class="{unread: secret.hasNews}">
                     <friend-preview friend="secret.friend" flex>
                         <ng-md-icon ng-if="secret.friend.verified" icon="beenhere" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
                         <ng-md-icon ng-if="secret.friend.inLove" icon="favorite" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>

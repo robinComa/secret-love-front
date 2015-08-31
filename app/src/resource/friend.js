@@ -13,7 +13,7 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                 deferred.resolve($cache.friends.getData());
             }, 1);
         }else{
-            SecretBox.query().$promise.then(function(secretBox){
+            SecretBox.query().then(function(secretBox){
 
                 var promises = [];
                 var friendsOnNotify = [];

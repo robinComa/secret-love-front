@@ -3,8 +3,8 @@
 angular.module('app').provider('$cache', function(settings){
 
     var validity = {
-        LOW: 60 * 60 * 1000,
-        MEDIUM: 24 * 60 * 60 * 1000,
+        LOW: 60 * 1000,
+        MEDIUM: 60 * 60 * 1000,
         HIGH: 30 * 24 * 60 * 60 * 1000
     };
 
@@ -51,6 +51,7 @@ angular.module('app').provider('$cache', function(settings){
         this.code[key] = new Cache('code_' + key, validity.HIGH);
     }
     this.friends = new Cache('data_friends', validity.LOW);
+    this.secretBox = new Cache('data_secretBox', validity.LOW);
 
     this.$get = function(){
         return this;

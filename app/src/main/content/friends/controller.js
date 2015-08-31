@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $state, Friend, $filter, $mdToast, $mdDialog, $translate, $timeout, SecretBox){
+angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $state, Friend, $filter, $mdToast, $mdDialog, $translate, $timeout, SecretBox, $cache){
 
     var isListState = function(){
         return $state.current.name === 'friends-list';
@@ -48,9 +48,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
     $scope.toogleLove = function(friend, ev){
 
-        var initialLove = friend.love;
+        var friendCopy = angular.copy(friend);
+        friendCopy.love = !friendCopy.love;
 
-        if(!initialLove.love && me.basket.loves < 1){
+        if(friendCopy.love && me.basket.loves < 1){
             $mdDialog.show(
                 $mdDialog.alert()
                     .clickOutsideToClose(true)
@@ -61,28 +62,37 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
                     .targetEvent(ev)
             );
         }else{
-            friend.love = !initialLove;
-            me.basket.loves--;
-            SecretBox.save(friend).$promise.then(function(){
+            if(friendCopy.love){
+                me.basket.loves--;
+                SecretBox.save(friendCopy).then(function(){
 
-                if(friend.love){
-                    $mdToast.show(
-                        $mdToast.simple()
-                            .content($translate.instant('friends.list.love.toast.content', {
-                                name: friend.name
-                            }))
-                            .position(settings.toast.position)
-                            .hideDelay(settings.toast.hideDelay)
-                    );
-                }
+                    friend.love = friendCopy.love;
+                    $cache.friends.invalid();
 
-            }, function(){
-                friend.love = undefined;
-                me.basket.loves++;
-                $timeout(function(){
-                    friend.love = initialLove;
-                }, 3000);
-            });
+                    if(friend.love){
+                        $mdToast.show(
+                            $mdToast.simple()
+                                .content($translate.instant('friends.list.love.toast.content', {
+                                    name: friend.name
+                                }))
+                                .position(settings.toast.position)
+                                .hideDelay(settings.toast.hideDelay)
+                        );
+                    }
+
+                }, function(){
+                    me.basket.loves++;
+                });
+            }else{
+                SecretBox.delete({
+                    id: friendCopy.id,
+                    type: friendCopy.type
+                }).then(function(){
+                    friend.love = friendCopy.love;
+                    $cache.friends.invalid();
+                });
+            }
+
         }
     };
 
