@@ -41,7 +41,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
                     callback: 'JSON_CALLBACK'
                 }
             }).then(function(response){
-                deferred.resolve(response.data.data.map(function(friend){
+                deferred.notify(response.data.data.map(function(friend){
                     return new Friend({
                         id: friend.id,
                         name: friend.name,
@@ -49,6 +49,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
                         type: 'facebook'
                     });
                 }));
+                deferred.resolve();
             });
             return deferred.promise;
         }

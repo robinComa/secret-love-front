@@ -24,35 +24,57 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
             return $q.when();
         },
         getFriends: function(token, getNewToken, close){
+
+            var getFriendPage = function(nextPageToken){
+                var subDeferred = $q.defer();
+                $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
+                    params: {
+                        access_token: token,
+                        callback: 'JSON_CALLBACK',
+                        maxResults: 100,
+                        fields : 'items(id, displayName,image/url,objectType),nextPageToken',
+                        pageToken: nextPageToken
+                    }
+                }).then(function(response){
+                    if(response.data.error && (response.data.error.code === LIMIT_TOKEN_STATUS || response.data.error.code === UNAUTH_STATUS)){
+                        close().then(function(){
+                            getNewToken().then(function(){
+                                subDeferred.reject(response.data.error.message);
+                            }, subDeferred.reject);
+                        });
+                    }else{
+                        subDeferred.resolve(response.data);
+                    }
+                }, subDeferred.reject);
+                return subDeferred.promise;
+            };
+
             var deferred = $q.defer();
-            $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
-                params: {
-                    access_token: token,
-                    callback: 'JSON_CALLBACK',
-                    maxResults: 100,
-                    fields : 'items(id, displayName,image/url,objectType),nextPageToken'
-                }
-            }).then(function(response){
-                if(response.data.error && (response.data.error.code === LIMIT_TOKEN_STATUS || response.data.error.code === UNAUTH_STATUS)){
-                    close().then(function(){
-                        getNewToken().then(function(){
-                            deferred.reject(response.data.error.message);
-                        }, deferred.reject);
-                    });
+
+            var calbackResponse = function(response){
+                var friends = response.items.reduce(function(friends, friend){
+                    if(friend.objectType === 'person'){
+                        friends.push(new Friend({
+                            id: friend.id,
+                            name: friend.displayName,
+                            picture: friend.image.url,
+                            type: 'googlePlus'
+                        }));
+                    }
+                    return friends;
+                }, []);
+
+                deferred.notify(friends);
+
+                if(response.nextPageToken){
+                    getFriendPage(response.nextPageToken).then(calbackResponse, deferred.reject);
                 }else{
-                    deferred.resolve(response.data.items.reduce(function(friends, friend){
-                        if(friend.objectType === 'person'){
-                            friends.push(new Friend({
-                                id: friend.id,
-                                name: friend.displayName,
-                                picture: friend.image.url,
-                                type: 'googlePlus'
-                            }));
-                        }
-                        return friends;
-                    }, []));
+                    deferred.resolve();
                 }
-            }, deferred.reject);
+
+            };
+            getFriendPage().then(calbackResponse, deferred.reject);
+
             return deferred.promise;
         }
     });

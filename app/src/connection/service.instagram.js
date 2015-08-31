@@ -35,7 +35,7 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                         }, deferred.reject);
                     });
                 }else{
-                    deferred.resolve(response.data.data.map(function(friend){
+                    deferred.notify(response.data.data.map(function(friend){
                         var name = friend.username;
                         if(friend.full_name){
                             name += ' (' + friend.full_name + ')';
@@ -47,6 +47,7 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                             type: 'instagram'
                         });
                     }));
+                    deferred.resolve();
                 }
             }, deferred.reject);
             return deferred.promise;

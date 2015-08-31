@@ -10,6 +10,7 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
         SecretBox.query().$promise.then(function(loveFriends){
 
             var promises = [];
+            var friends = [];
 
             var equals = function(friend1, friend2){
                 return friend1.id === friend2.id && friend1.name === friend2.name;
@@ -28,21 +29,23 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
             angular.forEach(settings.socials, function(social, name){
                 var socialService = $injector.get(name);
                 var promise = socialService.getFriends();
-                promise.then(function(friends){
+                promise.then(function(){
+
+                }, function(){
+
+                }, function(friends){
                     deferred.notify(friends.map(function(friend){
                         friend.love = areInLove(loveFriends, friend);
                         friend.visibility = isVisible();
+                        friends.push(friend);
                         return friend;
                     }));
                 });
                 promises.push(promise);
             });
 
-            $q.all(promises).then(function(friends){
-                var friendsList = friends.reduce(function(previous, current){
-                    return previous.concat(current);
-                });
-                deferred.resolve(friendsList);
+            $q.all(promises).then(function(){
+                deferred.resolve(friends);
             });
         });
 
