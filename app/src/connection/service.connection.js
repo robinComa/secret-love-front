@@ -1,9 +1,6 @@
 'use strict';
 
-angular.module('app').provider('Connection', function(settings){
-
-    var STORAGE_ITEM_TOKEN_NAME_PREFIX = 'access_token_';
-    var STORAGE_ITEM_CODE_NAME_PREFIX = 'access_code_';
+angular.module('app').provider('Connection', function(settings, $cacheProvider){
 
     var findPatternInURI = function(pattern){
         var reg = window.location.href.match(pattern);
@@ -14,10 +11,10 @@ angular.module('app').provider('Connection', function(settings){
         var hash = findPatternInURI(settings.socials[i].auth.patternURI);
         if(hash){
             if(settings.socials[i].auth.isCode){
-                localStorage.setItem(STORAGE_ITEM_CODE_NAME_PREFIX + i, hash);
+                $cacheProvider.code[i].setData(hash);
                 window.location = window.location.href.split('?')[0] + '#/';
             }else{
-                localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+                $cacheProvider.token[i].setData(hash);
             }
             break;
         }
@@ -26,19 +23,16 @@ angular.module('app').provider('Connection', function(settings){
     this.$get = function($q){
       return function(args){
 
-          var STORAGE_ITEM_TOKEN_NAME = STORAGE_ITEM_TOKEN_NAME_PREFIX + args.name;
-          var STORAGE_ITEM_CODE_NAME = STORAGE_ITEM_CODE_NAME_PREFIX + args.name;
-
           this.getToken = function(){
             var deferred = $q.defer();
-            var token = localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
-            var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
+            var token = $cacheProvider.token[args.name].getData();
+            var code = $cacheProvider.code[args.name].getData();
             if(token){
                 deferred.resolve(token);
             }else if(code){
                 args.getTokenWithCode(code).then(function(token){
-                    localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
-                    localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
+                    $cacheProvider.code[args.name].invalid();
+                    $cacheProvider.token[args.name].setData(token);
                     deferred.resolve(token);
                 });
             }else{
@@ -51,15 +45,15 @@ angular.module('app').provider('Connection', function(settings){
           this.close = function(){
               var deferred = $q.defer();
               args.sendConnectionClose().then(function(){
-                  localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
-                  localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
+                  $cacheProvider.code[args.name].invalid();
+                  $cacheProvider.token[args.name].invalid();
                   deferred.resolve();
               }, deferred.reject);
               return deferred.promise;
           };
 
           this.isConnected = function(){
-              return window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME) !== null;
+              return $cacheProvider.token[args.name].getData() !== null;
           };
 
           this.isImplemented = function(){
@@ -67,15 +61,15 @@ angular.module('app').provider('Connection', function(settings){
           };
 
           this.getFriends = function(){
-              var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
+              var code = $cacheProvider.code[args.name].getData();
               var deferred = $q.defer();
               if(code){
                   var connection = this;
                   connection.getToken().then(function(){
-                      deferred.resolve(connection.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), connection.getToken, connection.close) : []);
+                      deferred.resolve(connection.isConnected()? args.getFriends($cacheProvider.token[args.name].getData(), connection.getToken, connection.close) : []);
                   });
               }else{
-                  deferred.resolve(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), this.getToken, this.close) : []);
+                  deferred.resolve(this.isConnected()? args.getFriends($cacheProvider.token[args.name].getData(), this.getToken, this.close) : []);
               }
               return deferred.promise;
           };

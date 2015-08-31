@@ -7,24 +7,24 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
     Friend.query = function(){
         var deferred = $q.defer();
 
-        if($cache.friends.getData().length > 0){
+        if($cache.friends.getData()){
             $timeout(function(){
                 deferred.notify($cache.friends.getData());
                 deferred.resolve($cache.friends.getData());
             }, 1);
         }else{
-            SecretBox.query().$promise.then(function(loveFriends){
+            SecretBox.query().$promise.then(function(secretBox){
 
                 var promises = [];
                 var friendsOnNotify = [];
 
                 var equals = function(friend1, friend2){
-                    return friend1.id === friend2.id && friend1.name === friend2.name;
+                    return friend1.id === friend2.id && friend1.type === friend2.type;
                 };
 
-                var areInLove = function(loveFriends, friend){
-                    return loveFriends.some(function(loveFriend){
-                        return equals(loveFriend, friend);
+                var areInLove = function(secretBox, friend){
+                    return secretBox.some(function(secretBoxItem){
+                        return equals(secretBoxItem.friend, friend);
                     });
                 };
 
@@ -41,7 +41,7 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
 
                     }, function(friends){
                         deferred.notify(friends.map(function(friend){
-                            friend.love = areInLove(loveFriends, friend);
+                            friend.love = areInLove(secretBox, friend);
                             friend.visibility = isVisible();
                             friendsOnNotify.push(friend);
                             return friend;
