@@ -112,6 +112,8 @@ friend-preview ng-transclude * {
     .state-friends-list md-card-content md-virtual-repeat-container .repeated-item md-menu {
       height: 30px;
       width: 35px; }
+      .state-friends-list md-card-content md-virtual-repeat-container .repeated-item md-menu button {
+        margin-top: 10px; }
 
 .state-friends-list friends-filter {
   right: 20px;
