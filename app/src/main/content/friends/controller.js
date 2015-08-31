@@ -62,10 +62,8 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
             );
         }else{
             friend.love = !initialLove;
-
+            me.basket.loves--;
             SecretBox.save(friend).$promise.then(function(){
-
-                me.basket.loves--;
 
                 if(friend.love){
                     $mdToast.show(
@@ -80,6 +78,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
             }, function(){
                 friend.love = undefined;
+                me.basket.loves++;
                 $timeout(function(){
                     friend.love = initialLove;
                 }, 3000);
