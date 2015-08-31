@@ -288,6 +288,65 @@ angular.module('appStub').service('GetJsonFile', function(){
 
 'use strict';
 
+angular.module('app').provider('$cache', function(settings){
+
+    var validity = {
+        LOW: 60 * 60 * 1000,
+        MEDIUM: 24 * 60 * 60 * 1000,
+        HIGH: 30 * 24 * 60 * 60 * 1000
+    };
+
+    var now = function(){
+        return (new Date()).getTime();
+    };
+
+    var Cache = function(name, invalidity){
+        this.key = 'cache_' + name;
+        this.invalidity = invalidity;
+    };
+    Cache.prototype.getCache = function(){
+        var cache = window.localStorage.getItem(this.key);
+        return JSON.parse(cache);
+    };
+    Cache.prototype.setCache = function(cache){
+        window.localStorage.setItem(this.key, JSON.stringify(cache));
+    };
+    Cache.prototype.invalid = function(){
+        window.localStorage.removeItem(this.key);
+    };
+    Cache.prototype.getData = function(){
+        var cache = this.getCache();
+        if(!cache || cache.timestamp + this.invalidity < now()){
+            this.invalid();
+            return null;
+        }else{
+            return cache.data;
+        }
+    };
+    Cache.prototype.setData = function(data){
+        this.timestamp = now();
+        var cache = {
+            data: data,
+            timestamp: now()
+        };
+        this.setCache(cache);
+    };
+
+    this.token = {};
+    this.code = {};
+    for(var key in settings.socials){
+        this.token[key] = new Cache('token_' + key, validity.HIGH);
+        this.code[key] = new Cache('code_' + key, validity.HIGH);
+    }
+    this.friends = new Cache('data_friends', validity.LOW);
+
+    this.$get = function(){
+        return this;
+    };
+
+});
+'use strict';
+
 angular.module('app').factory('Me', function(settings, $resource){
 
     return $resource(settings.endpoint + 'me');
@@ -295,56 +354,68 @@ angular.module('app').factory('Me', function(settings, $resource){
 });
 'use strict';
 
-angular.module('app').factory('Friend', function(settings, $q, $resource, $injector, $http, SecretBox){
+angular.module('app').factory('Friend', function(settings, $q, $resource, $injector, $http, SecretBox, $timeout, $cache){
 
     var Friend = $resource(settings.endpoint + 'friends');
 
     Friend.query = function(){
         var deferred = $q.defer();
 
-        SecretBox.query().$promise.then(function(loveFriends){
+        if($cache.friends.getData()){
+            $timeout(function(){
+                deferred.notify($cache.friends.getData());
+                deferred.resolve($cache.friends.getData());
+            }, 1);
+        }else{
+            SecretBox.query().$promise.then(function(secretBox){
 
-            var promises = [];
+                var promises = [];
+                var friendsOnNotify = [];
 
-            var equals = function(friend1, friend2){
-                return friend1.id === friend2.id && friend1.name === friend2.name;
-            };
+                var equals = function(friend1, friend2){
+                    return friend1.id === friend2.id && friend1.type === friend2.type;
+                };
 
-            var areInLove = function(loveFriends, friend){
-                return loveFriends.some(function(loveFriend){
-                    return equals(loveFriend, friend);
+                var areInLove = function(secretBox, friend){
+                    return secretBox.some(function(secretBoxItem){
+                        return equals(secretBoxItem.friend, friend);
+                    });
+                };
+
+                var isVisible = function(){
+                    return true;
+                };
+
+                angular.forEach(settings.socials, function(social, name){
+                    var socialService = $injector.get(name);
+                    var promise = socialService.getFriends();
+                    promise.then(function(){
+
+                    }, function(){
+
+                    }, function(friends){
+                        deferred.notify(friends.map(function(friend){
+                            friend.love = areInLove(secretBox, friend);
+                            friend.visibility = isVisible();
+                            friendsOnNotify.push(friend);
+                            return friend;
+                        }));
+                    });
+                    promises.push(promise);
                 });
-            };
 
-            var isVisible = function(){
-                return true;
-            };
-
-            angular.forEach(settings.socials, function(social, name){
-                var socialService = $injector.get(name);
-                var promise = socialService.getFriends();
-                promise.then(function(friends){
-                    deferred.notify(friends.map(function(friend){
-                        friend.love = areInLove(loveFriends, friend);
-                        friend.visibility = isVisible();
-                        return friend;
-                    }));
+                $q.all(promises).then(function(){
+                    $cache.friends.setData(friendsOnNotify);
+                    deferred.resolve(friendsOnNotify);
                 });
-                promises.push(promise);
             });
-
-            $q.all(promises).then(function(friends){
-                var friendsList = friends.reduce(function(previous, current){
-                    return previous.concat(current);
-                });
-                deferred.resolve(friendsList);
-            });
-        });
+        }
 
         return deferred.promise;
     };
 
     return Friend;
+
 });
 'use strict';
 
@@ -448,10 +519,7 @@ angular.module('app').directive('friendPreview', function(settings){
 });
 'use strict';
 
-angular.module('app').provider('Connection', function(settings){
-
-    var STORAGE_ITEM_TOKEN_NAME_PREFIX = 'access_token_';
-    var STORAGE_ITEM_CODE_NAME_PREFIX = 'access_code_';
+angular.module('app').provider('Connection', function(settings, $cacheProvider){
 
     var findPatternInURI = function(pattern){
         var reg = window.location.href.match(pattern);
@@ -462,10 +530,10 @@ angular.module('app').provider('Connection', function(settings){
         var hash = findPatternInURI(settings.socials[i].auth.patternURI);
         if(hash){
             if(settings.socials[i].auth.isCode){
-                localStorage.setItem(STORAGE_ITEM_CODE_NAME_PREFIX + i, hash);
+                $cacheProvider.code[i].setData(hash);
                 window.location = window.location.href.split('?')[0] + '#/';
             }else{
-                localStorage.setItem(STORAGE_ITEM_TOKEN_NAME_PREFIX + i, hash);
+                $cacheProvider.token[i].setData(hash);
             }
             break;
         }
@@ -474,19 +542,16 @@ angular.module('app').provider('Connection', function(settings){
     this.$get = function($q){
       return function(args){
 
-          var STORAGE_ITEM_TOKEN_NAME = STORAGE_ITEM_TOKEN_NAME_PREFIX + args.name;
-          var STORAGE_ITEM_CODE_NAME = STORAGE_ITEM_CODE_NAME_PREFIX + args.name;
-
           this.getToken = function(){
             var deferred = $q.defer();
-            var token = localStorage.getItem(STORAGE_ITEM_TOKEN_NAME);
-            var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
+            var token = $cacheProvider.token[args.name].getData();
+            var code = $cacheProvider.code[args.name].getData();
             if(token){
                 deferred.resolve(token);
             }else if(code){
                 args.getTokenWithCode(code).then(function(token){
-                    localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
-                    localStorage.setItem(STORAGE_ITEM_TOKEN_NAME, token);
+                    $cacheProvider.code[args.name].invalid();
+                    $cacheProvider.token[args.name].setData(token);
                     deferred.resolve(token);
                 });
             }else{
@@ -499,15 +564,15 @@ angular.module('app').provider('Connection', function(settings){
           this.close = function(){
               var deferred = $q.defer();
               args.sendConnectionClose().then(function(){
-                  localStorage.removeItem(STORAGE_ITEM_TOKEN_NAME);
-                  localStorage.removeItem(STORAGE_ITEM_CODE_NAME);
+                  $cacheProvider.code[args.name].invalid();
+                  $cacheProvider.token[args.name].invalid();
                   deferred.resolve();
               }, deferred.reject);
               return deferred.promise;
           };
 
           this.isConnected = function(){
-              return window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME) !== null;
+              return $cacheProvider.token[args.name].getData() !== null;
           };
 
           this.isImplemented = function(){
@@ -515,15 +580,15 @@ angular.module('app').provider('Connection', function(settings){
           };
 
           this.getFriends = function(){
-              var code = localStorage.getItem(STORAGE_ITEM_CODE_NAME);
+              var code = $cacheProvider.code[args.name].getData();
               var deferred = $q.defer();
               if(code){
                   var connection = this;
                   connection.getToken().then(function(){
-                      deferred.resolve(connection.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), connection.getToken, connection.close) : []);
+                      deferred.resolve(connection.isConnected()? args.getFriends($cacheProvider.token[args.name].getData(), connection.getToken, connection.close) : []);
                   });
               }else{
-                  deferred.resolve(this.isConnected()? args.getFriends(window.localStorage.getItem(STORAGE_ITEM_TOKEN_NAME), this.getToken, this.close) : []);
+                  deferred.resolve(this.isConnected()? args.getFriends($cacheProvider.token[args.name].getData(), this.getToken, this.close) : []);
               }
               return deferred.promise;
           };
@@ -559,35 +624,57 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
             return $q.when();
         },
         getFriends: function(token, getNewToken, close){
+
+            var getFriendPage = function(nextPageToken){
+                var subDeferred = $q.defer();
+                $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
+                    params: {
+                        access_token: token,
+                        callback: 'JSON_CALLBACK',
+                        maxResults: 100,
+                        fields : 'items(id, displayName,image/url,objectType),nextPageToken',
+                        pageToken: nextPageToken
+                    }
+                }).then(function(response){
+                    if(response.data.error && (response.data.error.code === LIMIT_TOKEN_STATUS || response.data.error.code === UNAUTH_STATUS)){
+                        close().then(function(){
+                            getNewToken().then(function(){
+                                subDeferred.reject(response.data.error.message);
+                            }, subDeferred.reject);
+                        });
+                    }else{
+                        subDeferred.resolve(response.data);
+                    }
+                }, subDeferred.reject);
+                return subDeferred.promise;
+            };
+
             var deferred = $q.defer();
-            $http.jsonp('https://www.googleapis.com/plus/v1/people/me/people/visible', {
-                params: {
-                    access_token: token,
-                    callback: 'JSON_CALLBACK',
-                    maxResults: 100,
-                    fields : 'items(id, displayName,image/url,objectType),nextPageToken'
-                }
-            }).then(function(response){
-                if(response.data.error && (response.data.error.code === LIMIT_TOKEN_STATUS || response.data.error.code === UNAUTH_STATUS)){
-                    close().then(function(){
-                        getNewToken().then(function(){
-                            deferred.reject(response.data.error.message);
-                        }, deferred.reject);
-                    });
+
+            var calbackResponse = function(response){
+                var friends = response.items.reduce(function(friends, friend){
+                    if(friend.objectType === 'person'){
+                        friends.push(new Friend({
+                            id: friend.id,
+                            name: friend.displayName,
+                            picture: friend.image.url,
+                            type: 'googlePlus'
+                        }));
+                    }
+                    return friends;
+                }, []);
+
+                deferred.notify(friends);
+
+                if(response.nextPageToken){
+                    getFriendPage(response.nextPageToken).then(calbackResponse, deferred.reject);
                 }else{
-                    deferred.resolve(response.data.items.reduce(function(friends, friend){
-                        if(friend.objectType === 'person'){
-                            friends.push(new Friend({
-                                id: friend.id,
-                                name: friend.displayName,
-                                picture: friend.image.url,
-                                type: 'googlePlus'
-                            }));
-                        }
-                        return friends;
-                    }, []));
+                    deferred.resolve();
                 }
-            }, deferred.reject);
+
+            };
+            getFriendPage().then(calbackResponse, deferred.reject);
+
             return deferred.promise;
         }
     });
@@ -632,7 +719,7 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                         }, deferred.reject);
                     });
                 }else{
-                    deferred.resolve(response.data.data.map(function(friend){
+                    deferred.notify(response.data.data.map(function(friend){
                         var name = friend.username;
                         if(friend.full_name){
                             name += ' (' + friend.full_name + ')';
@@ -644,6 +731,7 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                             type: 'instagram'
                         });
                     }));
+                    deferred.resolve();
                 }
             }, deferred.reject);
             return deferred.promise;
@@ -696,7 +784,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
                     callback: 'JSON_CALLBACK'
                 }
             }).then(function(response){
-                deferred.resolve(response.data.data.map(function(friend){
+                deferred.notify(response.data.data.map(function(friend){
                     return new Friend({
                         id: friend.id,
                         name: friend.name,
@@ -704,6 +792,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
                         type: 'facebook'
                     });
                 }));
+                deferred.resolve();
             });
             return deferred.promise;
         }
@@ -976,10 +1065,8 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
             );
         }else{
             friend.love = !initialLove;
-
+            me.basket.loves--;
             SecretBox.save(friend).$promise.then(function(){
-
-                me.basket.loves--;
 
                 if(friend.love){
                     $mdToast.show(
@@ -994,6 +1081,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
             }, function(){
                 friend.love = undefined;
+                me.basket.loves++;
                 $timeout(function(){
                     friend.love = initialLove;
                 }, 3000);
@@ -1142,7 +1230,7 @@ angular.module('app').controller('FriendsFaceCtrl', function($scope){
 });
 'use strict';
 
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector, $cache){
 
     $scope.connections = settings.socials;
 
@@ -1167,6 +1255,7 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
 
     $scope.toggleConnection = function(name){
         var socialService = $injector.get(name);
+        $cache.friends.invalid();
         if(socialService.isConnected()){
             disconnectAction(socialService, name);
         }else{
