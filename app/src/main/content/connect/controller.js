@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector, $cache){
 
     $scope.connections = settings.socials;
 
@@ -25,6 +25,7 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
 
     $scope.toggleConnection = function(name){
         var socialService = $injector.get(name);
+        $cache.friends.invalid();
         if(socialService.isConnected()){
             disconnectAction(socialService, name);
         }else{
