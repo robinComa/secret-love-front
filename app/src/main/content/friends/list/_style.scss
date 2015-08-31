@@ -5,6 +5,9 @@ md-card-content{
       box-sizing: border-box;
       height: 55px;
       md-menu{
+        button{
+          margin-top: 10px;
+        }
         height: 30px;
         width: 35px;
       }
