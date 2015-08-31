@@ -36,9 +36,6 @@ angular.module('app', [
             resolve: {
                 me: function(Me){
                     return Me.get().$promise;
-                },
-                secretBox: function(SecretBox){
-                    return SecretBox.query().$promise;
                 }
             }
         }).state('friends', {
@@ -75,7 +72,12 @@ angular.module('app', [
                 },
                 content: {
                     templateUrl: 'src/main/content/secretbox/view.html',
-                    controller: 'SecretBoxCtrl'
+                    controller: 'SecretBoxCtrl',
+                    resolve: {
+                        secretBox: function(SecretBox){
+                            return SecretBox.query();
+                        }
+                    }
                 }
             }
         }).state('secret-box-dialog', {
@@ -152,6 +154,7 @@ angular.module('appStub', [
 
     $httpBackend.whenGET(/secretbox$/).respond(GetJsonFile.synchronously('stub/secretbox/GET.json'));
     $httpBackend.whenPOST(/secretbox$/).respond(200);
+    $httpBackend.whenDELETE(/secretbox\/.+\/.+$/).respond(200);
 
     $httpBackend.whenGET(/dialogs\/.*$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
 
@@ -291,8 +294,8 @@ angular.module('appStub').service('GetJsonFile', function(){
 angular.module('app').provider('$cache', function(settings){
 
     var validity = {
-        LOW: 60 * 60 * 1000,
-        MEDIUM: 24 * 60 * 60 * 1000,
+        LOW: 60 * 1000,
+        MEDIUM: 60 * 60 * 1000,
         HIGH: 30 * 24 * 60 * 60 * 1000
     };
 
@@ -339,6 +342,7 @@ angular.module('app').provider('$cache', function(settings){
         this.code[key] = new Cache('code_' + key, validity.HIGH);
     }
     this.friends = new Cache('data_friends', validity.LOW);
+    this.secretBox = new Cache('data_secretBox', validity.LOW);
 
     this.$get = function(){
         return this;
@@ -367,7 +371,7 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                 deferred.resolve($cache.friends.getData());
             }, 1);
         }else{
-            SecretBox.query().$promise.then(function(secretBox){
+            SecretBox.query().then(function(secretBox){
 
                 var promises = [];
                 var friendsOnNotify = [];
@@ -419,9 +423,62 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
 });
 'use strict';
 
-angular.module('app').factory('SecretBox', function(settings, $resource){
+angular.module('app').factory('SecretBox', function(settings, $resource, $q, $cache){
 
-    return $resource(settings.endpoint + 'secretbox');
+    var SecretBox = $resource(settings.endpoint + 'secretbox/:type/:id');
+
+    return {
+        query: function(){
+            var cache = $cache.secretBox.getData();
+            if(cache){
+                return $q.when(cache);
+            }
+
+            var deferred = $q.defer();
+            SecretBox.query(function(secretBox){
+                $cache.secretBox.setData(secretBox);
+                deferred.resolve(secretBox);
+            }, deferred.reject);
+            return deferred.promise;
+        },
+        save: function(friend){
+            var deferred = $q.defer();
+            SecretBox.save(friend).$promise.then(function(){
+                var secretBox = $cache.secretBox.getData();
+                secretBox.push({
+                    friend: {
+                        id: friend.id,
+                        type: friend.type,
+                        verified: false,
+                        inLove: false
+                    },
+                    lastUpdate: (new Date()).getTime(),
+                    hasNews: false,
+                    messages: null
+                });
+                $cache.secretBox.setData(secretBox);
+                deferred.resolve();
+            }, deferred.reject);
+            return deferred.promise;
+        },
+        delete: function(friend){
+            var deferred = $q.defer();
+            SecretBox.delete(friend).$promise.then(function(){
+                var secretBox = $cache.secretBox.getData();
+                var getIndex = function(type, id){
+                    for(var i in secretBox){
+                        if(secretBox[i].friend.type === type && secretBox[i].friend.id === id){
+                            return i;
+                        }
+                    }
+                };
+                secretBox.splice(getIndex(friend.type, friend.id), 1);
+                $cache.secretBox.setData(secretBox);
+                deferred.resolve();
+            }, deferred.reject);
+            return deferred.promise;
+        }
+    };
 
 });
 'use strict';
@@ -977,11 +1034,14 @@ angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $s
 });
 'use strict';
 
-angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval, secretBox){
+angular.module('app').controller('SidenavCtrl', function(settings, $scope, $interval, SecretBox){
 
-    $scope.nbSecretBoxNews = secretBox.filter(function(secret){
-        return secret.hasNews;
-    }).length;
+    SecretBox.query().then(function(secretBox){
+        $scope.secretBox = secretBox;
+        $scope.nbSecretBoxNews = $scope.secretBox.filter(function(secret){
+            return secret.hasNews;
+        }).length;
+    });
 
     var duration = 2000;
     var i = 0;
@@ -1003,7 +1063,7 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
-angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $state, Friend, $filter, $mdToast, $mdDialog, $translate, $timeout, SecretBox){
+angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $state, Friend, $filter, $mdToast, $mdDialog, $translate, $timeout, SecretBox, $cache){
 
     var isListState = function(){
         return $state.current.name === 'friends-list';
@@ -1051,9 +1111,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
     $scope.toogleLove = function(friend, ev){
 
-        var initialLove = friend.love;
+        var friendCopy = angular.copy(friend);
+        friendCopy.love = !friendCopy.love;
 
-        if(!initialLove.love && me.basket.loves < 1){
+        if(friendCopy.love && me.basket.loves < 1){
             $mdDialog.show(
                 $mdDialog.alert()
                     .clickOutsideToClose(true)
@@ -1064,28 +1125,37 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
                     .targetEvent(ev)
             );
         }else{
-            friend.love = !initialLove;
-            me.basket.loves--;
-            SecretBox.save(friend).$promise.then(function(){
+            if(friendCopy.love){
+                me.basket.loves--;
+                SecretBox.save(friendCopy).then(function(){
 
-                if(friend.love){
-                    $mdToast.show(
-                        $mdToast.simple()
-                            .content($translate.instant('friends.list.love.toast.content', {
-                                name: friend.name
-                            }))
-                            .position(settings.toast.position)
-                            .hideDelay(settings.toast.hideDelay)
-                    );
-                }
+                    friend.love = friendCopy.love;
+                    $cache.friends.invalid();
 
-            }, function(){
-                friend.love = undefined;
-                me.basket.loves++;
-                $timeout(function(){
-                    friend.love = initialLove;
-                }, 3000);
-            });
+                    if(friend.love){
+                        $mdToast.show(
+                            $mdToast.simple()
+                                .content($translate.instant('friends.list.love.toast.content', {
+                                    name: friend.name
+                                }))
+                                .position(settings.toast.position)
+                                .hideDelay(settings.toast.hideDelay)
+                        );
+                    }
+
+                }, function(){
+                    me.basket.loves++;
+                });
+            }else{
+                SecretBox.delete({
+                    id: friendCopy.id,
+                    type: friendCopy.type
+                }).then(function(){
+                    friend.love = friendCopy.love;
+                    $cache.friends.invalid();
+                });
+            }
+
         }
     };
 
