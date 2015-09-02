@@ -105,6 +105,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
     $scope.toggleFriendVisibility = function(friend){
         friend.visibility = !friend.visibility;
+        $cache.friends.setData($scope.friends);
         var toast = $mdToast.simple()
             .content($translate.instant(friend.visibility ? 'friends.list.show.toast.content' : 'friends.list.hide.toast.content', {
                 name: friend.name
@@ -116,6 +117,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
                 friend.visibility = !friend.visibility;
+                $cache.friends.setData($scope.friends);
             }
         });
     };

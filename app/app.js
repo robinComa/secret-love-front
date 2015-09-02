@@ -118,6 +118,19 @@ angular.module('app', [
                     controller: 'SettingsCtrl'
                 }
             }
+        }).state('shop', {
+            parent: 'main',
+            url: '/shop',
+            views: {
+                sidenav: {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                content: {
+                    templateUrl: 'src/main/content/shop/view.html',
+                    controller: 'ShopCtrl'
+                }
+            }
         });
 
 }).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){

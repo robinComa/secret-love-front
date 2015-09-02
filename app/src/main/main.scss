@@ -3,6 +3,9 @@ body{
 }
 
 md-toolbar{
+  h1{
+    text-align: center;
+  }
   button.md-button.btn-toggle-sidenav{
     position: absolute;
     left: 5px;
