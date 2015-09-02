@@ -1,6 +1,9 @@
 body {
   font-family: 'Roboto Condensed', sans-serif; }
 
+md-toolbar h1 {
+  text-align: center; }
+
 md-toolbar button.md-button.btn-toggle-sidenav {
   position: absolute;
   left: 5px;
@@ -74,6 +77,11 @@ basket-content .icon-minus-one {
   position: absolute;
   top: 35px;
   right: 55px; }
+
+basket-content .icon-love {
+  position: absolute;
+  right: 64px;
+  top: 17px; }
 
 body-message-action h1, body-message-action p {
   text-align: center; }
@@ -179,8 +187,19 @@ friend-preview ng-transclude * {
   color: grey;
   font-size: 10px; }
 
-.state-secret-box-dialog p.date {
-  color: grey; }
+.state-secret-box-dialog .md-icon-button {
+  margin-top: 10px; }
+
+.state-secret-box-dialog h3 {
+  text-align: right;
+  padding-right: 30px; }
+
+.state-secret-box-dialog md-list-item {
+  margin-bottom: 20px; }
+  .state-secret-box-dialog md-list-item p {
+    margin: 0px; }
+    .state-secret-box-dialog md-list-item p.date {
+      color: grey; }
 
 .state-secret-box-dialog .submit-btn {
   position: absolute;

@@ -1,24 +1,22 @@
 [
   {
     "friend": {
-      "id": "582801370",
-      "type": "instagram",
-      "verified": false,
+      "id": "Jordan",
+      "type": "facebook",
+      "verified": true,
       "inLove": false
     },
     "lastUpdate": 1234567890123,
-    "hasNews": false,
-    "messages": null
+    "hasNews": false
   },
   {
     "friend": {
-      "id": "112722703101178383990",
+      "id": "97237",
       "type": "googlePlus",
       "verified": true,
       "inLove": true
     },
     "lastUpdate": 1234557890123,
-    "hasNews": true,
-    "messages": "88uu5678hgca9ojij76xcfgvijijhj9879"
+    "hasNews": true
   }
 ]

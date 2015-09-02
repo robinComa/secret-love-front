@@ -72,20 +72,18 @@ angular.module('app', [
                 },
                 content: {
                     templateUrl: 'src/main/content/secretbox/view.html',
-                    controller: 'SecretBoxCtrl',
-                    resolve: {
-                        secretBox: function(SecretBox){
-                            return SecretBox.query();
-                        }
-                    }
+                    controller: 'SecretBoxCtrl'
                 }
             }
         }).state('secret-box-dialog', {
             parent: 'secret-box',
-            url: '/:id',
+            url: '/:type/:id',
             resolve: {
-                dialog: function(Dialog, $stateParams){
-                    return Dialog.get({id: $stateParams.id}).$promise;
+                dialogs: function(Dialog, $stateParams){
+                    return Dialog.query({
+                        type: $stateParams.type,
+                        id: $stateParams.id
+                    }).$promise;
                 }
             },
             views: {
@@ -118,6 +116,19 @@ angular.module('app', [
                 content: {
                     templateUrl: 'src/main/content/settings/view.html',
                     controller: 'SettingsCtrl'
+                }
+            }
+        }).state('shop', {
+            parent: 'main',
+            url: '/shop',
+            views: {
+                sidenav: {
+                    templateUrl: 'src/main/sidenav/view.html',
+                    controller: 'SidenavCtrl'
+                },
+                content: {
+                    templateUrl: 'src/main/content/shop/view.html',
+                    controller: 'ShopCtrl'
                 }
             }
         });
@@ -157,13 +168,11 @@ angular.module('appStub', [
     $httpBackend.whenDELETE(/secretbox\/.+\/.+$/).respond(200);
 
     $httpBackend.whenGET(/dialogs\/.*$/).respond(GetJsonFile.synchronously('stub/dialogs/GET.json'));
-
     $httpBackend.whenPOST(/dialogs$/).respond(200);
-    $httpBackend.whenPOST(/messages$/).respond(200);
 
-    //$httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
-    //$httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
-    //$httpBackend.whenJSONP(/https:\/\/graph.facebook.com\/v2.4\/me\/taggable_friends/).respond(GetJsonFile.synchronously('stub/friends/facebook.json'));
+    $httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/friends/googlePlus.json'));
+    $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/friends/instagram.json'));
+    $httpBackend.whenJSONP(/https:\/\/graph.facebook.com\/v2.4\/me\/taggable_friends/).respond(GetJsonFile.synchronously('stub/friends/facebook.json'));
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
@@ -341,8 +350,8 @@ angular.module('app').provider('$cache', function(settings){
         this.token[key] = new Cache('token_' + key, validity.HIGH);
         this.code[key] = new Cache('code_' + key, validity.HIGH);
     }
-    this.friends = new Cache('data_friends', validity.LOW);
-    this.secretBox = new Cache('data_secretBox', validity.LOW);
+    this.friends = new Cache('data_friends', validity.MEDIUM);
+    this.secretBox = new Cache('data_secretBox', validity.MEDIUM);
 
     this.$get = function(){
         return this;
@@ -444,7 +453,7 @@ angular.module('app').factory('SecretBox', function(settings, $resource, $q, $ca
         save: function(friend){
             var deferred = $q.defer();
             SecretBox.save(friend).$promise.then(function(){
-                var secretBox = $cache.secretBox.getData();
+                var secretBox = $cache.secretBox.getData() || [];
                 secretBox.push({
                     friend: {
                         id: friend.id,
@@ -483,16 +492,9 @@ angular.module('app').factory('SecretBox', function(settings, $resource, $q, $ca
 });
 'use strict';
 
-angular.module('app').factory('Message', function(settings, $resource){
-
-    return $resource(settings.endpoint + 'messages');
-
-});
-'use strict';
-
 angular.module('app').factory('Dialog', function(settings, $resource){
 
-    return $resource(settings.endpoint + 'dialogs/:id', {'id': '@id'});
+    return $resource(settings.endpoint + 'dialogs/:type/:id');
 
 });
 'use strict';
@@ -557,7 +559,8 @@ angular.module('app').directive('bodyMessageAction', function(){
 });
 'use strict';
 
-angular.module('app').directive('friendPreview', function(settings){
+angular.module('app').directive('friendPreview', function(settings, Friend){
+
     return {
         restrict: 'E',
         transclude: true,
@@ -566,6 +569,21 @@ angular.module('app').directive('friendPreview', function(settings){
         },
         templateUrl: 'src/components/friend-preview/view.html',
         link: function($scope){
+
+            if(!$scope.friend.picture || !$scope.friend.name){
+                Friend.query().then(function(friends){
+
+                    var matchFriends = friends.filter(function(f){
+                        return f.id === $scope.friend.id && f.type === $scope.friend.type;
+                    });
+
+                    if(matchFriends[0]){
+                        $scope.friend.name = matchFriends[0].name;
+                        $scope.friend.picture = matchFriends[0].picture;
+                    }
+                });
+            }
+
             $scope.getSocialIcon = function(social){
                 if(social){
                     return settings.socials[social].icon;
@@ -843,7 +861,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
             }).then(function(response){
                 deferred.notify(response.data.data.map(function(friend){
                     return new Friend({
-                        id: friend.id,
+                        id: friend.name,
                         name: friend.name,
                         picture: friend.picture.data.url,
                         type: 'facebook'
@@ -1127,6 +1145,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
         }else{
             if(friendCopy.love){
                 me.basket.loves--;
+                $scope.requestSend = true;
                 SecretBox.save(friendCopy).then(function(){
 
                     friend.love = friendCopy.love;
@@ -1142,17 +1161,23 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
                                 .hideDelay(settings.toast.hideDelay)
                         );
                     }
+                    $scope.requestSend = false;
 
                 }, function(){
                     me.basket.loves++;
+                    $scope.requestSend = false;
                 });
             }else{
+                $scope.requestSend = true;
                 SecretBox.delete({
                     id: friendCopy.id,
                     type: friendCopy.type
                 }).then(function(){
+                    $scope.requestSend = true;
                     friend.love = friendCopy.love;
                     $cache.friends.invalid();
+                }, function(){
+                    $scope.requestSend = false;
                 });
             }
 
@@ -1161,6 +1186,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
     $scope.toggleFriendVisibility = function(friend){
         friend.visibility = !friend.visibility;
+        $cache.friends.setData($scope.friends);
         var toast = $mdToast.simple()
             .content($translate.instant(friend.visibility ? 'friends.list.show.toast.content' : 'friends.list.hide.toast.content', {
                 name: friend.name
@@ -1172,6 +1198,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
                 friend.visibility = !friend.visibility;
+                $cache.friends.setData($scope.friends);
             }
         });
     };
@@ -1369,9 +1396,11 @@ angular.module('app').controller('SettingsCtrl', function($scope, me){
 });
 'use strict';
 
-angular.module('app').controller('SecretBoxCtrl', function($scope, secretBox){
+angular.module('app').controller('SecretBoxCtrl', function($scope, SecretBox){
 
-    $scope.secretBox = secretBox;
+    SecretBox.query().then(function(secretBox){
+        $scope.secretBox = secretBox;
+    });
 
 });
 'use strict';
@@ -1387,18 +1416,30 @@ angular.module('app').filter('orderByFresh', function() {
 });
 'use strict';
 
-angular.module('app').controller('DialogCtrl', function(settings,$scope, dialog, Message){
+angular.module('app').controller('DialogCtrl', function(settings,$scope, dialogs, Dialog, SecretBox, $stateParams){
 
-    $scope.dialog = dialog;
+    SecretBox.query().then(function(secretBox){
+        var secretBoxItem = secretBox.filter(function(secretBoxItem){
+            return secretBoxItem.friend.id === $stateParams.id && secretBoxItem.friend.type === $stateParams.type;
+        })[0];
+        $scope.friend = secretBoxItem.friend;
+        $scope.dialogs = dialogs;
+    });
 
-    $scope.newMessage = new Message();
+    $scope.newMessage = new Dialog();
 
     $scope.sendMessage = function(){
         $scope.newMessage.$save().then(function(){
             $scope.newMessage.when = (new Date()).getTime();
-            $scope.dialog.messages.push($scope.newMessage);
-            $scope.newMessage = new Message();
+            $scope.newMessage.me = true;
+            $scope.dialogs.push($scope.newMessage);
+            $scope.newMessage = new Dialog();
         });
     };
+
+});
+'use strict';
+
+angular.module('app').controller('ShopCtrl', function(){
 
 });
