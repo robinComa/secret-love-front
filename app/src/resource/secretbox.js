@@ -21,7 +21,7 @@ angular.module('app').factory('SecretBox', function(settings, $resource, $q, $ca
         save: function(friend){
             var deferred = $q.defer();
             SecretBox.save(friend).$promise.then(function(){
-                var secretBox = $cache.secretBox.getData();
+                var secretBox = $cache.secretBox.getData() || [];
                 secretBox.push({
                     friend: {
                         id: friend.id,

@@ -8,7 +8,7 @@
         <h1>{{ friend.name }}</h1>
 
         <div layout="row" layout-align="center center">
-            <img ng-src="{{friend.picture}}" alt="{{ friend.name }}" flex/>
+            <friend-preview friend="friend" flex></friend-preview>
             <md-button aria-label="{{'friends.face.next' | translate}}" class="next md-icon-button" ng-click="refreshFace(filteringFriends)">
                 <ng-md-icon icon="chevron_right" style="fill: pink" size="180"></ng-md-icon>
             </md-button>
@@ -18,7 +18,7 @@
             <md-button class="md-fab md-primary" ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
                 <ng-md-icon icon="visibility_off" style="fill: pink" size="40"></ng-md-icon>
             </md-button>
-            <md-button class="md-fab md-primary" aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend, $event)">
+            <md-button class="md-fab md-primary" aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-disabled="requestSend" ng-click="toogleLove(friend, $event)">
                 <ng-md-icon icon="favorite" style="fill: pink" size="40"></ng-md-icon>
             </md-button>
         </div>

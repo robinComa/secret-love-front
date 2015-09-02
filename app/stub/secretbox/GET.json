@@ -1,8 +1,8 @@
 [
   {
     "friend": {
-      "id": "582801370",
-      "type": "instagram",
+      "id": "Jordan",
+      "type": "facebook",
       "verified": false,
       "inLove": false
     },
@@ -12,7 +12,7 @@
   },
   {
     "friend": {
-      "id": "112722703101178383990",
+      "id": "97237",
       "type": "googlePlus",
       "verified": true,
       "inLove": true

@@ -64,6 +64,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
         }else{
             if(friendCopy.love){
                 me.basket.loves--;
+                $scope.requestSend = true;
                 SecretBox.save(friendCopy).then(function(){
 
                     friend.love = friendCopy.love;
@@ -79,17 +80,23 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
                                 .hideDelay(settings.toast.hideDelay)
                         );
                     }
+                    $scope.requestSend = false;
 
                 }, function(){
                     me.basket.loves++;
+                    $scope.requestSend = false;
                 });
             }else{
+                $scope.requestSend = true;
                 SecretBox.delete({
                     id: friendCopy.id,
                     type: friendCopy.type
                 }).then(function(){
+                    $scope.requestSend = true;
                     friend.love = friendCopy.love;
                     $cache.friends.invalid();
+                }, function(){
+                    $scope.requestSend = false;
                 });
             }
 
