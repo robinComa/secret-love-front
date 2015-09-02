@@ -72,20 +72,18 @@ angular.module('app', [
                 },
                 content: {
                     templateUrl: 'src/main/content/secretbox/view.html',
-                    controller: 'SecretBoxCtrl',
-                    resolve: {
-                        secretBox: function(SecretBox){
-                            return SecretBox.query();
-                        }
-                    }
+                    controller: 'SecretBoxCtrl'
                 }
             }
         }).state('secret-box-dialog', {
             parent: 'secret-box',
-            url: '/:id',
+            url: '/:type/:id',
             resolve: {
-                dialog: function(Dialog, $stateParams){
-                    return Dialog.get({id: $stateParams.id}).$promise;
+                dialogs: function(Dialog, $stateParams){
+                    return Dialog.query({
+                        type: $stateParams.type,
+                        id: $stateParams.id
+                    }).$promise;
                 }
             },
             views: {

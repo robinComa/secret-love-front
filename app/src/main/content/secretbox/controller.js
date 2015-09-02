@@ -1,7 +1,9 @@
 'use strict';
 
-angular.module('app').controller('SecretBoxCtrl', function($scope, secretBox){
+angular.module('app').controller('SecretBoxCtrl', function($scope, SecretBox){
 
-    $scope.secretBox = secretBox;
+    SecretBox.query().then(function(secretBox){
+        $scope.secretBox = secretBox;
+    });
 
 });

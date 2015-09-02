@@ -3,18 +3,27 @@
 
         <md-content>
 
+            <div layout="row">
+                <md-button class="md-icon-button" aria-label="{{'dialog.show.back.btn' | translate}}" ui-sref="secret-box">
+                    <ng-md-icon icon="arrow_back" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
+                </md-button>
+                <h3 flex>{{ friend.name }}</h3>
+            </div>
+
+            <md-divider></md-divider>
+
             <md-list>
-                <md-subheader class="md-no-sticky">
-                    <md-button class="md-icon-button" aria-label="{{'dialog.show.back.btn' | translate}}" ui-sref="secret-box">
-                        <ng-md-icon icon="arrow_back" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
-                    </md-button>
-                    <p>{{ dialog.friend.name }}</p>
-                </md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="message in dialog.messages | orderBy:'when'" layout="row">
-                    <friend-preview friend="dialog.friend" flex>
+                <md-list-item class="md-3-line" ng-repeat="message in dialogs | orderBy:'when'" layout="row">
+                    <div ng-if="message.me" flex>
                         <p class="date">{{message.when | date}}</p>
                         <p class="no-wrap">{{message.what}}</p>
-                    </friend-preview>
+                    </div>
+                    <div ng-if="!message.me">
+                        <friend-preview friend="friend" flex>
+                            <p class="date">{{message.when | date}}</p>
+                            <p class="no-wrap">{{message.what}}</p>
+                        </friend-preview>
+                    </div>
                 </md-list-item>
 
             </md-list>

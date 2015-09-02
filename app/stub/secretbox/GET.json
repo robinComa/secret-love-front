@@ -3,12 +3,11 @@
     "friend": {
       "id": "Jordan",
       "type": "facebook",
-      "verified": false,
+      "verified": true,
       "inLove": false
     },
     "lastUpdate": 1234567890123,
-    "hasNews": false,
-    "messages": null
+    "hasNews": false
   },
   {
     "friend": {
@@ -18,7 +17,6 @@
       "inLove": true
     },
     "lastUpdate": 1234557890123,
-    "hasNews": true,
-    "messages": "88uu5678hgca9ojij76xcfgvijijhj9879"
+    "hasNews": true
   }
 ]

@@ -1,5 +1,18 @@
-p.date{
-  color: grey;
+.md-icon-button{
+  margin-top: 10px;
+}
+h3{
+  text-align: right;
+  padding-right: 30px;
+}
+md-list-item{
+  margin-bottom: 20px;
+  p{
+    margin: 0px;
+    &.date{
+      color: grey;
+    }
+  }
 }
 .submit-btn{
   position: absolute;

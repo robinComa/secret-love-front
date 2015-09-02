@@ -15,13 +15,13 @@
             <md-list>
                 <md-list-item ng-repeat="secret in secretBox | orderByFresh track by secret.lastUpdate" ng-class="{unread: secret.hasNews}">
                     <friend-preview friend="secret.friend" flex>
-                        <ng-md-icon ng-if="secret.friend.verified" icon="beenhere" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
+                        <ng-md-icon ng-if="secret.friend.verified" icon="phone_iphone" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
                         <ng-md-icon ng-if="secret.friend.inLove" icon="favorite" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
                         <ng-md-icon ng-if="!secret.friend.inLove" icon="favorite_outline" ng-style="{fill: 'pink'}" size="20"></ng-md-icon>
                         <p>{{ secret.friend.name }}</p>
                         <time>{{secret.lastUpdate | date:'short'}}</time>
                     </friend-preview>
-                    <md-button ng-if="secret.friend.inLove" class="md-fab md-raised" ui-sref="secret-box-dialog({id: secret.messages})" aria-label="{{'dialog.read.message.btn' | translate}}">
+                    <md-button ng-if="secret.friend.inLove" class="md-fab md-raised" ui-sref="secret-box-dialog({id: secret.friend.id, type: secret.friend.type})" aria-label="{{'dialog.read.message.btn' | translate}}">
                         <ng-md-icon icon="forum" ng-style="{fill: 'pink'}" size="30"></ng-md-icon>
                     </md-button>
                 </md-list-item>
