@@ -50,8 +50,8 @@ angular.module('app').provider('$cache', function(settings){
         this.token[key] = new Cache('token_' + key, validity.HIGH);
         this.code[key] = new Cache('code_' + key, validity.HIGH);
     }
-    this.friends = new Cache('data_friends', validity.LOW);
-    this.secretBox = new Cache('data_secretBox', validity.LOW);
+    this.friends = new Cache('data_friends', validity.MEDIUM);
+    this.secretBox = new Cache('data_secretBox', validity.MEDIUM);
 
     this.$get = function(){
         return this;

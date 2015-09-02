@@ -43,7 +43,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
             }).then(function(response){
                 deferred.notify(response.data.data.map(function(friend){
                     return new Friend({
-                        id: friend.id,
+                        id: friend.name,
                         name: friend.name,
                         picture: friend.picture.data.url,
                         type: 'facebook'
