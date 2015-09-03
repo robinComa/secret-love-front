@@ -27,8 +27,8 @@ gulp.task('i18n', function () {
 
 gulp.task('stub', function () {
     return gulp.src([
-        'app/stub/**/*.json'
-    ]).pipe(gulp.dest('dist/stub/'));
+        'app/stub/data/**/*.json'
+    ]).pipe(gulp.dest('dist/stub/data/'));
 });
 
 gulp.task('html', ['styles'], function () {

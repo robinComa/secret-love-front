@@ -9,7 +9,7 @@
         <md-list-item>
             <md-button class="md-primary" ui-sref="secret-box" ng-click="toggleSidenav('left')" aria-label="{{'sidenav.entry.label.secretbox' | translate}}">
                 {{'sidenav.entry.label.secretbox' | translate}}
-                <span class="nb-secret-box-news">{{nbSecretBoxNews}}</span>
+                <span ng-if="nbSecretBoxNews > 0" class="nb-secret-box-news">{{nbSecretBoxNews}}</span>
                 <ng-md-icon icon="favorite_outline" size="14" class="icon-love"></ng-md-icon>
                 <ng-md-icon icon="markunread_mailbox" size="30"></ng-md-icon>
             </md-button>
