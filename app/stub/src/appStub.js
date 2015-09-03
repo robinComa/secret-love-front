@@ -10,13 +10,12 @@ angular.module('appStub', [
 
     $httpProvider.interceptors.push('HttpStubInterceptor');
 
-}).run(function($httpBackend, $window){
-
-    $window.localStorage.clear();
+}).run(function($httpBackend){
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
     $httpBackend.whenDELETE(/.*/).passThrough();
     $httpBackend.whenPUT(/.*/).passThrough();
     $httpBackend.whenJSONP(/.*/).passThrough();
+
 });

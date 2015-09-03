@@ -28,14 +28,38 @@ angular.module('app', [
     $urlRouterProvider.otherwise('/friends/list');
 
     $stateProvider
+        .state('unknown', {
+            abstract: true,
+            url: '',
+            template: '<div ui-view></div>'
+        })
+        .state('auth', {
+            parent: 'unknown',
+            url: '/auth',
+            templateUrl: 'src/main/content/auth/view.html',
+            controller: 'AuthCtrl'
+        })
+        .state('account', {
+            parent: 'unknown',
+            url: '/account',
+            templateUrl: 'src/main/content/account/view.html',
+            controller: 'AccountCtrl'
+        })
         .state('main', {
             abstract: true,
             url: '',
             templateUrl: 'src/main/main.html',
             controller: 'MainCtrl',
             resolve: {
-                me: function(Me){
-                    return Me.get().$promise;
+                me: function(Me, $q, $state){
+                    var deferred = $q.defer();
+                    Me.get().$promise.then(function(me){
+                        deferred.resolve(me);
+                    }, function(reject, $httpBackend, GetJsonFile){
+                        deferred.reject(reject);
+                        $state.go('auth');
+                    });
+                    return deferred.promise;
                 }
             }
         }).state('friends', {
@@ -135,6 +159,7 @@ angular.module('app', [
 
 }).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){
 
+    $translatePartialLoader.addPart('auth');
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');

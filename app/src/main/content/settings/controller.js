@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('SettingsCtrl', function($scope, me){
+angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $state){
 
     $scope.meCopy = angular.copy(me);
 
@@ -12,7 +12,8 @@ angular.module('app').controller('SettingsCtrl', function($scope, me){
     };
 
     $scope.disconnect = function(){
-
+        $window.localStorage.clear();
+        $state.go('auth');
     };
 
 });

@@ -2,7 +2,10 @@
 
 angular.module('appStub.server', [
     'appStub.json.file'
-]).run(function($httpBackend, GetJsonFile){
+]).run(function($window, $httpBackend, GetJsonFile){
+
+    $window.localStorage.removeItem('cache_data_friends');
+    $window.localStorage.removeItem('cache_data_secretBox');
 
     $httpBackend.whenGET(/me$/).respond(GetJsonFile.synchronously('stub/data/me/GET-x.json'));
     $httpBackend.whenPOST(/me$/).respond(200);
