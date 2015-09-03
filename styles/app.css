@@ -106,6 +106,9 @@ friend-preview ng-transclude * {
     white-space: normal;
     margin-bottom: 10px; }
 
+.state-auth h1 {
+  margin-top: -80px; }
+
 .state-friends-list .btn-toggle-list-face,
 .state-friends-face .btn-toggle-list-face {
   position: fixed;

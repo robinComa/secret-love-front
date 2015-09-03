@@ -17,6 +17,7 @@ i18n/en/friends.json
 i18n/en/secretbox.json
 i18n/en/settings.json
 i18n/en/sidenav.json
+i18n/fr/auth.json
 i18n/fr/basket.json
 i18n/fr/common.json
 i18n/fr/connect.json
@@ -36,4 +37,4 @@ stub/data/secretbox/GET.json
 NETWORK:
 *
 
-# hash: 99e400487076156b6592e3de8e7d34ef335a0e662dc2587c16b3190707efd3ad
+# hash: 20c66fecce20ad2955debc7dc467746b1278733776f49f338dbb960c42f2d857

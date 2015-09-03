@@ -28,14 +28,38 @@ angular.module('app', [
     $urlRouterProvider.otherwise('/friends/list');
 
     $stateProvider
+        .state('unknown', {
+            abstract: true,
+            url: '',
+            template: '<div ui-view></div>'
+        })
+        .state('auth', {
+            parent: 'unknown',
+            url: '/auth',
+            templateUrl: 'src/main/content/auth/view.html',
+            controller: 'AuthCtrl'
+        })
+        .state('account', {
+            parent: 'unknown',
+            url: '/account',
+            templateUrl: 'src/main/content/account/view.html',
+            controller: 'AccountCtrl'
+        })
         .state('main', {
             abstract: true,
             url: '',
             templateUrl: 'src/main/main.html',
             controller: 'MainCtrl',
             resolve: {
-                me: function(Me){
-                    return Me.get().$promise;
+                me: function(Me, $q, $state){
+                    var deferred = $q.defer();
+                    Me.get().$promise.then(function(me){
+                        deferred.resolve(me);
+                    }, function(reject, $httpBackend, GetJsonFile){
+                        deferred.reject(reject);
+                        $state.go('auth');
+                    });
+                    return deferred.promise;
                 }
             }
         }).state('friends', {
@@ -135,6 +159,7 @@ angular.module('app', [
 
 }).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){
 
+    $translatePartialLoader.addPart('auth');
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');
@@ -1017,6 +1042,28 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
 });
 'use strict';
 
+angular.module('app').controller('AuthCtrl', function($scope, Me){
+
+    $scope.me = new Me();
+
+    $scope.submit = function(){
+        if($scope.loginForm.$valid){
+            $scope.me.$save().then(function(){
+
+            }, function(){
+
+            });
+        }
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('AccountCtrl', function(){
+
+});
+'use strict';
+
 angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $state, Friend, $filter, $mdToast, $mdDialog, $translate, $timeout, SecretBox, $cache){
 
     var isListState = function(){
@@ -1314,7 +1361,7 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
 });
 'use strict';
 
-angular.module('app').controller('SettingsCtrl', function($scope, me){
+angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $state){
 
     $scope.meCopy = angular.copy(me);
 
@@ -1326,7 +1373,8 @@ angular.module('app').controller('SettingsCtrl', function($scope, me){
     };
 
     $scope.disconnect = function(){
-
+        $window.localStorage.clear();
+        $state.go('auth');
     };
 
 });
