@@ -4,6 +4,7 @@ CACHE MANIFEST
 CACHE:
 index.html
 scripts/app.js
+scripts/stub.js
 scripts/templates.js
 scripts/vendor.js
 styles/app.css
@@ -24,15 +25,15 @@ i18n/fr/friends.json
 i18n/fr/secretbox.json
 i18n/fr/settings.json
 i18n/fr/sidenav.json
-stub/dialogs/GET.json
-stub/friends/facebook.json
-stub/friends/googlePlus.json
-stub/friends/instagram.json
-stub/me/GET-x.json
-stub/secretbox/GET.json
+stub/data/dialogs/GET.json
+stub/data/friends/facebook.json
+stub/data/friends/googlePlus.json
+stub/data/friends/instagram.json
+stub/data/me/GET-x.json
+stub/data/secretbox/GET.json
 
 
 NETWORK:
 *
 
-# hash: 510ecd6bf032772835c87e6d40ef98331714018c5f153f5a3eca3d6c345e580f
+# hash: 99e400487076156b6592e3de8e7d34ef335a0e662dc2587c16b3190707efd3ad
