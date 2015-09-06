@@ -4,12 +4,12 @@ md-card-content{
     .repeated-item {
       box-sizing: border-box;
       height: 55px;
-      md-menu{
+      friend-preview{
         button{
-          margin-top: 10px;
+          margin: 0px 0px 0px 0px;
+          padding: 10px 0px 0px 0px;
+          width: 10px;
         }
-        height: 30px;
-        width: 35px;
       }
     }
   }

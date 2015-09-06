@@ -42,7 +42,10 @@ md-input-container{
 @import "../components/friend-preview/style";
 
 .state-auth{
-  @import "content/auth/style";
+  @import "../unknown/auth/style";
+}
+.state-account{
+  @import "../unknown/account/style";
 }
 
 .state-friends-list,

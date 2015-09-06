@@ -25,27 +25,16 @@
                 md-virtual-repeat="friend in filteringFriends">
 
                 <friend-preview friend="friend" flex>
-                    <p>{{ friend.name }}</p>
+                    <div layout="row" layout-align="start center">
+                        <p flex>{{ friend.name }}</p>
+                        <md-button flex="20" flex-gt-sm="10" class="md-icon-button" ng-if="!friend.love" ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
+                            <ng-md-icon icon="{{friend.visibility ? 'visibility_off' : 'visibility'}}" style="fill: pink" size="30"></ng-md-icon>
+                        </md-button>
+                        <md-button flex="20" flex-gt-sm="10" class="md-icon-button" ng-if="friend.visibility" aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend, $event)">
+                            <ng-md-icon icon="{{getLoveIcon(friend)}}" style="fill: pink" size="30"></ng-md-icon>
+                        </md-button>
+                    </div>
                 </friend-preview>
-
-                <md-menu md-position-mode="target-right target" md-offset="0 -7">
-                    <md-button aria-label="Open phone interactions menu" class="md-icon-button" ng-click="openMenu($mdOpenMenu, $event)">
-                        <ng-md-icon flex="15" icon="more_vert" style="fill: pink" size="30"></ng-md-icon>
-                    </md-button>
-                    <md-menu-content width="2">
-                        <md-menu-item ng-if="friend.visibility">
-                            <md-button aria-label="{{'friends.list.menu.action.toggle.love' | translate}}" ng-click="toogleLove(friend, $event)">
-                                <ng-md-icon icon="{{getLoveIcon(friend)}}" style="fill: pink" size="40"></ng-md-icon>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item ng-if="!friend.love">
-                            <md-button ng-disabled="friend.love" aria-label="{{'friends.list.menu.action.toggle.visibility' | translate}}" ng-click="toggleFriendVisibility(friend)">
-                                <ng-md-icon icon="{{friend.visibility ? 'visibility_off' : 'visibility'}}" style="fill: pink" size="40"></ng-md-icon>
-                            </md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
-
             </div>
         </md-virtual-repeat-container>
 
