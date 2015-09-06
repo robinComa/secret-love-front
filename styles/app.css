@@ -120,11 +120,10 @@ friend-preview ng-transclude * {
   .state-friends-list md-card-content md-virtual-repeat-container .repeated-item {
     box-sizing: border-box;
     height: 55px; }
-    .state-friends-list md-card-content md-virtual-repeat-container .repeated-item md-menu {
-      height: 30px;
-      width: 35px; }
-      .state-friends-list md-card-content md-virtual-repeat-container .repeated-item md-menu button {
-        margin-top: 10px; }
+    .state-friends-list md-card-content md-virtual-repeat-container .repeated-item friend-preview button {
+      margin: 0px 0px 0px 0px;
+      padding: 10px 0px 0px 0px;
+      width: 10px; }
 
 .state-friends-list friends-filter {
   right: 20px;
@@ -213,3 +212,10 @@ friend-preview ng-transclude * {
 .state-connect ng-md-icon {
   margin-left: 10px;
   margin-right: 10px; }
+
+.state-connect p {
+  margin: 0px;
+  padding: 0px; }
+  .state-connect p.status {
+    color: pink;
+    font-size: 12px; }

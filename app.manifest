@@ -9,14 +9,7 @@ scripts/templates.js
 scripts/vendor.js
 styles/app.css
 styles/vendor.css
-i18n/en/basket.json
-i18n/en/common.json
-i18n/en/connect.json
-i18n/en/dialog.json
-i18n/en/friends.json
-i18n/en/secretbox.json
-i18n/en/settings.json
-i18n/en/sidenav.json
+i18n/fr/account.json
 i18n/fr/auth.json
 i18n/fr/basket.json
 i18n/fr/common.json
@@ -26,6 +19,16 @@ i18n/fr/friends.json
 i18n/fr/secretbox.json
 i18n/fr/settings.json
 i18n/fr/sidenav.json
+i18n/en/account.json
+i18n/en/auth.json
+i18n/en/basket.json
+i18n/en/common.json
+i18n/en/connect.json
+i18n/en/dialog.json
+i18n/en/friends.json
+i18n/en/secretbox.json
+i18n/en/settings.json
+i18n/en/sidenav.json
 stub/data/dialogs/GET.json
 stub/data/friends/facebook.json
 stub/data/friends/googlePlus.json
@@ -37,4 +40,4 @@ stub/data/secretbox/GET.json
 NETWORK:
 *
 
-# hash: 413045c0e743b6127630297c37b552818a7a882b59cba0b55a096656885916df
+# hash: 22a9a84a89570451c79548f52b68fbe0d44f0ed167f882f5761ec00b3d5fd728
