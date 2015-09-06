@@ -31,18 +31,19 @@ angular.module('app', [
         .state('unknown', {
             abstract: true,
             url: '',
-            template: '<div ui-view></div>'
+            templateUrl: 'src/unknown/view.html',
+            controller: 'UnknownCtrl'
         })
         .state('auth', {
             parent: 'unknown',
             url: '/auth',
-            templateUrl: 'src/main/content/auth/view.html',
+            templateUrl: 'src/unknown/auth/view.html',
             controller: 'AuthCtrl'
         })
         .state('account', {
             parent: 'unknown',
             url: '/account',
-            templateUrl: 'src/main/content/account/view.html',
+            templateUrl: 'src/unknown/account/view.html',
             controller: 'AccountCtrl'
         })
         .state('main', {

@@ -1,0 +1,46 @@
+<div layout="column" layout-align="center center">
+    <ng-md-icon icon="favorite" style="fill: pink" size="200"></ng-md-icon>
+    <h1>{{'common.title' | translate}}</h1>
+</div>
+
+<form name="loginForm" ng-submit="submit()" layout="column">
+
+    <md-input-container>
+        <label>{{'auth.login.placeholder' | translate}}</label>
+        <input ng-model="me.login" name="login" type="text" required ng-minlength="5" ng-maxlength="15"/>
+        <ng-md-icon icon="account_circle" size="50"></ng-md-icon>
+        <div ng-messages="loginForm.$dirty && loginForm.login.$error">
+            <div ng-message="required">{{'auth.login.error.required' | translate}}</div>
+            <div ng-message="maxlength">{{'auth.login.error.maxlength' | translate}}</div>
+            <div ng-message="minlength">{{'auth.login.error.minlength' | translate}}</div>
+        </div>
+    </md-input-container>
+
+    <md-input-container>
+        <label>{{'auth.password.placeholder' | translate}}</label>
+        <input ng-model="me.password" name="password" type="password" required ng-minlength="5" ng-maxlength="15"/>
+        <ng-md-icon icon="vpn_key" size="50"></ng-md-icon>
+        <div ng-messages="loginForm.$dirty && loginForm.password.$error">
+            <div ng-message="required">{{'auth.password.error.required' | translate}}</div>
+            <div ng-message="maxlength">{{'auth.password.error.maxlength' | translate}}</div>
+            <div ng-message="minlength">{{'auth.password.error.minlength' | translate}}</div>
+        </div>
+    </md-input-container>
+
+    <md-button type="submit" class="md-raised md-primary">
+        {{'auth.connect.btn.label' | translate}}
+    </md-button>
+
+</form>
+
+<div layout="column">
+    <md-divider ></md-divider>
+
+    <md-button type="button" class="md-raised" ui-sref="account">
+        {{'auth.create.account.btn.label' | translate}}
+    </md-button>
+
+    <md-button type="button" class="md-raised" ui-sref="friends-list">
+        {{'auth.demo.btn.label' | translate}}
+    </md-button>
+</div>
