@@ -2,6 +2,24 @@
 
 angular.module('app').factory('Me', function(settings, $resource){
 
-    return $resource(settings.endpoint + 'me');
+    var Me = $resource(settings.endpoint + 'me/:action', null, {
+        isUnique: {
+            method:'POST',
+            params: {
+                action: 'unique'
+            }
+        },
+        authenticate: {
+            method:'POST',
+            params: {
+                action: 'authenticate'
+            }
+        },
+        update: {
+            method:'PUT'
+        }
+    });
+
+    return Me;
 
 });

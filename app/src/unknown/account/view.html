@@ -1,29 +1,53 @@
-<form name="loginForm" ng-submit="submit()" layout="column">
+<h1>{{'account.form.title' | translate}}</h1>
+
+<p>{{'account.form.description' | translate}}</p>
+
+<form name="accountForm" ng-submit="submit($event)" layout="column">
 
     <md-input-container>
-        <label>{{'auth.login.placeholder' | translate}}</label>
-        <input ng-model="meCopy.login" name="login" type="text" required ng-minlength="5" ng-maxlength="15"/>
+        <label>{{'account.login.placeholder' | translate}}</label>
+        <input ng-model="me.login" name="login" type="text" required ng-minlength="5" ng-maxlength="15"/>
         <ng-md-icon icon="account_circle" size="50"></ng-md-icon>
-        <div ng-messages="loginForm.$dirty && loginForm.login.$error">
-            <div ng-message="required">{{'auth.login.error.required' | translate}}</div>
-            <div ng-message="maxlength">{{'auth.login.error.maxlength' | translate}}</div>
-            <div ng-message="minlength">{{'auth.login.error.minlength' | translate}}</div>
+        <div ng-messages="accountForm.$dirty && accountForm.login.$error">
+            <div ng-message="required">{{'account.login.error.required' | translate}}</div>
+            <div ng-message="maxlength">{{'account.login.error.maxlength' | translate}}</div>
+            <div ng-message="minlength">{{'account.login.error.minlength' | translate}}</div>
         </div>
     </md-input-container>
 
     <md-input-container>
-        <label>{{'auth.password.placeholder' | translate}}</label>
-        <input ng-model="meCopy.password" name="password" type="password" required ng-minlength="5" ng-maxlength="15"/>
-        <ng-md-icon icon="vpn_key" size="50"></ng-md-icon>
-        <div ng-messages="loginForm.$dirty && loginForm.password.$error">
-            <div ng-message="required">{{'auth.password.error.required' | translate}}</div>
-            <div ng-message="maxlength">{{'auth.password.error.maxlength' | translate}}</div>
-            <div ng-message="minlength">{{'auth.password.error.minlength' | translate}}</div>
+        <label>{{'account.email.placeholder' | translate}}</label>
+        <input ng-model="me.email" email-check name="email" type="email" required/>
+        <ng-md-icon icon="email" size="50"></ng-md-icon>
+        <div ng-messages="accountForm.$dirty && accountForm.email.$error">
+            <div ng-message="required">{{'account.email.error.required' | translate}}</div>
+            <div ng-message="email">{{'account.email.error.email' | translate}}</div>
+            <div ng-message="blacklist">{{'account.email.error.blacklist' | translate}}</div>
+            <div ng-message="unique">{{'account.email.error.unique' | translate}}</div>
         </div>
     </md-input-container>
 
-    <md-button type="button" class="md-raised md-primary">
-        {{'auth.connect.btn.label' | translate}}
+    <md-input-container>
+        <label>{{'account.password.placeholder' | translate}}</label>
+        <input ng-model="me.password" name="password" type="password" required ng-minlength="5" ng-maxlength="15"/>
+        <ng-md-icon icon="vpn_key" size="50"></ng-md-icon>
+        <div ng-messages="accountForm.$dirty && accountForm.password.$error">
+            <div ng-message="required">{{'account.password.error.required' | translate}}</div>
+            <div ng-message="maxlength">{{'account.password.error.maxlength' | translate}}</div>
+            <div ng-message="minlength">{{'account.password.error.minlength' | translate}}</div>
+        </div>
+    </md-input-container>
+
+    <md-input-container>
+        <label>{{'account.password.2.placeholder' | translate}}</label>
+        <input ng-model="password2" verify-model="me.password" name="password2" type="password" required ng-minlength="5" ng-maxlength="15"/>
+        <div ng-messages="accountForm.$dirty && accountForm.password2.$error">
+            <div ng-message="verify">{{'account.password.error.verify' | translate}}</div>
+        </div>
+    </md-input-container>
+
+    <md-button type="submit" class="md-raised md-primary" ng-disabled="!accountForm.$valid">
+        {{'account.create.account.btn.label' | translate}}
     </md-button>
 
 </form>

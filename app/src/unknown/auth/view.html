@@ -6,13 +6,13 @@
 <form name="loginForm" ng-submit="submit()" layout="column">
 
     <md-input-container>
-        <label>{{'auth.login.placeholder' | translate}}</label>
-        <input ng-model="me.login" name="login" type="text" required ng-minlength="5" ng-maxlength="15"/>
-        <ng-md-icon icon="account_circle" size="50"></ng-md-icon>
-        <div ng-messages="loginForm.$dirty && loginForm.login.$error">
-            <div ng-message="required">{{'auth.login.error.required' | translate}}</div>
-            <div ng-message="maxlength">{{'auth.login.error.maxlength' | translate}}</div>
-            <div ng-message="minlength">{{'auth.login.error.minlength' | translate}}</div>
+        <label>{{'auth.email.placeholder' | translate}}</label>
+        <input ng-model="me.email" name="email" type="email" required/>
+        <ng-md-icon icon="email" size="50"></ng-md-icon>
+        <div ng-messages="loginForm.$dirty && loginForm.email.$error">
+            <div ng-message="required">{{'auth.email.error.required' | translate}}</div>
+            <div ng-message="email">{{'auth.email.error.email' | translate}}</div>
+            <div ng-message="blacklist">{{'auth.email.error.blacklist' | translate}}</div>
         </div>
     </md-input-container>
 

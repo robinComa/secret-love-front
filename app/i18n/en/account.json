@@ -1,0 +1,23 @@
+{
+  "account.form.title": "Account creation",
+  "account.form.description": "La création d'un compte permet d'accéder à la l'application. Vous pourrez choisir de connecter vos applications sociales afin de visualiser vos contacts.",
+  "account.login.placeholder": "Login",
+  "account.login.error.required": "Login is mandatory",
+  "account.login.error.maxlength": "Too long",
+  "account.login.error.minlength": "Too short",
+  "account.email.placeholder": "Email",
+  "account.email.error.required": "Email is mandatory",
+  "account.email.error.email": "Email is not correctly spelled",
+  "account.email.error.blacklist": "Your email provider is into our blacklist",
+  "account.email.error.unique": "This email is already used",
+  "account.password.placeholder": "Password",
+  "account.password.error.required": "Password is mandatory",
+  "account.password.error.maxlength": "Too long",
+  "account.password.error.minlength": "Too short",
+  "account.password.error.verify": "It is not the same password",
+  "account.password.2.placeholder": "Password verification",
+  "account.create.account.btn.label": "Create an account",
+  "account.connect.issue.dialog.title": "We have an issue",
+  "account.connect.issue.dialog.description": "Account creation not possible",
+  "account.connect.issue.dialog.action": "retry"
+}

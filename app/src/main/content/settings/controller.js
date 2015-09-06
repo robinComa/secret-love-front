@@ -5,7 +5,7 @@ angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $
     $scope.meCopy = angular.copy(me);
 
     $scope.submit = function(){
-        $scope.meCopy.$save().then(function(){
+        $scope.meCopy.$update().then(function(){
             me.login = $scope.meCopy.login;
             me.email = $scope.meCopy.email;
         });

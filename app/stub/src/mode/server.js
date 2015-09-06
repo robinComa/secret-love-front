@@ -8,7 +8,10 @@ angular.module('appStub.server', [
     $window.localStorage.removeItem('cache_data_secretBox');
 
     $httpBackend.whenGET(/me$/).respond(GetJsonFile.synchronously('stub/data/me/GET-x.json'));
+    $httpBackend.whenPUT(/me$/).respond(200);
     $httpBackend.whenPOST(/me$/).respond(200);
+    $httpBackend.whenPOST(/me\/authenticate/).respond(401);
+    $httpBackend.whenPOST(/me\/unique$/).respond({unique: true});
 
     $httpBackend.whenGET(/secretbox$/).respond(GetJsonFile.synchronously('stub/data/secretbox/GET.json'));
     $httpBackend.whenPOST(/secretbox$/).respond(200);

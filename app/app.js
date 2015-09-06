@@ -56,7 +56,7 @@ angular.module('app', [
                     var deferred = $q.defer();
                     Me.get().$promise.then(function(me){
                         deferred.resolve(me);
-                    }, function(reject, $httpBackend, GetJsonFile){
+                    }, function(reject){
                         deferred.reject(reject);
                         $state.go('auth');
                     });
@@ -161,6 +161,7 @@ angular.module('app', [
 }).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){
 
     $translatePartialLoader.addPart('auth');
+    $translatePartialLoader.addPart('account');
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');

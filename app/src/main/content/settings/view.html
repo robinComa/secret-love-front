@@ -15,27 +15,6 @@
                     </div>
                 </md-input-container>
 
-                <md-input-container>
-                    <label>{{'settings.password.placeholder' | translate}}</label>
-                    <input ng-model="meCopy.password" name="password" type="password" required ng-minlength="5" ng-maxlength="15"/>
-                    <ng-md-icon icon="vpn_key" size="50"></ng-md-icon>
-                    <div ng-messages="settingsForm.password.$error">
-                        <div ng-message="required">{{'settings.password.error.required' | translate}}</div>
-                        <div ng-message="maxlength">{{'settings.password.error.maxlength' | translate}}</div>
-                        <div ng-message="minlength">{{'settings.password.error.minlength' | translate}}</div>
-                    </div>
-                </md-input-container>
-
-                <md-input-container>
-                    <label>{{'settings.email.placeholder' | translate}}</label>
-                    <input ng-model="meCopy.email" name="email" type="email" required/>
-                    <ng-md-icon icon="mail" size="50"></ng-md-icon>
-                    <div ng-messages="settingsForm.email.$error">
-                        <div ng-message="required">{{'settings.email.error.required' | translate}}</div>
-                        <div ng-message="email">{{'settings.email.error.email' | translate}}</div>
-                    </div>
-                </md-input-container>
-
                 <div layout="row" layout-align="end start">
                     <md-button type="submit" class="md-raised md-primary" ng-disabled="!settingsForm.$valid">{{'settings.form.submit.label' | translate}}</md-button>
                 </div>
