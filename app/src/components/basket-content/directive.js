@@ -13,10 +13,12 @@ angular.module('app').directive('basketContent', function($timeout){
                 return $scope.basket.loves;
             }, function(val, oldVal){
                 if(val !== oldVal){
-                    $scope.moveMinusOne = true;
-                    $timeout(function(){
-                        $scope.moveMinusOne = false;
-                    }, 2000);
+                    if(val < oldVal){
+                        $scope.moveMinusOne = true;
+                        $timeout(function(){
+                            $scope.moveMinusOne = false;
+                        }, 2000);
+                    }
                 }
             });
         }

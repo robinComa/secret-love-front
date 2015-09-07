@@ -175,6 +175,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
     $translatePartialLoader.addPart('basket');
+    $translatePartialLoader.addPart('shop');
 
     $timeout(function(){
         $translate.refresh();

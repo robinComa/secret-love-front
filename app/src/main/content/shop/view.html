@@ -4,10 +4,24 @@
         <md-card-content>
 
             <md-list>
-                <md-list-item>
-                    //TODO
-                 </md-list-item>
+
+                <md-list-item ng-repeat="item in items" layout="row">
+
+                    <ng-md-icon icon="{{item.icon}}" style="fill:pink" size="50"></ng-md-icon>
+
+                    <p class="nb">x{{item.nb}}</p>
+                    <p class="price">{{item.price}}</p>
+
+                    <md-button type="button" class="md-fab md-primary" ng-click="purchase(item)" aria-label="{{'shop.purchase.btn.label' | translate}}">
+                        <ng-md-icon icon="add_shopping_cart" style="fill:pink" size="30"></ng-md-icon>
+                    </md-button>
+
+                    <md-divider ng-if="!$last"></md-divider>
+
+                </md-list-item>
+
             </md-list>
+
         </md-card-content>
     </md-card>
 </div>
