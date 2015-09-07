@@ -1,6 +1,16 @@
 body {
   font-family: 'Roboto Condensed', sans-serif; }
 
+md-toolbar.demo-block {
+  height: 30px;
+  min-height: 30px; }
+  md-toolbar.demo-block .md-toolbar-tools {
+    height: 30px;
+    min-height: 30px;
+    color: white; }
+    md-toolbar.demo-block .md-toolbar-tools button {
+      padding-top: 8px; }
+
 md-toolbar h1 {
   text-align: center; }
 
@@ -73,7 +83,7 @@ basket-content .md-icon-button.btn-shopping {
   height: 30px;
   width: 30px; }
 
-basket-content .icon-minus-one {
+basket-content .icon-plus-minus-one {
   position: absolute;
   top: 35px;
   right: 55px; }
@@ -219,3 +229,13 @@ friend-preview ng-transclude * {
   .state-connect p.status {
     color: pink;
     font-size: 12px; }
+
+.state-shop p {
+  font-weight: bold;
+  text-align: center;
+  color: #E91E63; }
+  .state-shop p.nb {
+    position: absolute;
+    margin-top: 20px;
+    left: 35px;
+    width: 30px; }

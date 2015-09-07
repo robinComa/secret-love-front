@@ -2,5 +2,7 @@
   "common.title": "Secret Love",
   "common.navbar.title": "Secret Love",
   "common.toogle.label": "Open main menu",
-  "common.link.home.label": "Go to home page"
+  "common.link.home.label": "Go to home page",
+  "common.navbar.demo.mode": "Demo mode",
+  "common.navbar.demo.close": "Return to standard mode"
 }

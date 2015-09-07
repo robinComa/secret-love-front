@@ -1,6 +1,6 @@
 {
   "account.form.title": "Account creation",
-  "account.form.description": "La création d'un compte permet d'accéder à la l'application. Vous pourrez choisir de connecter vos applications sociales afin de visualiser vos contacts.",
+  "account.form.description": "The account creation permit to use the application. You can choose to connect your socials apps to use your friends.",
   "account.login.placeholder": "Login",
   "account.login.error.required": "Login is mandatory",
   "account.login.error.maxlength": "Too long",

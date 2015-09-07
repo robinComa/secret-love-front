@@ -32,7 +32,12 @@ angular.module('app', [
             abstract: true,
             url: '',
             templateUrl: 'src/unknown/view.html',
-            controller: 'UnknownCtrl'
+            controller: 'UnknownCtrl',
+            onEnter: function(LoadApplication, $state){
+                if(LoadApplication.isAppStub()){
+                    $state.go('friends-list');
+                }
+            }
         })
         .state('auth', {
             parent: 'unknown',
@@ -170,6 +175,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('connect');
     $translatePartialLoader.addPart('settings');
     $translatePartialLoader.addPart('basket');
+    $translatePartialLoader.addPart('shop');
 
     $timeout(function(){
         $translate.refresh();
@@ -188,6 +194,13 @@ angular.module('app', [
             position: 'bottom left'
         },
         socials: {
+            phone: {
+                label: 'connect.label.phone',
+                icon: {
+                    name: 'quick_contacts_dialer',
+                    color: '#6491F7'
+                }
+            },
             facebook: {
                 label: 'connect.label.facebook',
                 auth: {
@@ -512,10 +525,12 @@ angular.module('app').directive('basketContent', function($timeout){
                 return $scope.basket.loves;
             }, function(val, oldVal){
                 if(val !== oldVal){
-                    $scope.moveMinusOne = true;
-                    $timeout(function(){
-                        $scope.moveMinusOne = false;
-                    }, 2000);
+                    if(val < oldVal){
+                        $scope.moveMinusOne = true;
+                        $timeout(function(){
+                            $scope.moveMinusOne = false;
+                        }, 2000);
+                    }
                 }
             });
         }
@@ -583,15 +598,17 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
     };
 
     for(var i in settings.socials){
-        var hash = findPatternInURI(settings.socials[i].auth.patternURI);
-        if(hash){
-            if(settings.socials[i].auth.isCode){
-                $cacheProvider.code[i].setData(hash);
-                window.location = window.location.href.split('?')[0] + '#/';
-            }else{
-                $cacheProvider.token[i].setData(hash);
+        if(settings.socials[i].auth){
+            var hash = findPatternInURI(settings.socials[i].auth.patternURI);
+            if(hash){
+                if(settings.socials[i].auth.isCode){
+                    $cacheProvider.code[i].setData(hash);
+                    window.location = window.location.href.split('?')[0] + '#/';
+                }else{
+                    $cacheProvider.token[i].setData(hash);
+                }
+                break;
             }
-            break;
         }
     }
 
@@ -652,6 +669,48 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
       };
     };
 
+
+});
+'use strict';
+
+angular.module('app').factory('phone', function($q, $http) {
+
+    var isPhoneDevice = false;
+    var isStubMode = true;
+
+    return{
+        isConnected: function(){
+            return isPhoneDevice || isStubMode;
+        },
+        isImplemented: function(){
+            return isPhoneDevice || isStubMode;
+        },
+        close: function(){
+
+        },
+        getFriends: function(){
+            var deferred = $q.defer();
+            if(isStubMode){
+                $http.get('stub/data/friends/phone.json').then(function(response){
+                    var friends = response.data.map(function(friend){
+                        return {
+                            id: friend.id,
+                            name: friend.displayName,
+                            picture: 'data:image/jpg;base64,' + friend.photos[0],
+                            type: 'phone'
+                        };
+                    });
+                    deferred.notify(friends);
+                    deferred.resolve(friends);
+                }, deferred.reject);
+            }else if(isPhoneDevice){
+                deferred.resolve([]);
+            }else{
+                deferred.resolve([]);
+            }
+            return deferred.promise;
+        }
+    };
 
 });
 'use strict';
@@ -1021,13 +1080,18 @@ angular.module('app').factory('twitter', function(settings, Connection, $q, $htt
 });
 'use strict';
 
-angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $state){
+angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $state, LoadApplication){
 
     $scope.me = me;
     $scope.state = $state;
+    $scope.isAppStub = LoadApplication.isAppStub();
 
     $scope.toggleSidenav = function(menuId) {
         $mdSidenav(menuId).toggle();
+    };
+
+    $scope.loadApp = function(){
+        LoadApplication.loadApp();
     };
 
 });
@@ -1069,7 +1133,7 @@ angular.module('app').controller('UnknownCtrl', function($scope, $state){
 });
 'use strict';
 
-angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDialog, $translate){
+angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDialog, $translate, LoadApplication){
 
     $scope.me = new Me();
 
@@ -1089,6 +1153,10 @@ angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDia
                 );
             });
         }
+    };
+
+    $scope.loadDemo = function(){
+        LoadApplication.loadAppStub();
     };
 
 });
@@ -1875,7 +1943,7 @@ angular.module('app').controller('FriendsListCtrl', function($scope){
     $scope.$parent.filter = {
         visibility: true,
         love: [false],
-        type: ['instagram', 'googlePlus', 'facebook']
+        type: ['instagram', 'googlePlus', 'facebook', 'phone']
     };
 
     $scope.getLoveIcon = function(friend){
@@ -1909,7 +1977,7 @@ angular.module('app').filter('friendFilter', function($filter) {
 });
 'use strict';
 
-angular.module('app').directive('friendsFilter', function(settings){
+angular.module('app').directive('friendsFilter', function(settings, $injector){
     return {
         restrict: 'E',
         templateUrl: 'src/main/content/friends/list/filter/view.html',
@@ -1938,7 +2006,12 @@ angular.module('app').directive('friendsFilter', function(settings){
                     scope.filter.type.push(value);
                 }
             };
-            scope.socialIsSeleced = function(type){
+
+            scope.isConnected = function(name){
+                return $injector.get(name).isConnected();
+            };
+
+            scope.socialIsSelected = function(type){
                 return scope.filter.type.indexOf(type) !== -1;
             };
 
@@ -2051,6 +2124,7 @@ angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $
 
     $scope.disconnect = function(){
         $window.localStorage.clear();
+        $window.sessionStorage.clear();
         $state.go('auth');
     };
 
@@ -2101,6 +2175,74 @@ angular.module('app').controller('DialogCtrl', function(settings,$scope, dialogs
 });
 'use strict';
 
-angular.module('app').controller('ShopCtrl', function(){
+angular.module('app').controller('ShopCtrl', function($scope, me){
+
+    $scope.items = [{
+        icon: 'favorite_outline',
+        type: 'love',
+        nb: 1,
+        price: '0.99 USD'
+    },{
+        icon: 'favorite_outline',
+        type: 'love',
+        nb: 3,
+        price: '2.99 USD'
+    },{
+        icon: 'favorite_outline',
+        type: 'love',
+        nb: 10,
+        price: '6.99 USD'
+    },{
+        icon: 'favorite_outline',
+        type: 'love',
+        nb: 20,
+        price: '9.99 USD'
+    }];
+
+    $scope.purchase = function(item){
+        var initialLoves = me.basket.loves;
+        me.basket.loves += item.nb;
+        me.$update().then(function(){
+
+        }, function(){
+            me.basket.loves = initialLoves;
+        });
+    };
+
+});
+'use strict';
+
+angular.element(document).ready(function() {
+
+    var LoadApplication = function(){
+
+        var KEY = 'application_mode';
+
+        this.isAppStub = function(){
+            return sessionStorage.getItem(KEY) === 'appStub';
+        };
+
+        this.load = function(){
+            if(this.isAppStub()){
+                angular.bootstrap(document, ['appStub']);
+            }else{
+                angular.bootstrap(document, ['app']);
+            }
+        };
+
+        this.loadAppStub = function(){
+            sessionStorage.setItem('application_mode', 'appStub');
+            window.location = window.location.href.split(window.location.hash)[0];
+        };
+        this.loadApp = function(){
+            sessionStorage.removeItem('application_mode');
+            window.location = window.location.href.split(window.location.hash)[0];
+        };
+    };
+
+    angular.module('app').service('LoadApplication', LoadApplication);
+
+    var service = new LoadApplication();
+    service.load();
 
 });

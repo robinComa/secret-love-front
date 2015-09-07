@@ -2,5 +2,7 @@
   "common.title": "Secret Love",
   "common.navbar.title": "Secret Love",
   "common.toogle.label": "Ouvrir le menu principal",
-  "common.link.home.label": "Aller sur la page d'accueil"
+  "common.link.home.label": "Aller sur la page d'accueil",
+  "common.navbar.demo.mode": "Mode demo",
+  "common.navbar.demo.close": "Revenir au mode normal"
 }
