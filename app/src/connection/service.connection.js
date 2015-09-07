@@ -8,15 +8,17 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
     };
 
     for(var i in settings.socials){
-        var hash = findPatternInURI(settings.socials[i].auth.patternURI);
-        if(hash){
-            if(settings.socials[i].auth.isCode){
-                $cacheProvider.code[i].setData(hash);
-                window.location = window.location.href.split('?')[0] + '#/';
-            }else{
-                $cacheProvider.token[i].setData(hash);
+        if(settings.socials[i].auth){
+            var hash = findPatternInURI(settings.socials[i].auth.patternURI);
+            if(hash){
+                if(settings.socials[i].auth.isCode){
+                    $cacheProvider.code[i].setData(hash);
+                    window.location = window.location.href.split('?')[0] + '#/';
+                }else{
+                    $cacheProvider.token[i].setData(hash);
+                }
+                break;
             }
-            break;
         }
     }
 

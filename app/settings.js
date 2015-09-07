@@ -10,6 +10,13 @@
             position: 'bottom left'
         },
         socials: {
+            phone: {
+                label: 'connect.label.phone',
+                icon: {
+                    name: 'quick_contacts_dialer',
+                    color: '#6491F7'
+                }
+            },
             facebook: {
                 label: 'connect.label.facebook',
                 auth: {

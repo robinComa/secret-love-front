@@ -5,8 +5,8 @@
         </md-button>
     </md-fab-trigger>
     <md-fab-actions>
-        <md-button class="md-fab md-raised md-mini" ng-repeat="(key, social) in socials" ng-value="key" aria-label="{{social.label | translate}}" ng-click="socialToggle(key)">
-            <ng-md-icon icon="{{social.icon.name}}" ng-style="{fill: socialIsSeleced(key) ? social.icon.color : 'grey'}" size="20"></ng-md-icon>
+        <md-button class="md-fab md-raised md-mini" ng-if="isConnected(key)" ng-repeat="(key, social) in socials" ng-value="key" aria-label="{{social.label | translate}}" ng-click="socialToggle(key)">
+            <ng-md-icon icon="{{social.icon.name}}" ng-style="{fill: socialIsSelected(key) ? social.icon.color : 'grey'}" size="20"></ng-md-icon>
         </md-button>
         <md-button class="md-fab md-raised md-mini" aria-label="{{'friends.filter.not.love.label' | translate}}" ng-click="loveSelected(false)">
             <ng-md-icon icon="favorite_outline" ng-style="{fill: loveIsSelected(false) ? 'pink': 'grey'}" size="20"></ng-md-icon>

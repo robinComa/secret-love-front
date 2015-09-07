@@ -9,7 +9,7 @@ angular.module('app').controller('FriendsListCtrl', function($scope){
     $scope.$parent.filter = {
         visibility: true,
         love: [false],
-        type: ['instagram', 'googlePlus', 'facebook']
+        type: ['instagram', 'googlePlus', 'facebook', 'phone']
     };
 
     $scope.getLoveIcon = function(friend){

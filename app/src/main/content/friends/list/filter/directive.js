@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').directive('friendsFilter', function(settings){
+angular.module('app').directive('friendsFilter', function(settings, $injector){
     return {
         restrict: 'E',
         templateUrl: 'src/main/content/friends/list/filter/view.html',
@@ -29,7 +29,12 @@ angular.module('app').directive('friendsFilter', function(settings){
                     scope.filter.type.push(value);
                 }
             };
-            scope.socialIsSeleced = function(type){
+
+            scope.isConnected = function(name){
+                return $injector.get(name).isConnected();
+            };
+
+            scope.socialIsSelected = function(type){
                 return scope.filter.type.indexOf(type) !== -1;
             };
 
