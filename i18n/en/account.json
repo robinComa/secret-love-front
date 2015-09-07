@@ -17,6 +17,7 @@
   "account.password.error.verify": "It is not the same password",
   "account.password.2.placeholder": "Password verification",
   "account.create.account.btn.label": "Create an account",
+  "account.cancel.btn.label": "Cancel",
   "account.connect.issue.dialog.title": "We have an issue",
   "account.connect.issue.dialog.description": "Account creation not possible",
   "account.connect.issue.dialog.action": "retry"

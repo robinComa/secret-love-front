@@ -17,6 +17,7 @@
   "account.password.error.verify": "Ce n'est pas le même mot de passe",
   "account.password.2.placeholder": "Ressaisissez votre mot de passe",
   "account.create.account.btn.label": "Créer un compte",
+  "account.cancel.btn.label": "Annuler",
   "account.connect.issue.dialog.title": "Une erreur est survenue",
   "account.connect.issue.dialog.description": "Création de compte impossible",
   "account.connect.issue.dialog.action": "réessayer"
