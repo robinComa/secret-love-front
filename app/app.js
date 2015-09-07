@@ -32,7 +32,12 @@ angular.module('app', [
             abstract: true,
             url: '',
             templateUrl: 'src/unknown/view.html',
-            controller: 'UnknownCtrl'
+            controller: 'UnknownCtrl',
+            onEnter: function(LoadApplication, $state){
+                if(LoadApplication.isAppStub()){
+                    $state.go('friends-list');
+                }
+            }
         })
         .state('auth', {
             parent: 'unknown',

@@ -13,6 +13,7 @@ angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $
 
     $scope.disconnect = function(){
         $window.localStorage.clear();
+        $window.sessionStorage.clear();
         $state.go('auth');
     };
 

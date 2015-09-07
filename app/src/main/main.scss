@@ -3,6 +3,18 @@ body{
 }
 
 md-toolbar{
+  &.demo-block{
+    height: 30px;
+    min-height: 30px;
+    .md-toolbar-tools{
+      height: 30px;
+      min-height: 30px;
+      color: white;
+      button{
+        padding-top: 8px;
+      }
+    }
+  }
   h1{
     text-align: center;
   }

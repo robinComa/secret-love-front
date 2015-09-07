@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDialog, $translate){
+angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDialog, $translate, LoadApplication){
 
     $scope.me = new Me();
 
@@ -20,6 +20,10 @@ angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDia
                 );
             });
         }
+    };
+
+    $scope.loadDemo = function(){
+        LoadApplication.loadAppStub();
     };
 
 });

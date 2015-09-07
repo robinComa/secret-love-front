@@ -3,7 +3,7 @@
     <h1>{{'common.title' | translate}}</h1>
 </div>
 
-<form name="loginForm" ng-submit="submit()" layout="column">
+<form name="loginForm" ng-submit="submit()" layout="column" novalidate>
 
     <md-input-container>
         <label>{{'auth.email.placeholder' | translate}}</label>
@@ -40,7 +40,7 @@
         {{'auth.create.account.btn.label' | translate}}
     </md-button>
 
-    <md-button type="button" class="md-raised" ui-sref="friends-list">
+    <md-button type="button" class="md-raised" ng-click="loadDemo()">
         {{'auth.demo.btn.label' | translate}}
     </md-button>
 </div>

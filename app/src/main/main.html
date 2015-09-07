@@ -10,6 +10,19 @@
         <basket-content basket="me.basket"></basket-content>
     </div>
 </md-toolbar>
+
+<md-toolbar ng-if="isAppStub" class="md-warn md-hue-3 demo-block">
+    <div class="md-toolbar-tools">
+        <h3>
+            <span>{{'common.navbar.demo.mode' | translate}}</span>
+        </h3>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="{{'common.navbar.demo.close' | translate}}" ng-click="loadApp()">
+            <ng-md-icon icon="close" style="fill: pink" size="30"></ng-md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
+
 <section layout="row" flex>
     <md-sidenav ui-view="sidenav"  md-swipe-left="toggleSidenav('left')" layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')"></md-sidenav>
     <div layout="column" id="content" layout-fill flex flex-md="72">
