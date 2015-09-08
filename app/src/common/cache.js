@@ -12,7 +12,7 @@ angular.module('app').run(function ($log, $window) {
 
         // Cache in error
         $window.applicationCache.addEventListener('error', function () {
-            $log.info('Cache in error : ');
+            $log.info('Cache in error');
         }, false);
 
         // Check of the manifest release
