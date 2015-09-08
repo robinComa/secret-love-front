@@ -199,6 +199,13 @@ friend-preview ng-transclude * {
   color: grey;
   font-size: 10px; }
 
+.match img {
+  border-radius: 50%;
+  height: 150px;
+  width: 150px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  margin: 0px; }
+
 .state-secret-box-dialog .md-icon-button {
   margin-top: 10px; }
 

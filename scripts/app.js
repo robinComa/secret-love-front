@@ -163,7 +163,7 @@ angular.module('app', [
             }
         });
 
-}).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){
+}).run(function($translatePartialLoader, $translate, $timeout){
 
     $translatePartialLoader.addPart('auth');
     $translatePartialLoader.addPart('account');
@@ -2041,7 +2041,7 @@ angular.module('app').controller('FriendsFaceCtrl', function($scope){
     $scope.$parent.filter = {
         visibility: true,
         love: [false],
-        type: ['instagram', 'googlePlus', 'facebook']
+        type: ['instagram', 'googlePlus', 'facebook', 'phone']
     };
 
     $scope.refreshFace = function(friends){
@@ -2131,11 +2131,49 @@ angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $
 });
 'use strict';
 
-angular.module('app').controller('SecretBoxCtrl', function($scope, SecretBox){
+angular.module('app').controller('SecretBoxCtrl', function($scope, SecretBox, $mdDialog){
+
+    var isMatch = function(secret){
+        return secret.friend.inLove && secret.hasNews && secret.messages && secret.messages.length === 0;
+    };
+
+    $scope.close = function() {
+        $mdDialog.cancel();
+    };
+    $scope.markAsRead = function() {
+        $mdDialog.hide();
+    };
 
     SecretBox.query().then(function(secretBox){
+        secretBox.forEach(function(secret){
+            if(isMatch(secret)){
+                $scope.matchFriend = secret.friend;
+                $mdDialog.show({
+                    scope: $scope,
+                    controller: 'MatchCtrl',
+                    templateUrl: 'src/main/content/secretbox/match/view.html',
+                    clickOutsideToClose:true
+                }).then(function() {
+
+                }, function() {
+
+                });
+            }
+        });
         $scope.secretBox = secretBox;
     });
+
+});
+'use strict';
+
+angular.module('app').controller('MatchCtrl', function($scope, $mdDialog){
+
+    $scope.close = function() {
+        $mdDialog.cancel();
+    };
+    $scope.markAsRead = function() {
+        $mdDialog.hide();
+    };
 
 });
 'use strict';
@@ -2157,8 +2195,10 @@ angular.module('app').controller('DialogCtrl', function(settings,$scope, dialogs
         var secretBoxItem = secretBox.filter(function(secretBoxItem){
             return secretBoxItem.friend.id === $stateParams.id && secretBoxItem.friend.type === $stateParams.type;
         })[0];
-        $scope.friend = secretBoxItem.friend;
-        $scope.dialogs = dialogs;
+        if(secretBoxItem){
+            $scope.friend = secretBoxItem.friend;
+            $scope.dialogs = dialogs;
+        }
     });
 
     $scope.newMessage = new Dialog();
