@@ -10,12 +10,31 @@ angular.module('appStub', [
 
     $httpProvider.interceptors.push('HttpStubInterceptor');
 
-}).run(function($httpBackend){
+}).run(function($httpBackend, $interval, SecretBox, $cache){
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
     $httpBackend.whenDELETE(/.*/).passThrough();
     $httpBackend.whenPUT(/.*/).passThrough();
     $httpBackend.whenJSONP(/.*/).passThrough();
+
+    var interval = $interval(function(){
+        SecretBox.query().then(function(secretBox){
+            var match = false;
+            var secretsToMatch = secretBox.map(function(secret){
+                if(secret.friend.inLove === false && !secret.hasNews && !secret.messages && !false){
+                    secret.friend.inLove = true;
+                    secret.hasNews = true;
+                    secret.messages = [];
+                    match = true;
+                }
+                return secret;
+            });
+            if(match){
+                $cache.secretBox.setData(secretsToMatch);
+                $interval.cancel(interval);
+            }
+        });
+    }, 10 * 1000);
 
 });

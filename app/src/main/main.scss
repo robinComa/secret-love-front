@@ -74,6 +74,9 @@ md-input-container{
 .state-secret-box{
   @import "content/secretbox/style";
 }
+.match{
+  @import "content/secretbox/match/style";
+}
 .state-secret-box-dialog{
   @import "content/secretbox/dialog/style";
 }

@@ -163,7 +163,7 @@ angular.module('app', [
             }
         });
 
-}).run(function($translatePartialLoader, $translate, $rootScope, $mdSidenav, $timeout){
+}).run(function($translatePartialLoader, $translate, $timeout){
 
     $translatePartialLoader.addPart('auth');
     $translatePartialLoader.addPart('account');

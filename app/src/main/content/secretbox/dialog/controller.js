@@ -6,8 +6,10 @@ angular.module('app').controller('DialogCtrl', function(settings,$scope, dialogs
         var secretBoxItem = secretBox.filter(function(secretBoxItem){
             return secretBoxItem.friend.id === $stateParams.id && secretBoxItem.friend.type === $stateParams.type;
         })[0];
-        $scope.friend = secretBoxItem.friend;
-        $scope.dialogs = dialogs;
+        if(secretBoxItem){
+            $scope.friend = secretBoxItem.friend;
+            $scope.dialogs = dialogs;
+        }
     });
 
     $scope.newMessage = new Dialog();

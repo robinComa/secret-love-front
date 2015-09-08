@@ -1,0 +1,22 @@
+<md-dialog aria-label="{{'secretbox.match.title' | translate}}" class="match">
+    <form>
+        <md-dialog-content layout="column" layout-align="center center">
+            <h1>{{'secretbox.match.title' | translate}}!</h1>
+
+            <div layout="row" layout-align="center center">
+                <friend-preview friend="matchFriend" flex></friend-preview>
+            </div>
+
+            <p>{{matchFriend.name}}</p>
+
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <md-button ng-click="close()">
+                {{'secretbox.match.close' | translate}}
+            </md-button>
+            <md-button ng-click="markAsRead()">
+                {{'secretbox.match.mark.as.read' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
