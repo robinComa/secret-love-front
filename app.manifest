@@ -2,45 +2,45 @@ CACHE MANIFEST
 
 
 CACHE:
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/index.html
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/app.js
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/stub.js
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/templates.js
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/vendor.js
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/app.css
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/vendor.css
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/account.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/auth.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/basket.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/common.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/connect.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/dialog.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/friends.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/secretbox.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/settings.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/shop.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/sidenav.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/account.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/auth.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/basket.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/common.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/connect.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/dialog.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/friends.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/secretbox.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/settings.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/shop.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/fr/sidenav.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/dialogs/GET.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/friends/facebook.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/friends/googlePlus.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/friends/instagram.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/friends/phone.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/me/GET-x.json
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/secretbox/GET.json
+index.html
+scripts%5Capp.js
+scripts%5Cstub.js
+scripts%5Ctemplates.js
+scripts%5Cvendor.js
+styles%5Capp.css
+styles%5Cvendor.css
+i18n%5Cen%5Caccount.json
+i18n%5Cen%5Cauth.json
+i18n%5Cen%5Cbasket.json
+i18n%5Cen%5Ccommon.json
+i18n%5Cen%5Cconnect.json
+i18n%5Cen%5Cdialog.json
+i18n%5Cen%5Cfriends.json
+i18n%5Cen%5Csecretbox.json
+i18n%5Cen%5Csettings.json
+i18n%5Cen%5Cshop.json
+i18n%5Cen%5Csidenav.json
+i18n%5Cfr%5Caccount.json
+i18n%5Cfr%5Cauth.json
+i18n%5Cfr%5Cbasket.json
+i18n%5Cfr%5Ccommon.json
+i18n%5Cfr%5Cconnect.json
+i18n%5Cfr%5Cdialog.json
+i18n%5Cfr%5Cfriends.json
+i18n%5Cfr%5Csecretbox.json
+i18n%5Cfr%5Csettings.json
+i18n%5Cfr%5Cshop.json
+i18n%5Cfr%5Csidenav.json
+stub%5Cdata%5Cdialogs%5CGET.json
+stub%5Cdata%5Cfriends%5Cfacebook.json
+stub%5Cdata%5Cfriends%5CgooglePlus.json
+stub%5Cdata%5Cfriends%5Cinstagram.json
+stub%5Cdata%5Cfriends%5Cphone.json
+stub%5Cdata%5Cme%5CGET-x.json
+stub%5Cdata%5Csecretbox%5CGET.json
 
 
 NETWORK:
 *
 
-# hash: 9885f479608f50e7ab940ea13a657836599586a73fb23e4044325154b5e81d99
+# hash: b77bd2dd65dbdcd4a59c944d91ddb5357b3b872d718aa78c4793abd35094a04a
