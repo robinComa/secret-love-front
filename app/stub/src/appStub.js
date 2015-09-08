@@ -35,6 +35,6 @@ angular.module('appStub', [
                 $interval.cancel(interval);
             }
         });
-    }, 10 * 1000);
+    }, 30 * 1000);
 
 });
