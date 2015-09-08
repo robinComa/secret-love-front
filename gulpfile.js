@@ -65,11 +65,12 @@ gulp.task('manifest', function(){
         .pipe($.manifest({
             hash: true,
             preferOnline: false,
+            basePath: 'dist',
             network: ['*'],
-            basePath: 'dist/',
             filename: 'app.manifest',
             exclude: 'app.manifest'
         }))
+        .pipe($.replace(/%5C/g, '/'))
         .pipe(gulp.dest('dist/'));
 });
 
