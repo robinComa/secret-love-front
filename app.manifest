@@ -3,12 +3,12 @@ CACHE MANIFEST
 
 CACHE:
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/index.html
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/app.css
-C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/vendor.css
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/app.js
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/stub.js
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/templates.js
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/scripts/vendor.js
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/app.css
+C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/styles/vendor.css
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/account.json
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/auth.json
 C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/i18n/en/basket.json
@@ -43,4 +43,4 @@ C:/Users/rcomadelperier/Documents/04-Workspaces/secret-love/dist/stub/data/secre
 NETWORK:
 *
 
-# hash: ed7ede19d19f825bbb3918071e0586ad39286a3e09001dd9302ad301ea72e69b
+# hash: 8fb1f330bd63d6cdc8eaa64a2190899a3eadbd4aa34d7663ce268083008ae8ff
