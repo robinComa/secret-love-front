@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('app').controller('ForgotPasswordCtrl', function($scope, Me, $state, $mdDialog, $translate, LoadApplication){
+angular.module('app').controller('ForgotPasswordCtrl', function($scope, Me, $state, $mdDialog, $translate){
 
     $scope.me = new Me();
 
     $scope.submit = function(ev){
-        if($scope.loginForm.$valid){
+        if($scope.passwordForm.$valid){
             $scope.me.$forgotPassword().then(function(){
                 $mdDialog.show(
                     $mdDialog.alert()

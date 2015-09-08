@@ -63,14 +63,30 @@ angular.module('app', [
             templateUrl: 'src/main/main.html',
             controller: 'MainCtrl',
             resolve: {
-                me: function(Me, $q, $state){
+                me: function(Me, $q, $state, $mdDialog){
                     var deferred = $q.defer();
-                    Me.get().$promise.then(function(me){
-                        deferred.resolve(me);
-                    }, function(reject){
+                    var reject = function(reject){
                         deferred.reject(reject);
                         $state.go('auth');
-                    });
+                    };
+                    Me.get().$promise.then(function(me){
+                        if(me.pin){
+                            $mdDialog.show({
+                                controller: 'PinCtrl',
+                                templateUrl: 'src/unknown/auth/pin/view.html',
+                                parent: angular.element(document.body),
+                                clickOutsideToClose:true
+                            }).then(function(pin) {
+                                if(pin === me.pin){
+                                    deferred.resolve(me);
+                                }else{
+                                    reject();
+                                }
+                            }, reject);
+                        }else{
+                            deferred.resolve(me);
+                        }
+                    }, reject);
                     return deferred.promise;
                 }
             }
@@ -174,6 +190,7 @@ angular.module('app', [
     $translatePartialLoader.addPart('auth');
     $translatePartialLoader.addPart('forgot-password');
     $translatePartialLoader.addPart('account');
+    $translatePartialLoader.addPart('pin');
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');

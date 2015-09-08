@@ -15,6 +15,18 @@
                     </div>
                 </md-input-container>
 
+                <md-input-container>
+                    <label>{{'pin.placeholder' | translate}}</label>
+                    <input ng-model="meCopy.pin" name="pin" type="password" required ng-pattern="'[0-9]+'" ng-minlength="4" ng-maxlength="4"/>
+                    <ng-md-icon icon="vpn_key" size="50"></ng-md-icon>
+                    <div ng-messages="settingsForm.$dirty && settingsForm.pin.$error">
+                        <div ng-message="required">{{'pin.error.required' | translate}}</div>
+                        <div ng-message="pattern">{{'pin.error.pattern' | translate}}</div>
+                        <div ng-message="minlength">{{'pin.error.minlength' | translate}}</div>
+                        <div ng-message="maxlength">{{'pin.error.maxlength' | translate}}</div>
+                    </div>
+                </md-input-container>
+
                 <div layout="row" layout-align="end start">
                     <md-button type="submit" class="md-raised md-primary" ng-disabled="!settingsForm.$valid">{{'settings.form.submit.label' | translate}}</md-button>
                 </div>

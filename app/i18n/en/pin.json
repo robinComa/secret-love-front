@@ -1,0 +1,8 @@
+{
+  "pin.placeholder": "PIN Code",
+  "pin.error.required": "Pin code is mandatory",
+  "pin.error.pattern": "Only numbers",
+  "pin.error.minlength": "Minimum 4 digits",
+  "pin.error.maxlength": "Maximum 4 digits",
+  "pin.btn.label": "Ok"
+}

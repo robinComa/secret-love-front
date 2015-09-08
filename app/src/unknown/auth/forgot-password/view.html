@@ -1,19 +1,19 @@
 <h1>{{'forgot.password.title' | translate}}</h1>
 
-<form name="loginForm" ng-submit="submit()" layout="column" novalidate>
+<form name="passwordForm" ng-submit="submit()" layout="column" novalidate>
 
     <md-input-container>
         <label>{{'forgot.password.email.placeholder' | translate}}</label>
         <input ng-model="me.email" name="email" type="email" required/>
         <ng-md-icon icon="email" size="50"></ng-md-icon>
-        <div ng-messages="loginForm.$dirty && loginForm.email.$error">
+        <div ng-messages="passwordForm.$dirty && passwordForm.email.$error">
             <div ng-message="required">{{'forgot.password.email.error.required' | translate}}</div>
             <div ng-message="email">{{'forgot.password.email.error.email' | translate}}</div>
             <div ng-message="blacklist">{{'forgot.password.email.error.blacklist' | translate}}</div>
         </div>
     </md-input-container>
 
-    <md-button type="submit" class="md-raised md-primary">
+    <md-button type="submit" class="md-raised md-primary" ng-disabled="!passwordForm.$valid">
         {{'forgot.password.send.btn.label' | translate}}
     </md-button>
 

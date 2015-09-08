@@ -1,0 +1,19 @@
+<form name="pinForm" ng-submit="submit()" layout="column" novalidate>
+
+    <md-input-container>
+        <label>{{'pin.placeholder' | translate}}</label>
+        <input ng-model="pin" name="pin" type="text" required ng-pattern="'[0-9]+'" ng-minlength="4" ng-maxlength="4"/>
+        <ng-md-icon icon="vpn_key" size="50"></ng-md-icon>
+        <div ng-messages="pinForm.$dirty && pinForm.pin.$error">
+            <div ng-message="required">{{'pin.error.required' | translate}}</div>
+            <div ng-message="pattern">{{'pin.error.pattern' | translate}}</div>
+            <div ng-message="minlength">{{'pin.error.minlength' | translate}}</div>
+            <div ng-message="maxlength">{{'pin.error.maxlength' | translate}}</div>
+        </div>
+    </md-input-container>
+
+    <md-button type="submit" class="md-raised md-primary" ng-disabled="!pinForm.$valid">
+        {{'pin.btn.label' | translate}}
+    </md-button>
+
+</form>
