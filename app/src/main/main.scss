@@ -56,6 +56,9 @@ md-input-container{
 .state-auth{
   @import "../unknown/auth/style";
 }
+.state-forgot-password{
+  @import "../unknown/auth/forgot-password/style";
+}
 .state-account{
   @import "../unknown/account/style";
 }

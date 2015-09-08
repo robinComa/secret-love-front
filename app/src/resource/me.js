@@ -15,6 +15,12 @@ angular.module('app').factory('Me', function(settings, $resource){
                 action: 'authenticate'
             }
         },
+        forgotPassword: {
+            method:'POST',
+            params: {
+                action: 'forgot-password'
+            }
+        },
         update: {
             method:'PUT'
         }

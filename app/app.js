@@ -45,6 +45,12 @@ angular.module('app', [
             templateUrl: 'src/unknown/auth/view.html',
             controller: 'AuthCtrl'
         })
+        .state('forgot-password', {
+            parent: 'unknown',
+            url: '/forgot/password',
+            templateUrl: 'src/unknown/auth/forgot-password/view.html',
+            controller: 'ForgotPasswordCtrl'
+        })
         .state('account', {
             parent: 'unknown',
             url: '/account',
@@ -166,6 +172,7 @@ angular.module('app', [
 }).run(function($translatePartialLoader, $translate, $timeout){
 
     $translatePartialLoader.addPart('auth');
+    $translatePartialLoader.addPart('forgot-password');
     $translatePartialLoader.addPart('account');
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
