@@ -122,6 +122,10 @@ friend-preview ng-transclude * {
 .state-auth h1 {
   margin-top: -80px; }
 
+.state-auth .forgot-password {
+  margin: 10px;
+  text-align: center; }
+
 .state-friends-list .btn-toggle-list-face,
 .state-friends-face .btn-toggle-list-face {
   position: fixed;

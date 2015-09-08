@@ -85,7 +85,8 @@ angular.module('appStub.server', [
     $httpBackend.whenGET(/me$/).respond(GetJsonFile.synchronously('stub/data/me/GET-x.json'));
     $httpBackend.whenPUT(/me$/).respond(200);
     $httpBackend.whenPOST(/me$/).respond(200);
-    $httpBackend.whenPOST(/me\/authenticate/).respond(401);
+    $httpBackend.whenPOST(/me\/authenticate$/).respond(401);
+    $httpBackend.whenPOST(/me\/forgot-password$/).respond(200);
     $httpBackend.whenPOST(/me\/unique$/).respond({unique: true});
 
     $httpBackend.whenGET(/secretbox$/).respond(GetJsonFile.synchronously('stub/data/secretbox/GET.json'));

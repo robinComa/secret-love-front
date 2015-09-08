@@ -15,7 +15,9 @@ i18n/en/basket.json
 i18n/en/common.json
 i18n/en/connect.json
 i18n/en/dialog.json
+i18n/en/forgot-password.json
 i18n/en/friends.json
+i18n/en/pin.json
 i18n/en/secretbox.json
 i18n/en/settings.json
 i18n/en/shop.json
@@ -26,7 +28,9 @@ i18n/fr/basket.json
 i18n/fr/common.json
 i18n/fr/connect.json
 i18n/fr/dialog.json
+i18n/fr/forgot-password.json
 i18n/fr/friends.json
+i18n/fr/pin.json
 i18n/fr/secretbox.json
 i18n/fr/settings.json
 i18n/fr/shop.json
@@ -43,4 +47,4 @@ stub/data/secretbox/GET.json
 NETWORK:
 *
 
-# hash: 34c1ec15744aa99ec4f5eeedc3f824275a45d83ab623ec2754c43761ddc3ff54
+# hash: 93763ae1ba914134acb42e125294bdbc5b11cea432af32c9f7d35cfb9fed642c

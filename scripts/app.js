@@ -45,6 +45,12 @@ angular.module('app', [
             templateUrl: 'src/unknown/auth/view.html',
             controller: 'AuthCtrl'
         })
+        .state('forgot-password', {
+            parent: 'unknown',
+            url: '/forgot/password',
+            templateUrl: 'src/unknown/auth/forgot-password/view.html',
+            controller: 'ForgotPasswordCtrl'
+        })
         .state('account', {
             parent: 'unknown',
             url: '/account',
@@ -57,14 +63,30 @@ angular.module('app', [
             templateUrl: 'src/main/main.html',
             controller: 'MainCtrl',
             resolve: {
-                me: function(Me, $q, $state){
+                me: function(Me, $q, $state, $mdDialog){
                     var deferred = $q.defer();
-                    Me.get().$promise.then(function(me){
-                        deferred.resolve(me);
-                    }, function(reject){
+                    var reject = function(reject){
                         deferred.reject(reject);
                         $state.go('auth');
-                    });
+                    };
+                    Me.get().$promise.then(function(me){
+                        if(me.pin){
+                            $mdDialog.show({
+                                controller: 'PinCtrl',
+                                templateUrl: 'src/unknown/auth/pin/view.html',
+                                parent: angular.element(document.body),
+                                clickOutsideToClose:true
+                            }).then(function(pin) {
+                                if(pin === me.pin){
+                                    deferred.resolve(me);
+                                }else{
+                                    reject();
+                                }
+                            }, reject);
+                        }else{
+                            deferred.resolve(me);
+                        }
+                    }, reject);
                     return deferred.promise;
                 }
             }
@@ -166,7 +188,9 @@ angular.module('app', [
 }).run(function($translatePartialLoader, $translate, $timeout){
 
     $translatePartialLoader.addPart('auth');
+    $translatePartialLoader.addPart('forgot-password');
     $translatePartialLoader.addPart('account');
+    $translatePartialLoader.addPart('pin');
     $translatePartialLoader.addPart('common');
     $translatePartialLoader.addPart('sidenav');
     $translatePartialLoader.addPart('friends');
@@ -351,6 +375,12 @@ angular.module('app').factory('Me', function(settings, $resource){
                 action: 'authenticate'
             }
         },
+        forgotPassword: {
+            method:'POST',
+            params: {
+                action: 'forgot-password'
+            }
+        },
         update: {
             method:'PUT'
         }
@@ -524,7 +554,7 @@ angular.module('app').run(function ($log, $window) {
 
         // Cache in error
         $window.applicationCache.addEventListener('error', function () {
-            $log.info('Cache in error : ');
+            $log.info('Cache in error');
         }, false);
 
         // Check of the manifest release
@@ -1192,6 +1222,48 @@ angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDia
 
     $scope.loadDemo = function(){
         LoadApplication.loadAppStub();
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('ForgotPasswordCtrl', function($scope, Me, $state, $mdDialog, $translate){
+
+    $scope.me = new Me();
+
+    $scope.submit = function(ev){
+        if($scope.passwordForm.$valid){
+            $scope.me.$forgotPassword().then(function(){
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title($translate.instant('forgot.password.success.dialog.title'))
+                        .content($translate.instant('forgot.password.success.dialog.description'))
+                        .ariaLabel($translate.instant('forgot.password.success.dialog.action'))
+                        .ok($translate.instant('forgot.password.success.dialog.action'))
+                        .targetEvent(ev)
+                );
+            }, function(){
+                $mdDialog.show(
+                    $mdDialog.alert()
+                        .clickOutsideToClose(true)
+                        .title($translate.instant('forgot.password.issue.dialog.title'))
+                        .content($translate.instant('forgot.password.issue.dialog.description'))
+                        .ariaLabel($translate.instant('forgot.password.issue.dialog.action'))
+                        .ok($translate.instant('forgot.password.issue.dialog.action'))
+                        .targetEvent(ev)
+                );
+            });
+        }
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('PinCtrl', function($scope, $mdDialog){
+
+    $scope.submit = function(){
+        $mdDialog.hide($scope.pin.toString());
     };
 
 });
