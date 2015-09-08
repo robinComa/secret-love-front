@@ -520,6 +520,7 @@ angular.module('app').run(function ($log, $window) {
             $window.applicationCache.swapCache();
             $log.info('Cache updating');
             $window.location.reload();
+            console.log('toto');
         }, false);
 
         // Cache in error

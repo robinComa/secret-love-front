@@ -31,16 +31,16 @@ i18n/fr/secretbox.json
 i18n/fr/settings.json
 i18n/fr/shop.json
 i18n/fr/sidenav.json
+stub/data/dialogs/GET.json
 stub/data/friends/facebook.json
 stub/data/friends/googlePlus.json
 stub/data/friends/instagram.json
 stub/data/friends/phone.json
 stub/data/me/GET-x.json
-stub/data/dialogs/GET.json
 stub/data/secretbox/GET.json
 
 
 NETWORK:
 *
 
-# hash: 13f2325b90c8d0d531f86826568c3e45d5858d274cb2049e0f12ce0a9c2562ca
+# hash: 34935ec4752994cf9493fb2ecc1cf8c804540260d66b171846bf04a2fd7a9797
