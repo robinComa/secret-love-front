@@ -65,7 +65,7 @@ md-sidenav md-list-item a.md-button {
 md-sidenav .socialCarousel {
   position: fixed;
   bottom: 20px;
-  right: 20px; }
+  left: 220px; }
 
 md-backdrop.md-sidenav-backdrop {
   display: none; }
@@ -81,7 +81,10 @@ basket-content .label-love-length {
 
 basket-content .md-icon-button.btn-shopping {
   height: 30px;
-  width: 30px; }
+  width: 30px;
+  position: absolute;
+  right: 10px;
+  top: 14px; }
 
 basket-content .icon-plus-minus-one {
   position: absolute;
@@ -127,6 +130,8 @@ friend-preview ng-transclude * {
 
 .state-friends-list md-card-content {
   padding: 0px 0px 0px 10px; }
+  .state-friends-list md-card-content input::-ms-clear {
+    display: none; }
   .state-friends-list md-card-content md-virtual-repeat-container .repeated-item {
     box-sizing: border-box;
     height: 55px; }
@@ -158,12 +163,14 @@ friend-preview ng-transclude * {
   width: 100%;
   text-align: center; }
 
-.state-friends-face md-card-content img {
-  border-radius: 50%;
-  height: 150px;
-  width: 150px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-  margin: 0px; }
+.state-friends-face md-card-content .avatar-container {
+  padding-left: 100px; }
+  .state-friends-face md-card-content .avatar-container img {
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    margin: 0px 0px 0px -150px; }
 
 .state-friends-face md-card-content .md-button.next {
   height: 100px;
@@ -199,12 +206,14 @@ friend-preview ng-transclude * {
   color: grey;
   font-size: 10px; }
 
-.match img {
-  border-radius: 50%;
-  height: 150px;
-  width: 150px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-  margin: 0px; }
+.match .avatar-container {
+  padding-left: 100px; }
+  .match .avatar-container img {
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    margin: 0px 0px 0px -150px; }
 
 .state-secret-box-dialog .md-icon-button {
   margin-top: 10px; }
