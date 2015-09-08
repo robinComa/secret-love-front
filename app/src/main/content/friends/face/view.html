@@ -7,7 +7,7 @@
     <md-card-content layout="column" layout-align="center center" ng-if="friend">
         <h1>{{ friend.name }}</h1>
 
-        <div layout="row" layout-align="center center">
+        <div layout="row" class="avatar-container" layout-align="center center">
             <friend-preview friend="friend" flex></friend-preview>
             <md-button aria-label="{{'friends.face.next' | translate}}" class="next md-icon-button" ng-click="refreshFace(filteringFriends)">
                 <ng-md-icon icon="chevron_right" style="fill: pink" size="180"></ng-md-icon>

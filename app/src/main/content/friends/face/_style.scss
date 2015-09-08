@@ -9,12 +9,15 @@ md-card-content{
     text-align: center;
   }
 
-  img{
-    border-radius: 50%;
-    height: 150px;
-    width: 150px;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
-    margin: 0px;
+  .avatar-container{
+    padding-left: 100px;
+    img{
+      border-radius: 50%;
+      height: 150px;
+      width: 150px;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+      margin: 0px 0px 0px -150px;
+    }
   }
 
   .md-button.next{

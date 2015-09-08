@@ -11,7 +11,7 @@
 
     <md-card-content ng-if="friends.length > 0" flex layout="column">
 
-        <md-input-container flex="10">
+        <md-input-container>
             <label>{{'friends.filter.name.label' | translate}}</label>
             <input ng-model="filter.search" type="text"/>
             <ng-md-icon ng-click="filter.search = ''" ng-if="filter.search" icon="clear" size="50"></ng-md-icon>

@@ -1,5 +1,8 @@
 md-card-content{
   padding: 0px 0px 0px 10px;
+  input::-ms-clear {
+    display: none;
+  }
   md-virtual-repeat-container {
     .repeated-item {
       box-sizing: border-box;

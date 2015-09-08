@@ -15,7 +15,7 @@
                             ng-disabled="isNotImplemented(type)">
 
                         <div layout="row" layout-align="center center">
-                            <ng-md-icon icon="{{connection.icon.name}}" style="fill: {{connection.icon.color}}" size="30"></ng-md-icon>
+                            <ng-md-icon icon="{{connection.icon.name}}" ng-style="{fill: connection.icon.color}" size="30"></ng-md-icon>
                             <div layout="column">
                                 <p>{{'connect.label.' + type | translate}}</p>
                                 <p class="status" ng-if="!isNotImplemented(type) && isConnected(type)">{{'connect.is.connected' | translate}}</p>
