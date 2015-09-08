@@ -5,7 +5,7 @@ angular.module('app').controller('FriendsFaceCtrl', function($scope){
     $scope.$parent.filter = {
         visibility: true,
         love: [false],
-        type: ['instagram', 'googlePlus', 'facebook']
+        type: ['instagram', 'googlePlus', 'facebook', 'phone']
     };
 
     $scope.refreshFace = function(friends){
