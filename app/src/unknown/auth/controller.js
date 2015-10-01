@@ -8,12 +8,24 @@ angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDia
         if($scope.loginForm.$valid){
             $scope.me.$authenticate().then(function(){
                 $state.go('friends-list');
-            }, function(){
+            }, function(error){
+                var descriptionLabel;
+                switch (error.status){
+                    case 403:
+                        descriptionLabel = 'auth.connect.issue.dialog.password';
+                        break;
+                    case 404:
+                        descriptionLabel = 'auth.connect.issue.dialog.email';
+                        break;
+                    default:
+                        descriptionLabel = 'auth.connect.issue.dialog.description';
+                        break;
+                }
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
                         .title($translate.instant('auth.connect.issue.dialog.title'))
-                        .content($translate.instant('auth.connect.issue.dialog.description'))
+                        .content($translate.instant(descriptionLabel))
                         .ariaLabel($translate.instant('auth.connect.issue.dialog.action'))
                         .ok($translate.instant('auth.connect.issue.dialog.action'))
                         .targetEvent(ev)

@@ -1,0 +1,13 @@
+<ng-md-icon
+        ng-if="!isUrl(name)"
+        icon="{{name}}"
+        ng-style="{fill: color}">
+
+</ng-md-icon>
+
+<md-icon
+        ng-if="isUrl(name)"
+        md-svg-src="{{name}}"
+        ng-style="{fill: color}">
+
+</md-icon>

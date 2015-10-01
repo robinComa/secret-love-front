@@ -11,7 +11,7 @@ angular.module('app').directive('friendPreview', function(settings, Friend){
         templateUrl: 'src/components/friend-preview/view.html',
         link: function($scope){
 
-            if(!$scope.friend.picture || !$scope.friend.name){
+            if($scope.friend && (!$scope.friend.picture || !$scope.friend.name)){
                 Friend.query().then(function(friends){
 
                     var matchFriends = friends.filter(function(f){

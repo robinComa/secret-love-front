@@ -19,6 +19,11 @@ angular.module('app').factory('linkedin', function(Connection, $http) {
                     callback: 'JSON_CALLBACK'
                 }
             });
+        },
+        getMe: function(){
+            var deferred = $q.defer();
+            deferred.resolve({});
+            return deferred.promise;
         }
     });
 

@@ -45,6 +45,11 @@ angular.module('app').factory('twitter', function(settings, Connection, $q, $htt
             // https://api.twitter.com/1.1/friends/ids.json
             // https://api.twitter.com/1.1/users/lookup.json?user_id=6693582,F1717226282,2277815413
             return deferred.promise;
+        },
+        getMe: function(){
+            var deferred = $q.defer();
+            deferred.resolve({});
+            return deferred.promise;
         }
     });
 });

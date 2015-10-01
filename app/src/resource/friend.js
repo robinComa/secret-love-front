@@ -28,8 +28,12 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                     });
                 };
 
-                var isVisible = function(){
-                    return true;
+                var isVisible = function(friend){
+                    var data = $cache.hiddenFriends.getData() || [];
+                    var isInHiddenList = data.some(function(f){
+                        return equals(f, friend);
+                    });
+                    return !isInHiddenList;
                 };
 
                 angular.forEach(settings.socials, function(social, name){
@@ -42,7 +46,7 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                     }, function(friends){
                         deferred.notify(friends.map(function(friend){
                             friend.love = areInLove(secretBox, friend);
-                            friend.visibility = isVisible();
+                            friend.visibility = isVisible(friend);
                             friendsOnNotify.push(friend);
                             return friend;
                         }));

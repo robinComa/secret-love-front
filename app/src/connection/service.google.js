@@ -76,6 +76,24 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
             getFriendPage().then(calbackResponse, deferred.reject);
 
             return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            $http.jsonp('https://www.googleapis.com/plus/v1/people/me', {
+                params: {
+                    access_token: token,
+                    callback: 'JSON_CALLBACK'
+                }
+            }).then(function(response){
+                var me = {
+                    id: response.data.id,
+                    name: response.data.displayName,
+                    picture: response.data.image.url,
+                    type: 'googlePlus'
+                };
+                deferred.resolve(me);
+            }, deferred.reject);
+            return deferred.promise;
         }
     });
 

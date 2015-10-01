@@ -4,7 +4,7 @@
     var origin = window.location.href.split(window.location.hash)[0];
 
     angular.module('app').constant('settings', {
-        endpoint: 'rest-api/',
+        endpoint: 'http://localhost:9001/rest-api/',
         toast: {
             hideDelay: 5000,
             position: 'bottom left'
@@ -54,7 +54,7 @@
                     scope: ['basic']
                 },
                 icon: {
-                    name: 'photo_camera',
+                    name: 'img/instagram-icon.svg',
                     color: 'brown'
                 }
             },
@@ -84,6 +84,16 @@
                 icon: {
                     name: 'linkedin',
                     color: '#0177B5'
+                }
+            },
+            viadeo: {
+                label: 'connect.label.viadeo',
+                auth: {
+
+                },
+                icon: {
+                    name: 'img/viadeo-icon.svg',
+                    color: '#FFA100'
                 }
             }
         }

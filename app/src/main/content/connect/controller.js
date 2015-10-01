@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector, $cache){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector, $cache, Me){
 
     $scope.connections = settings.socials;
 
@@ -16,8 +16,10 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
             .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
             .targetEvent(event);
         $mdDialog.show(confirm).then(function() {
-            $scope.connectionModel[name] = false;
-            socialService.close();
+            Me.disconnect({type: name}).$promise.then(function(){
+                $scope.connectionModel[name] = false;
+                socialService.close();
+            });
         }, function(){
             $scope.connectionModel[name] = true;
         });

@@ -6,8 +6,9 @@ friend-preview {
     border-radius: 50%;
     box-sizing: content-box;
   }
-  ng-md-icon.friend-preview-social-icon{
+  social-icon.friend-preview-social-icon{
     position: absolute;
+    display: inline;
   }
   ng-transclude *{
     padding: 0px;

@@ -76,6 +76,16 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
               return deferred.promise;
           };
 
+          this.getMe = function(){
+              var deferred = $q.defer();
+              this.getToken().then(function(token){
+                  args.getMe(token).then(function(socialMe){
+                      deferred.resolve(socialMe);
+                  }, deferred.reject);
+              }, deferred.reject);
+              return deferred.promise;
+          };
+
       };
     };
 

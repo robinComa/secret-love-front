@@ -9,6 +9,7 @@ angular.module('appStub.social', [
     $window.localStorage.setItem('cache_token_facebook', JSON.stringify(token));
     $window.localStorage.setItem('cache_token_instagram', JSON.stringify(token));
     $window.localStorage.setItem('cache_token_googlePlus', JSON.stringify(token));
+    $window.localStorage.setItem('cache_token_viadeo', JSON.stringify(token));
 
     $httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/data/friends/googlePlus.json'));
     $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/data/friends/instagram.json'));

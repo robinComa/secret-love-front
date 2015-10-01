@@ -15,7 +15,7 @@ angular.module('app').controller('SecretBoxCtrl', function($scope, SecretBox, $m
 
     SecretBox.query().then(function(secretBox){
         secretBox.forEach(function(secret){
-            if(isMatch(secret)){
+            if(secret && isMatch(secret)){
                 $scope.matchFriend = secret.friend;
                 $mdDialog.show({
                     scope: $scope,

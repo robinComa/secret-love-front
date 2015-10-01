@@ -65,7 +65,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
             if(friendCopy.love){
                 me.basket.loves--;
                 $scope.requestSend = true;
-                SecretBox.save(friendCopy).then(function(){
+                SecretBox.save({
+                    type: friendCopy.type,
+                    id: friendCopy.id
+                }).then(function(){
 
                     friend.love = friendCopy.love;
                     $cache.friends.invalid();
@@ -104,8 +107,22 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
     };
 
     $scope.toggleFriendVisibility = function(friend){
-        friend.visibility = !friend.visibility;
-        $cache.friends.setData($scope.friends);
+
+        var setVisibility = function(visibility){
+            friend.visibility = visibility;
+            $cache.friends.setData($scope.friends);
+            $cache.hiddenFriends.setData($scope.friends.filter(function(f){
+                return !f.visibility;
+            }).map(function(f){
+                return {
+                    id: f.id,
+                    type: f.type
+                };
+            }));
+        };
+
+        setVisibility(!friend.visibility);
+
         var toast = $mdToast.simple()
             .content($translate.instant(friend.visibility ? 'friends.list.show.toast.content' : 'friends.list.hide.toast.content', {
                 name: friend.name
@@ -116,8 +133,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
             .hideDelay(settings.toast.hideDelay);
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
-                friend.visibility = !friend.visibility;
-                $cache.friends.setData($scope.friends);
+                setVisibility(!friend.visibility);
             }
         });
     };

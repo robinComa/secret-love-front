@@ -52,6 +52,7 @@ angular.module('app').provider('$cache', function(settings){
     }
     this.friends = new Cache('data_friends', validity.MEDIUM);
     this.secretBox = new Cache('data_secretBox', validity.MEDIUM);
+    this.hiddenFriends = new Cache('data_hiddenFriends', validity.HIGH);
 
     this.$get = function(){
         return this;

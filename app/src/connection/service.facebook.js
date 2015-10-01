@@ -18,6 +18,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
             $http({
                 method: 'GET',
                 url: 'https://graph.facebook.com/oauth/access_token',
+                withCredentials: false,
                 params: {
                     code: code,
                     client_id: settings.socials.facebook.auth.clientId,
@@ -41,16 +42,35 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
                     callback: 'JSON_CALLBACK'
                 }
             }).then(function(response){
-                deferred.notify(response.data.data.map(function(friend){
+                deferred.notify(response.data.data ? response.data.data.map(function(friend){
                     return new Friend({
                         id: friend.name,
                         name: friend.name,
                         picture: friend.picture.data.url,
                         type: 'facebook'
                     });
-                }));
+                }) : []);
                 deferred.resolve();
             });
+            return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            $http.jsonp('https://graph.facebook.com/v2.4/me', {
+                params: {
+                    access_token: token,
+                    callback: 'JSON_CALLBACK',
+                    count: 1000
+                }
+            }).then(function(response){
+                var me = {
+                    id: response.data.name,
+                    name: response.data.name,
+                    picture: 'https://graph.facebook.com/' + response.data.id + '/picture',
+                    type: 'facebook'
+                };
+                deferred.resolve(me);
+            }, deferred.reject);
             return deferred.promise;
         }
     });

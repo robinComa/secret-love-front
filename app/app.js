@@ -9,7 +9,9 @@ angular.module('app', [
     'ngMaterial',
     'ngMdIcons',
     'ngMessages'
-]).config(function(LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
+]).config(function($httpProvider, LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
+
+    $httpProvider.defaults.withCredentials = true;
 
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'i18n/{lang}/{part}.json'

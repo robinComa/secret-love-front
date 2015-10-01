@@ -51,6 +51,29 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                 }
             }, deferred.reject);
             return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            $http.jsonp('https://api.instagram.com/v1/users/self', {
+                params: {
+                    access_token: token,
+                    callback: 'JSON_CALLBACK',
+                    count: 1000
+                }
+            }).then(function(response){
+                var name = response.data.data.username;
+                if(response.data.data.full_name){
+                    name += ' (' + response.data.data.full_name + ')';
+                }
+                var me = {
+                    id: response.data.data.id,
+                    name: name,
+                    picture: response.data.data.profile_picture,
+                    type: 'instagram'
+                };
+                deferred.resolve(me);
+            }, deferred.reject);
+            return deferred.promise;
         }
     });
 
