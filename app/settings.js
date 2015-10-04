@@ -58,6 +58,16 @@
                     color: 'brown'
                 }
             },
+            viadeo: {
+                label: 'connect.label.viadeo',
+                auth: {
+                    proxy: true
+                },
+                icon: {
+                    name: 'img/viadeo-icon.svg',
+                    color: '#FFA100'
+                }
+            },
             twitter: {
                 label: 'connect.label.twitter',
                 auth: {
@@ -75,6 +85,7 @@
             linkedin: {
                 label: 'connect.label.linkedin',
                 auth: {
+                    isCode: true,
                     patternURI: /code=(.*)&state/,
                     clientId: '77bmx0zg9stbsk',
                     clientSecret: 'aryHtzhM2yc9aXeS',
@@ -84,16 +95,6 @@
                 icon: {
                     name: 'linkedin',
                     color: '#0177B5'
-                }
-            },
-            viadeo: {
-                label: 'connect.label.viadeo',
-                auth: {
-
-                },
-                icon: {
-                    name: 'img/viadeo-icon.svg',
-                    color: '#FFA100'
                 }
             }
         }

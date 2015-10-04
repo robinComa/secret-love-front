@@ -1,0 +1,35 @@
+<md-dialog aria-label="{{'connect.proxy.dialog.title' | translate}}">
+    <form name="proxyForm" novalidate ng-submit="submit()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{'connect.proxy.dialog.title' | translate}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <md-input-container flex>
+                <label for="login">{{'connect.proxy.dialog.field.login.label' | translate}}</label>
+                <input id="login" name="login" ng-model="proxy.login" type="text" required>
+                <ng-md-icon icon="account_box" size="50"></ng-md-icon>
+                <div ng-messages="proxyForm.$dirty && proxyForm.login.$error">
+                    <div ng-message="required">{{'connect.proxy.dialog.field.login.error' | translate}}</div>
+                </div>
+            </md-input-container>
+            <md-input-container flex>
+                <label for="password">{{'connect.proxy.dialog.field.password.label' | translate}}</label>
+                <input id="password" name="password" ng-model="proxy.password" type="password" required>
+                <ng-md-icon icon="email" size="50"></ng-md-icon>
+                <div ng-messages="proxyForm.$dirty && proxyForm.password.$error">
+                    <div ng-message="required">{{'connect.proxy.dialog.field.password.error' | translate}}</div>
+                </div>
+            </md-input-container>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <md-button type="button" ng-click="cancel()" >
+                {{'connect.proxy.dialog.button.cancel' | translate}}
+            </md-button>
+            <md-button type="submit" ng-disabled="!proxyForm.$valid">
+                {{'connect.proxy.dialog.button.submit' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
