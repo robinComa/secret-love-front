@@ -12,5 +12,13 @@
   "connect.disconnect.confirmation.title": "Confirmation",
   "connect.disconnect.confirmation.content": "Do you want disconnect {{name}} from this application?",
   "connect.disconnect.confirmation.ok": "Disconnect friends",
-  "connect.disconnect.confirmation.cancel": "Cancel"
+  "connect.disconnect.confirmation.cancel": "Cancel",
+
+  "connect.proxy.dialog.title": "Connection",
+  "connect.proxy.dialog.field.login.label": "Login",
+  "connect.proxy.dialog.field.login.error": "Login is required",
+  "connect.proxy.dialog.field.password.label": "Password",
+  "connect.proxy.dialog.field.password.error": "Password is required",
+  "connect.proxy.dialog.button.cancel": "Cancel",
+  "connect.proxy.dialog.button.submit": "Connection"
 }
