@@ -51,6 +51,7 @@ angular.module('app').factory('phone', function($q, $http, $cache, $timeout) {
         },
         getMe: function(){
             var deferred = $q.defer();
+            //TODO not null id (Telephone number)
             deferred.resolve({
                 type: 'phone',
                 id: null
