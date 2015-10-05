@@ -3,10 +3,12 @@
 angular.module('app').provider('$cache', function(settings){
 
     var validity = {
-        LOW: 60 * 1000,
-        MEDIUM: 60 * 60 * 1000,
-        HIGH: 30 * 24 * 60 * 60 * 1000
+        MINUTE: 60 * 1000
     };
+    validity.HOUR = 60 * validity.MINUTE;
+    validity.DAY = 24 * validity.HOUR;
+    validity.MONTH = 30 * validity.DAY;
+    validity.YEAR = 365 * validity.MONTH;
 
     var now = function(){
         return (new Date()).getTime();
@@ -47,12 +49,12 @@ angular.module('app').provider('$cache', function(settings){
     this.token = {};
     this.code = {};
     for(var key in settings.socials){
-        this.token[key] = new Cache('token_' + key, validity.HIGH);
-        this.code[key] = new Cache('code_' + key, validity.HIGH);
+        this.token[key] = new Cache('token_' + key, validity.YEAR);
+        this.code[key] = new Cache('code_' + key, validity.MINUTE);
     }
-    this.friends = new Cache('data_friends', validity.MEDIUM);
-    this.secretBox = new Cache('data_secretBox', validity.MEDIUM);
-    this.hiddenFriends = new Cache('data_hiddenFriends', validity.HIGH);
+    this.friends = new Cache('data_friends', validity.MINUTE);
+    this.secretBox = new Cache('data_secretBox', validity.MINUTE);
+    this.hiddenFriends = new Cache('data_hiddenFriends', validity.YEAR);
 
     this.$get = function(){
         return this;

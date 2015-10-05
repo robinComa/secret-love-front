@@ -3,8 +3,12 @@ friends-filter{
   position: fixed;
   bottom: 20px;
   md-fab-speed-dial{
+    md-fab-actions{
+      button{
+        margin: 0px;
+      }
+    }
     button{
-
       &.md-mini{
         ng-md-icon{
           position: absolute;
