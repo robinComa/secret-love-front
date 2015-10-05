@@ -52,7 +52,7 @@ angular.module('app').provider('$cache', function(settings){
         this.token[key] = new Cache('token_' + key, validity.YEAR);
         this.code[key] = new Cache('code_' + key, validity.MINUTE);
     }
-    this.friends = new Cache('data_friends', validity.MINUTE);
+    this.friends = new Cache('data_friends', validity.HOUR);
     this.secretBox = new Cache('data_secretBox', validity.MINUTE);
     this.hiddenFriends = new Cache('data_hiddenFriends', validity.YEAR);
 
