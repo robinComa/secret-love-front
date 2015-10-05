@@ -3,8 +3,9 @@
 angular.module('app').provider('$cache', function(settings){
 
     var validity = {
-        MINUTE: 60 * 1000
+        SECOND: 1000
     };
+    validity.MINUTE = 60 * validity.SECOND;
     validity.HOUR = 60 * validity.MINUTE;
     validity.DAY = 24 * validity.HOUR;
     validity.MONTH = 30 * validity.DAY;
@@ -52,8 +53,8 @@ angular.module('app').provider('$cache', function(settings){
         this.token[key] = new Cache('token_' + key, validity.YEAR);
         this.code[key] = new Cache('code_' + key, validity.MINUTE);
     }
-    this.friends = new Cache('data_friends', validity.HOUR);
-    this.secretBox = new Cache('data_secretBox', validity.MINUTE);
+    this.friends = new Cache('data_friends', validity.SECOND);
+    this.secretBox = new Cache('data_secretBox', validity.SECOND);
     this.hiddenFriends = new Cache('data_hiddenFriends', validity.YEAR);
 
     this.$get = function(){
