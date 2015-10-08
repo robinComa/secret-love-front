@@ -4,7 +4,7 @@ angular.module('app').controller('DialogCtrl', function(settings,$scope, dialogs
 
     var initMessage = function(){
         $scope.newMessage = new Dialog();
-        console.log($scope.friend)
+        console.log($scope.friend);
         $scope.newMessage.to = {
             id: $scope.friend.id,
             type: $scope.friend.type

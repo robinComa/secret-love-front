@@ -45,7 +45,7 @@ angular.module('app').factory('linkedin', function(settings, Connection, $http, 
                     callback: 'JSON_CALLBACK'
                 }
             }).then(function(response){
-                console.log(response)
+                console.log(response);
                 deferred.resolve(response);
             }, deferred.reject);
             return deferred.promise;
@@ -59,7 +59,7 @@ angular.module('app').factory('linkedin', function(settings, Connection, $http, 
                     callback: 'JSON_CALLBACK'
                 }
             }).then(function(response){
-                console.log(response)
+                console.log(response);
                 deferred.resolve(response);
             }, deferred.reject);
             return deferred.promise;
