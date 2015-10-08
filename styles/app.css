@@ -62,11 +62,6 @@ md-sidenav md-list-item a.md-button {
       right: 33px;
       fill: white; }
 
-md-sidenav .socialCarousel {
-  position: fixed;
-  bottom: 20px;
-  left: 220px; }
-
 md-backdrop.md-sidenav-backdrop {
   display: none; }
 
@@ -106,8 +101,9 @@ friend-preview .avatar {
   border-radius: 50%;
   box-sizing: content-box; }
 
-friend-preview ng-md-icon.friend-preview-social-icon {
-  position: absolute; }
+friend-preview social-icon.friend-preview-social-icon {
+  position: absolute;
+  display: inline; }
 
 friend-preview ng-transclude * {
   padding: 0px;
@@ -121,10 +117,6 @@ friend-preview ng-transclude * {
 
 .state-auth h1 {
   margin-top: -80px; }
-
-.state-auth .forgot-password {
-  margin: 10px;
-  text-align: center; }
 
 .state-friends-list .btn-toggle-list-face,
 .state-friends-face .btn-toggle-list-face {
@@ -148,6 +140,8 @@ friend-preview ng-transclude * {
   right: 20px;
   position: fixed;
   bottom: 20px; }
+  .state-friends-list friends-filter md-fab-speed-dial md-fab-actions button {
+    margin: 0px; }
   .state-friends-list friends-filter md-fab-speed-dial button.md-mini ng-md-icon {
     position: absolute;
     top: 6px;
@@ -239,7 +233,7 @@ friend-preview ng-transclude * {
   right: 0px; }
 
 .state-connect p,
-.state-connect ng-md-icon {
+.state-connect social-icon {
   margin-left: 10px;
   margin-right: 10px; }
 

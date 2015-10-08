@@ -86,8 +86,11 @@ angular.module('appStub.server', [
     $httpBackend.whenPUT(/me$/).respond(200);
     $httpBackend.whenPOST(/me$/).respond(200);
     $httpBackend.whenPOST(/me\/authenticate$/).respond(401);
+    $httpBackend.whenGET(/me\/logout$/).respond(200);
     $httpBackend.whenPOST(/me\/forgot-password$/).respond(200);
     $httpBackend.whenPOST(/me\/unique$/).respond({unique: true});
+    $httpBackend.whenPUT(/me\/disconnect$/).respond(200);
+    $httpBackend.whenPOST(/me\/connect$/).respond(200);
 
     $httpBackend.whenGET(/secretbox$/).respond(GetJsonFile.synchronously('stub/data/secretbox/GET.json'));
     $httpBackend.whenPOST(/secretbox$/).respond(200);
@@ -108,6 +111,7 @@ angular.module('appStub.social', [
     $window.localStorage.setItem('cache_token_facebook', JSON.stringify(token));
     $window.localStorage.setItem('cache_token_instagram', JSON.stringify(token));
     $window.localStorage.setItem('cache_token_googlePlus', JSON.stringify(token));
+    $window.localStorage.setItem('cache_token_viadeo', JSON.stringify(token));
 
     $httpBackend.whenJSONP(/https:\/\/www\.googleapis\.com\/plus\/v1\/people\/me\/people\/visible/).respond(GetJsonFile.synchronously('stub/data/friends/googlePlus.json'));
     $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/data/friends/instagram.json'));

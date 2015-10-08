@@ -1,8 +1,7 @@
 {
   "pin.placeholder": "Code PIN",
   "pin.error.required": "Veillez saisir un code pin",
-  "pin.error.pattern": "Uniquement des chiffres",
-  "pin.error.minlength": "4 chiffres minimun",
+  "pin.error.pattern": "Uniquement 4 chiffres",
   "pin.error.maxlength": "4 chiffres maximum",
   "pin.btn.label": "Ok"
 }

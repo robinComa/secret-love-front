@@ -9,7 +9,9 @@ angular.module('app', [
     'ngMaterial',
     'ngMdIcons',
     'ngMessages'
-]).config(function(LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
+]).config(function($httpProvider, LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
+
+    $httpProvider.defaults.withCredentials = true;
 
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'i18n/{lang}/{part}.json'
@@ -212,7 +214,7 @@ angular.module('app', [
     var origin = window.location.href.split(window.location.hash)[0];
 
     angular.module('app').constant('settings', {
-        endpoint: 'rest-api/',
+        endpoint: 'http://localhost:9001/rest-api/',
         toast: {
             hideDelay: 5000,
             position: 'bottom left'
@@ -262,8 +264,18 @@ angular.module('app', [
                     scope: ['basic']
                 },
                 icon: {
-                    name: 'photo_camera',
+                    name: 'img/instagram-icon.svg',
                     color: 'brown'
+                }
+            },
+            viadeo: {
+                label: 'connect.label.viadeo',
+                auth: {
+                    proxy: true
+                },
+                icon: {
+                    name: 'img/viadeo-icon.svg',
+                    color: '#FFA100'
                 }
             },
             twitter: {
@@ -283,6 +295,7 @@ angular.module('app', [
             linkedin: {
                 label: 'connect.label.linkedin',
                 auth: {
+                    isCode: true,
                     patternURI: /code=(.*)&state/,
                     clientId: '77bmx0zg9stbsk',
                     clientSecret: 'aryHtzhM2yc9aXeS',
@@ -303,10 +316,13 @@ angular.module('app', [
 angular.module('app').provider('$cache', function(settings){
 
     var validity = {
-        LOW: 60 * 1000,
-        MEDIUM: 60 * 60 * 1000,
-        HIGH: 30 * 24 * 60 * 60 * 1000
+        SECOND: 1000
     };
+    validity.MINUTE = 60 * validity.SECOND;
+    validity.HOUR = 60 * validity.MINUTE;
+    validity.DAY = 24 * validity.HOUR;
+    validity.MONTH = 30 * validity.DAY;
+    validity.YEAR = 365 * validity.MONTH;
 
     var now = function(){
         return (new Date()).getTime();
@@ -347,11 +363,12 @@ angular.module('app').provider('$cache', function(settings){
     this.token = {};
     this.code = {};
     for(var key in settings.socials){
-        this.token[key] = new Cache('token_' + key, validity.HIGH);
-        this.code[key] = new Cache('code_' + key, validity.HIGH);
+        this.token[key] = new Cache('token_' + key, validity.YEAR);
+        this.code[key] = new Cache('code_' + key, validity.MINUTE);
     }
-    this.friends = new Cache('data_friends', validity.MEDIUM);
-    this.secretBox = new Cache('data_secretBox', validity.MEDIUM);
+    this.friends = new Cache('data_friends', validity.SECOND);
+    this.secretBox = new Cache('data_secretBox', validity.SECOND);
+    this.hiddenFriends = new Cache('data_hiddenFriends', validity.YEAR);
 
     this.$get = function(){
         return this;
@@ -360,7 +377,7 @@ angular.module('app').provider('$cache', function(settings){
 });
 'use strict';
 
-angular.module('app').factory('Me', function(settings, $resource){
+angular.module('app').factory('Me', function(settings, $resource, $q, $injector){
 
     var Me = $resource(settings.endpoint + 'me/:action', null, {
         isUnique: {
@@ -375,6 +392,12 @@ angular.module('app').factory('Me', function(settings, $resource){
                 action: 'authenticate'
             }
         },
+        logout: {
+            method:'GET',
+            params: {
+                action: 'logout'
+            }
+        },
         forgotPassword: {
             method:'POST',
             params: {
@@ -383,8 +406,35 @@ angular.module('app').factory('Me', function(settings, $resource){
         },
         update: {
             method:'PUT'
+        },
+        disconnect: {
+            method:'PUT',
+            params: {
+                action: 'disconnect'
+            }
+        },
+        connect: {
+            method:'POST',
+            params: {
+                action: 'connect'
+            }
         }
     });
+
+    Me.getSocialsMe = function(){
+
+        var promises = [];
+
+        angular.forEach(settings.socials, function(social, name){
+            var socialService = $injector.get(name);
+            if(socialService.isConnected()){
+                var promise = socialService.getMe();
+                promises.push(promise);
+            }
+        });
+
+        return $q.all(promises);
+    };
 
     return Me;
 
@@ -419,8 +469,12 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                     });
                 };
 
-                var isVisible = function(){
-                    return true;
+                var isVisible = function(friend){
+                    var data = $cache.hiddenFriends.getData() || [];
+                    var isInHiddenList = data.some(function(f){
+                        return equals(f, friend);
+                    });
+                    return !isInHiddenList;
                 };
 
                 angular.forEach(settings.socials, function(social, name){
@@ -433,7 +487,7 @@ angular.module('app').factory('Friend', function(settings, $q, $resource, $injec
                     }, function(friends){
                         deferred.notify(friends.map(function(friend){
                             friend.love = areInLove(secretBox, friend);
-                            friend.visibility = isVisible();
+                            friend.visibility = isVisible(friend);
                             friendsOnNotify.push(friend);
                             return friend;
                         }));
@@ -519,6 +573,29 @@ angular.module('app').factory('SecretBox', function(settings, $resource, $q, $ca
 angular.module('app').factory('Dialog', function(settings, $resource){
 
     return $resource(settings.endpoint + 'dialogs/:type/:id');
+
+});
+'use strict';
+
+angular.module('app').factory('Proxy', function(settings, $resource){
+
+    var Proxy = $resource(settings.endpoint + 'proxy/:action', null, {
+        getViadeoFriends: {
+            method:'POST',
+            params: {
+                action: 'viadeo-friends'
+            },
+            isArray: true
+        },
+        getViadeoMe: {
+            method:'POST',
+            params: {
+                action: 'viadeo-me'
+            }
+        }
+    });
+
+    return Proxy;
 
 });
 'use strict';
@@ -631,7 +708,7 @@ angular.module('app').directive('friendPreview', function(settings, Friend){
         templateUrl: 'src/components/friend-preview/view.html',
         link: function($scope){
 
-            if(!$scope.friend.picture || !$scope.friend.name){
+            if($scope.friend && (!$scope.friend.picture || !$scope.friend.name)){
                 Friend.query().then(function(friends){
 
                     var matchFriends = friends.filter(function(f){
@@ -650,6 +727,49 @@ angular.module('app').directive('friendPreview', function(settings, Friend){
                     return settings.socials[social].icon;
                 }
             };
+        }
+    };
+});
+'use strict';
+
+angular.module('app').directive('socialIcon', function(){
+
+    return {
+        restrict: 'E',
+        templateUrl: 'src/components/social/view.html',
+        scope: {
+            name: '@name',
+            color: '@color'
+        },
+        link: function(scope, el){
+            var size = el.attr('size');
+            setTimeout(function(){
+                var svg = el.find('svg');
+                svg.attr('width', size);
+                svg.attr('height', size);
+            },100);
+            scope.isUrl = function(name){
+                return name.indexOf('/') !== -1;
+            };
+        }
+    };
+
+});
+'use strict';
+
+angular.module('app').controller('ConnectProxyCtrl', function($scope, $mdDialog){
+
+    $scope.proxy = {};
+
+    $scope.hide = function() {
+        $mdDialog.hide();
+    };
+    $scope.cancel = function() {
+        $mdDialog.cancel();
+    };
+    $scope.submit = function() {
+        if($scope.proxyForm.$valid){
+            $mdDialog.hide($scope.proxy);
         }
     };
 });
@@ -731,6 +851,16 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
               return deferred.promise;
           };
 
+          this.getMe = function(){
+              var deferred = $q.defer();
+              this.getToken().then(function(token){
+                  args.getMe(token).then(function(socialMe){
+                      deferred.resolve(socialMe);
+                  }, deferred.reject);
+              }, deferred.reject);
+              return deferred.promise;
+          };
+
       };
     };
 
@@ -738,41 +868,62 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
 });
 'use strict';
 
-angular.module('app').factory('phone', function($q, $http) {
+angular.module('app').factory('phone', function($q, $http, $cache, $timeout) {
 
     var isPhoneDevice = false;
     var isStubMode = true;
 
     return{
+        getToken: function(){
+            var token = 'OK';
+            $cache.token.phone.setData(token);
+            return $q.when(token);
+        },
         isConnected: function(){
-            return isPhoneDevice || isStubMode;
+            return $cache.token.phone.getData() !== null;
         },
         isImplemented: function(){
             return isPhoneDevice || isStubMode;
         },
         close: function(){
-
+            var deferred = $q.defer();
+            $timeout(function(){
+                $cache.token.phone.invalid();
+                deferred.resolve();
+            }, 1);
+            return deferred.promise;
         },
         getFriends: function(){
             var deferred = $q.defer();
-            if(isStubMode){
-                $http.get('stub/data/friends/phone.json').then(function(response){
-                    var friends = response.data.map(function(friend){
-                        return {
-                            id: friend.id,
-                            name: friend.displayName,
-                            picture: 'data:image/jpg;base64,' + friend.photos[0],
-                            type: 'phone'
-                        };
-                    });
-                    deferred.notify(friends);
-                    deferred.resolve(friends);
-                }, deferred.reject);
-            }else if(isPhoneDevice){
-                deferred.resolve([]);
+            if(this.isImplemented() && this.isConnected()){
+                if(isStubMode){
+                    $http.get('stub/data/friends/phone.json').then(function(response){
+                        var friends = response.data.map(function(friend){
+                            return {
+                                id: friend.id,
+                                name: friend.displayName,
+                                picture: 'data:image/jpg;base64,' + friend.photos[0],
+                                type: 'phone'
+                            };
+                        });
+                        deferred.notify(friends);
+                        deferred.resolve(friends);
+                    }, deferred.reject);
+                }else if(isPhoneDevice){
+                    deferred.resolve([]);
+                }
             }else{
                 deferred.resolve([]);
             }
+            return deferred.promise;
+        },
+        getMe: function(){
+            var deferred = $q.defer();
+            //TODO not null id (Telephone number)
+            deferred.resolve({
+                type: 'phone',
+                id: null
+            });
             return deferred.promise;
         }
     };
@@ -856,6 +1007,24 @@ angular.module('app').factory('googlePlus', function(settings, Connection, $http
             getFriendPage().then(calbackResponse, deferred.reject);
 
             return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            $http.jsonp('https://www.googleapis.com/plus/v1/people/me', {
+                params: {
+                    access_token: token,
+                    callback: 'JSON_CALLBACK'
+                }
+            }).then(function(response){
+                var me = {
+                    id: response.data.id,
+                    name: response.data.displayName,
+                    picture: response.data.image.url,
+                    type: 'googlePlus'
+                };
+                deferred.resolve(me);
+            }, deferred.reject);
+            return deferred.promise;
         }
     });
 
@@ -915,6 +1084,29 @@ angular.module('app').factory('instagram', function(settings, Connection, $q, $h
                 }
             }, deferred.reject);
             return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            $http.jsonp('https://api.instagram.com/v1/users/self', {
+                params: {
+                    access_token: token,
+                    callback: 'JSON_CALLBACK',
+                    count: 1000
+                }
+            }).then(function(response){
+                var name = response.data.data.username;
+                if(response.data.data.full_name){
+                    name += ' (' + response.data.data.full_name + ')';
+                }
+                var me = {
+                    id: response.data.data.id,
+                    name: name,
+                    picture: response.data.data.profile_picture,
+                    type: 'instagram'
+                };
+                deferred.resolve(me);
+            }, deferred.reject);
+            return deferred.promise;
         }
     });
 
@@ -941,6 +1133,7 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
             $http({
                 method: 'GET',
                 url: 'https://graph.facebook.com/oauth/access_token',
+                withCredentials: false,
                 params: {
                     code: code,
                     client_id: settings.socials.facebook.auth.clientId,
@@ -964,16 +1157,35 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
                     callback: 'JSON_CALLBACK'
                 }
             }).then(function(response){
-                deferred.notify(response.data.data.map(function(friend){
+                deferred.notify(response.data.data ? response.data.data.map(function(friend){
                     return new Friend({
                         id: friend.name,
                         name: friend.name,
                         picture: friend.picture.data.url,
                         type: 'facebook'
                     });
-                }));
+                }) : []);
                 deferred.resolve();
             });
+            return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            $http.jsonp('https://graph.facebook.com/v2.4/me', {
+                params: {
+                    access_token: token,
+                    callback: 'JSON_CALLBACK',
+                    count: 1000
+                }
+            }).then(function(response){
+                var me = {
+                    id: response.data.name,
+                    name: response.data.name,
+                    picture: 'https://graph.facebook.com/' + response.data.id + '/picture',
+                    type: 'facebook'
+                };
+                deferred.resolve(me);
+            }, deferred.reject);
             return deferred.promise;
         }
     });
@@ -981,118 +1193,73 @@ angular.module('app').factory('facebook', function(settings, Connection, Friend,
 });
 'use strict';
 
-angular.module('app').factory('linkedin', function(Connection, $http) {
+angular.module('app').factory('linkedin', function(settings, Connection, $http, $q) {
 
     return new Connection({
         name: 'linkedin',
         isImplemented: false,
         sendTokenRequest: function(){
-            throw 'Not Implemented';
+            var url = 'https://www.linkedin.com/uas/oauth2/authorization';
+            url += '?client_id=' + settings.socials.linkedin.auth.clientId;
+            url += '&redirect_uri=' + settings.socials.linkedin.auth.redirectUri;
+            url += '&response_type=code';
+            url += '&state=abcde';
+            url += '&scope=' + settings.socials.linkedin.auth.scope.join(' ');
+            window.location = url;
+            return $q.when();
+        },
+        getTokenWithCode: function(code){
+            var deferred = $q.defer();
+            $http.post('https://www.linkedin.com/uas/oauth2/accessToken', {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                params: {
+                    grant_type: 'authorization_code',
+                    code: code,
+                    redirect_uri: settings.socials.linkedin.auth.redirectUri,
+                    client_id: settings.socials.linkedin.auth.clientId,
+                    client_secret: settings.socials.linkedin.auth.clientSecret
+                }
+            }).then(function(resp){
+                deferred.resolve(resp.data.access_token);
+            });
+            return deferred.promise;
         },
         sendConnectionClose: function(){
-            throw 'Not Implemented';
+            return $q.when();
         },
         getFriends: function(token){
-            return $http.jsonp('https://api.linkedin.com/v1/people/~:(num-connections)', {
+            var deferred = $q.defer();
+            $http.jsonp('https://api.linkedin.com/v1/people/~?format=json', {
                 params: {
                     format: 'jsonp',
                     oauth2_access_token: token,
                     callback: 'JSON_CALLBACK'
                 }
-            });
+            }).then(function(response){
+                console.log(response);
+                deferred.resolve(response);
+            }, deferred.reject);
+            return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            $http.jsonp('https://api.linkedin.com/v1/people/~?format=json', {
+                params: {
+                    format: 'jsonp',
+                    oauth2_access_token: token,
+                    callback: 'JSON_CALLBACK'
+                }
+            }).then(function(response){
+                console.log(response);
+                deferred.resolve(response);
+            }, deferred.reject);
+            return deferred.promise;
         }
     });
 
 });
-
-/**
- *
- *
- *
- *  var adaptToModel = function(dto){
-        return new FriendModel(dto.id, dto.firstName + ' ' + dto.lastName, dto.pictureUrl, 'linkedin');
-    };
-
- this.adaptToModels = function(dto){
-        if(dto && dto.data && dto.data.numConnections){
-            var models = [];
-            for(var i = 0; i < dto.data.numConnections; i++){
-                models.push(adaptToModel({
-                    id: i,
-                    firstName: 'Fake First Name',
-                    lastName: i,
-                    pictureUrl: 'https://media.licdn.com/mpr/mprx/0_io443xgIdsvMEmnciSRb3pp6IjA9oDnc3e2b3j0zqUL6zWTB72Hq7gwRLrldWoBRGdV6asDHmXt1'
-                }));
-            }
-            return models;
-        }else{
-            return [];
-        }
-    };
-
-angular.module('app').provider('$linkedin', function(settings){
-
-    var getUriCode = function(hash){
-        var reg = hash.match(/code=(.*)&state/);
-        return reg && reg[1] ? reg[1] : null;
-    };
-
-    var code = getUriCode(window.location.href);
-
-    if(code){
-        window.localStorage.setItem('access_code_linkedin', code);
-    }
-    code = window.localStorage.getItem('access_code_linkedin');
-
-    var token = window.localStorage.getItem('access_token_linkedin');
-
-    this.$get = function($q, $http){
-
-        return {
-        getToken: function(){
-                var deferred = $q.defer();
-                if(token){
-                    deferred.resolve(token);
-                }else if(code){
-                    $http.get('https://www.linkedin.com/uas/oauth2/accessToken', {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        params: {
-                            grant_type: 'authorization_code',
-                            code: code,
-                            redirect_uri: settings.socials.linkedin.auth.redirectUri,
-                            client_id: settings.socials.linkedin.auth.clientId,
-                            client_secret: settings.socials.linkedin.auth.clientSecret
-                        }
-                    }).then(function(resp){
-                        token = resp.data.access_token;
-                        window.localStorage.setItem('access_token_linkedin', token);
-                        deferred.resolve(token);
-                    });
-                }
-                return deferred.promise;
-            },
-            connect: function(){
-                if(code){
-                    return $q.when(code);
-                }else{
-                    var url = 'https://www.linkedin.com/uas/oauth2/authorization';
-                    url += '?client_id=' + settings.socials.linkedin.auth.clientId;
-                    url += '&redirect_uri=' + settings.socials.linkedin.auth.redirectUri;
-                    url += '&response_type=code';
-                    url += '&state=abcde';
-                    url += '&scope=' + settings.socials.linkedin.auth.scope.join(' ');
-                    window.location = url;
-                    return $q.when();
-                }
-            }
-        };
-
-    };
-
-});
- */
 'use strict';
 
 angular.module('app').factory('twitter', function(settings, Connection, $q, $http) {
@@ -1140,12 +1307,67 @@ angular.module('app').factory('twitter', function(settings, Connection, $q, $htt
             // https://api.twitter.com/1.1/friends/ids.json
             // https://api.twitter.com/1.1/users/lookup.json?user_id=6693582,F1717226282,2277815413
             return deferred.promise;
+        },
+        getMe: function(){
+            var deferred = $q.defer();
+            deferred.resolve({});
+            return deferred.promise;
         }
     });
 });
 'use strict';
 
-angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $state, LoadApplication){
+angular.module('app').factory('viadeo', function(Connection, $http, $q, $cache, $mdDialog, Proxy, Friend) {
+
+    return new Connection({
+        name: 'viadeo',
+        isImplemented: true,
+        sendTokenRequest: function(){
+            var deferred = $q.defer();
+            $mdDialog.show({
+                controller: 'ConnectProxyCtrl',
+                templateUrl: 'src/connection/proxy/view.html',
+                parent: angular.element(document.querySelector('.state-connect')[0]),
+                clickOutsideToClose:true
+            }).then(function(answer) {
+                $cache.token.viadeo.setData(answer);
+                deferred.resolve(answer);
+            }, deferred.reject);
+            return deferred.promise;
+        },
+        sendConnectionClose: function(){
+            return $q.when();
+        },
+        getFriends: function(token){
+            var deferred = $q.defer();
+            Proxy.getViadeoFriends(token).$promise.then(function(response){
+                var friends = response.map(function(friend){
+                    return new Friend({
+                        id: friend.contactId,
+                        name: friend.firstname + ' ' + friend.lastname,
+                        picture: friend.photoUrl,
+                        type: 'viadeo'
+                    });
+                });
+                deferred.notify(friends);
+                deferred.resolve(friends);
+            }, deferred.reject);
+            return deferred.promise;
+        },
+        getMe: function(token){
+            var deferred = $q.defer();
+            Proxy.getViadeoMe(token).$promise.then(function(response){
+                response.type = 'viadeo';
+                deferred.resolve(response);
+            }, deferred.reject);
+            return deferred.promise;
+        }
+    });
+
+});
+'use strict';
+
+angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $state, LoadApplication, Me){
 
     $scope.me = me;
     $scope.state = $state;
@@ -1159,6 +1381,17 @@ angular.module('app').controller('MainCtrl', function($scope, $mdSidenav, me, $s
         LoadApplication.loadApp();
     };
 
+    Me.getSocialsMe().then(function(socialsMe){
+        var unsavedSocials = socialsMe.filter(function(social){
+            return !$scope.me.socials.some(function(s){
+                return s.id === social.id && s.type === social.type;
+            });
+        });
+        unsavedSocials.forEach(function(socialMe){
+            Me.connect(socialMe);
+        });
+    });
+
 });
 'use strict';
 
@@ -1170,23 +1403,6 @@ angular.module('app').controller('SidenavCtrl', function(settings, $scope, $inte
             return secret.hasNews;
         }).length;
     });
-
-    var duration = 2000;
-    var i = 0;
-    var keys = Object.keys(settings.socials);
-
-    $scope.selectedIcon = settings.socials[keys[i]].icon;
-
-    $interval(function(){
-        $scope.selectedIcon = settings.socials[keys[i % keys.length]].icon;
-        i++;
-    }, duration);
-
-    $scope.option = {
-        rotation: 'none',
-        duration: duration,
-        easing : 'sine-out'
-    };
 
 });
 'use strict';
@@ -1206,12 +1422,24 @@ angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDia
         if($scope.loginForm.$valid){
             $scope.me.$authenticate().then(function(){
                 $state.go('friends-list');
-            }, function(){
+            }, function(error){
+                var descriptionLabel;
+                switch (error.status){
+                    case 403:
+                        descriptionLabel = 'auth.connect.issue.dialog.password';
+                        break;
+                    case 404:
+                        descriptionLabel = 'auth.connect.issue.dialog.email';
+                        break;
+                    default:
+                        descriptionLabel = 'auth.connect.issue.dialog.description';
+                        break;
+                }
                 $mdDialog.show(
                     $mdDialog.alert()
                         .clickOutsideToClose(true)
                         .title($translate.instant('auth.connect.issue.dialog.title'))
-                        .content($translate.instant('auth.connect.issue.dialog.description'))
+                        .content($translate.instant(descriptionLabel))
                         .ariaLabel($translate.instant('auth.connect.issue.dialog.action'))
                         .ok($translate.instant('auth.connect.issue.dialog.action'))
                         .targetEvent(ev)
@@ -1222,6 +1450,34 @@ angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDia
 
     $scope.loadDemo = function(){
         LoadApplication.loadAppStub();
+    };
+
+});
+'use strict';
+
+angular.module('app').directive('emailExist', function(Me){
+
+    return{
+        restrict: 'A',
+        require: 'ngModel',
+        scope: {
+          ngModel: '='
+        },
+        link: function(scope, element, attributes, ctrl){
+
+            scope.$watch(function(){
+                return scope.ngModel;
+            }, function(val){
+                Me.isUnique({
+                    email: val
+                }).$promise.then(function(response){
+                    ctrl.$setValidity('exist', !response.unique);
+                }, function(){
+                    ctrl.$setValidity('exist', false);
+                });
+            });
+
+        }
     };
 
 });
@@ -1981,7 +2237,10 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
             if(friendCopy.love){
                 me.basket.loves--;
                 $scope.requestSend = true;
-                SecretBox.save(friendCopy).then(function(){
+                SecretBox.save({
+                    type: friendCopy.type,
+                    id: friendCopy.id
+                }).then(function(){
 
                     friend.love = friendCopy.love;
                     $cache.friends.invalid();
@@ -2020,8 +2279,22 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
     };
 
     $scope.toggleFriendVisibility = function(friend){
-        friend.visibility = !friend.visibility;
-        $cache.friends.setData($scope.friends);
+
+        var setVisibility = function(visibility){
+            friend.visibility = visibility;
+            $cache.friends.setData($scope.friends);
+            $cache.hiddenFriends.setData($scope.friends.filter(function(f){
+                return !f.visibility;
+            }).map(function(f){
+                return {
+                    id: f.id,
+                    type: f.type
+                };
+            }));
+        };
+
+        setVisibility(!friend.visibility);
+
         var toast = $mdToast.simple()
             .content($translate.instant(friend.visibility ? 'friends.list.show.toast.content' : 'friends.list.hide.toast.content', {
                 name: friend.name
@@ -2032,8 +2305,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
             .hideDelay(settings.toast.hideDelay);
         $mdToast.show(toast).then(function(response) {
             if ( response === 'ok' ) {
-                friend.visibility = !friend.visibility;
-                $cache.friends.setData($scope.friends);
+                setVisibility(!friend.visibility);
             }
         });
     };
@@ -2050,7 +2322,7 @@ angular.module('app').controller('FriendsListCtrl', function($scope){
     $scope.$parent.filter = {
         visibility: true,
         love: [false],
-        type: ['instagram', 'googlePlus', 'facebook', 'phone']
+        type: ['instagram', 'googlePlus', 'facebook', 'phone', 'viadeo']
     };
 
     $scope.getLoveIcon = function(friend){
@@ -2145,12 +2417,6 @@ angular.module('app').directive('friendsFilter', function(settings, $injector){
 
 angular.module('app').controller('FriendsFaceCtrl', function($scope){
 
-    $scope.$parent.filter = {
-        visibility: true,
-        love: [false],
-        type: ['instagram', 'googlePlus', 'facebook', 'phone']
-    };
-
     $scope.refreshFace = function(friends){
         if(friends.length > 0){
             var randomIndex = Math.floor(Math.random()*friends.length);
@@ -2167,7 +2433,7 @@ angular.module('app').controller('FriendsFaceCtrl', function($scope){
 });
 'use strict';
 
-angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector, $cache){
+angular.module('app').controller('ConnectCtrl', function($scope, settings, $translate, $mdDialog, $injector, $cache, Me){
 
     $scope.connections = settings.socials;
 
@@ -2183,8 +2449,10 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
             .cancel($translate.instant('connect.disconnect.confirmation.cancel'))
             .targetEvent(event);
         $mdDialog.show(confirm).then(function() {
-            $scope.connectionModel[name] = false;
-            socialService.close();
+            Me.disconnect({type: name}).$promise.then(function(){
+                $scope.connectionModel[name] = false;
+                socialService.close();
+            });
         }, function(){
             $scope.connectionModel[name] = true;
         });
@@ -2218,7 +2486,7 @@ angular.module('app').controller('ConnectCtrl', function($scope, settings, $tran
 });
 'use strict';
 
-angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $state){
+angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $state, Me){
 
     $scope.meCopy = angular.copy(me);
 
@@ -2230,9 +2498,11 @@ angular.module('app').controller('SettingsCtrl', function($scope, me, $window, $
     };
 
     $scope.disconnect = function(){
-        $window.localStorage.clear();
-        $window.sessionStorage.clear();
-        $state.go('auth');
+        Me.logout().$promise.then(function(){
+            $window.localStorage.clear();
+            $window.sessionStorage.clear();
+            $state.go('auth');
+        });
     };
 
 });
@@ -2253,7 +2523,7 @@ angular.module('app').controller('SecretBoxCtrl', function($scope, SecretBox, $m
 
     SecretBox.query().then(function(secretBox){
         secretBox.forEach(function(secret){
-            if(isMatch(secret)){
+            if(secret && isMatch(secret)){
                 $scope.matchFriend = secret.friend;
                 $mdDialog.show({
                     scope: $scope,
@@ -2298,6 +2568,15 @@ angular.module('app').filter('orderByFresh', function() {
 
 angular.module('app').controller('DialogCtrl', function(settings,$scope, dialogs, Dialog, SecretBox, $stateParams){
 
+    var initMessage = function(){
+        $scope.newMessage = new Dialog();
+        console.log($scope.friend);
+        $scope.newMessage.to = {
+            id: $scope.friend.id,
+            type: $scope.friend.type
+        };
+    };
+
     SecretBox.query().then(function(secretBox){
         var secretBoxItem = secretBox.filter(function(secretBoxItem){
             return secretBoxItem.friend.id === $stateParams.id && secretBoxItem.friend.type === $stateParams.type;
@@ -2305,19 +2584,19 @@ angular.module('app').controller('DialogCtrl', function(settings,$scope, dialogs
         if(secretBoxItem){
             $scope.friend = secretBoxItem.friend;
             $scope.dialogs = dialogs;
+
+            initMessage();
+
+            $scope.sendMessage = function(){
+                $scope.newMessage.$save().then(function(){
+                    $scope.newMessage.when = (new Date()).getTime();
+                    $scope.newMessage.me = true;
+                    $scope.dialogs.push($scope.newMessage);
+                    initMessage();
+                });
+            };
         }
     });
-
-    $scope.newMessage = new Dialog();
-
-    $scope.sendMessage = function(){
-        $scope.newMessage.$save().then(function(){
-            $scope.newMessage.when = (new Date()).getTime();
-            $scope.newMessage.me = true;
-            $scope.dialogs.push($scope.newMessage);
-            $scope.newMessage = new Dialog();
-        });
-    };
 
 });
 'use strict';
