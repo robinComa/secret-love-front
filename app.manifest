@@ -3,6 +3,9 @@ CACHE MANIFEST
 
 CACHE:
 index.html
+img/favicon.ico
+img/instagram-icon.svg
+img/viadeo-icon.svg
 scripts/app.js
 scripts/stub.js
 scripts/templates.js
@@ -47,4 +50,4 @@ stub/data/secretbox/GET.json
 NETWORK:
 *
 
-# hash: ebb1febcb4ed7e2703165ac277d84cb07275e29e42f0c7e59d01c3bee0f58166
+# hash: c9cea444cbd4301c5472b872822f8e1be90a5b20a1165e50e349f1890f77e394
