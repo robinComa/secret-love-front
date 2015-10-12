@@ -43,6 +43,7 @@ stub/data/friends/facebook.json
 stub/data/friends/googlePlus.json
 stub/data/friends/instagram.json
 stub/data/friends/phone.json
+stub/data/friends/viadeo.json
 stub/data/me/GET-x.json
 stub/data/secretbox/GET.json
 
@@ -50,4 +51,4 @@ stub/data/secretbox/GET.json
 NETWORK:
 *
 
-# hash: 2b5a1522d207634e2e766017e442fd2c441fff42a0a5f25485a575a82c0c35f0
+# hash: 6e76d571810aabad870b150ce2cd51b22193173f65a33eb91d4d29e94867eb75

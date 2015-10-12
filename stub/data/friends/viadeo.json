@@ -1,0 +1,19 @@
+[
+  {
+    "contactId": "0023muvdduswl5a",
+    "type": "contact",
+    "memberId": "0023muvdduswl5a",
+    "photoUrl": "http://a4.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTE1ODA0OTcxODA2OTgzNjkz.jpg",
+    "hasPhoto": "true",
+    "firstname": "John",
+    "lastname": "Travolta",
+    "email": "John.Travolta@gmail.com",
+    "photoTimestamp": "1417732664000",
+    "headline": "Actor",
+    "viadeoMember": "true",
+    "networkSize": "69",
+    "canSeeMyDirectContacts": "true",
+    "personnalCardAccess": "false",
+    "professionalCardAccess": "false"
+  }
+]
