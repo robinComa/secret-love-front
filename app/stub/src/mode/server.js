@@ -24,4 +24,5 @@ angular.module('appStub.server', [
     $httpBackend.whenGET(/dialogs\/.*$/).respond(GetJsonFile.synchronously('stub/data/dialogs/GET.json'));
     $httpBackend.whenPOST(/dialogs$/).respond(200);
 
+
 });

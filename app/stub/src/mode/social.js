@@ -15,4 +15,6 @@ angular.module('appStub.social', [
     $httpBackend.whenJSONP(/https:\/\/api\.instagram\.com\/v1\/users\/self\/follows/).respond(GetJsonFile.synchronously('stub/data/friends/instagram.json'));
     $httpBackend.whenJSONP(/https:\/\/graph.facebook.com\/v2.4\/me\/taggable_friends/).respond(GetJsonFile.synchronously('stub/data/friends/facebook.json'));
 
+    $httpBackend.whenPOST(/proxy\/viadeo\-friends/).respond(GetJsonFile.synchronously('stub/data/friends/viadeo.json'));
+
 });
