@@ -1434,8 +1434,7 @@ angular.module('app').controller('AuthCtrl', function($scope, Me, $state, $mdDia
                         descriptionLabel = 'auth.connect.issue.dialog.email';
                         break;
                     default:
-                        //descriptionLabel = 'auth.connect.issue.dialog.description';
-                        descriptionLabel = JSON.stringify(error);
+                        descriptionLabel = 'auth.connect.issue.dialog.description';
                         break;
                 }
                 $mdDialog.show(
