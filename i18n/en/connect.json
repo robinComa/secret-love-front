@@ -20,5 +20,12 @@
   "connect.proxy.dialog.field.password.label": "Password",
   "connect.proxy.dialog.field.password.error": "Password is required",
   "connect.proxy.dialog.button.cancel": "Cancel",
-  "connect.proxy.dialog.button.submit": "Connection"
+  "connect.proxy.dialog.button.submit": "Connection",
+
+  "connect.phone.dialog.title": "Connection",
+  "connect.phone.dialog.field.number.label": "Phone number",
+  "connect.phone.dialog.field.number.required": "Phone number is required",
+  "connect.phone.dialog.field.number.pattern": "Phone number is not correct",
+  "connect.phone.dialog.button.cancel": "Cancel",
+  "connect.phone.dialog.button.submit": "Connection"
 }

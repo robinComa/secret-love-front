@@ -20,5 +20,12 @@
   "connect.proxy.dialog.field.password.label": "Mot de passe",
   "connect.proxy.dialog.field.password.error": "Le mot de passe est obligatoire",
   "connect.proxy.dialog.button.cancel": "Annuler",
-  "connect.proxy.dialog.button.submit": "Connecter"
+  "connect.proxy.dialog.button.submit": "Connecter",
+
+  "connect.phone.dialog.title": "Se connecter",
+  "connect.phone.dialog.field.number.label": "Numéro de téléphone",
+  "connect.phone.dialog.field.number.required": "Le numéro de téléphone est obligatoire",
+  "connect.phone.dialog.field.number.pattern": "Le numéro de téléphone est mal écrit",
+  "connect.phone.dialog.button.cancel": "Annuler",
+  "connect.phone.dialog.button.submit": "Connecter"
 }
