@@ -20,14 +20,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
     $scope.loading = true;
 
-    $scope.friends = [];
-    Friend.query().then(function(){
-        $scope.loading = false;
-    }, function(){}, function(friends){
-        $scope.friends = $scope.friends.concat(friends);
-        updateFilteringFriends();
-    });
-
     $scope.filter = {};
 
     var filter = function(friends, filter){
@@ -37,6 +29,14 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
     var updateFilteringFriends = function(){
         $scope.filteringFriends = filter($scope.friends, $scope.filter);
     };
+
+    $scope.friends = [];
+    Friend.query().then(function(){
+        $scope.loading = false;
+    }, function(){}, function(friends){
+        $scope.friends = $scope.friends.concat(friends);
+        updateFilteringFriends();
+    });
 
     $scope.$watch(function(){
         return $scope.filter;
