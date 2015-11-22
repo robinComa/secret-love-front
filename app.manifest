@@ -5,6 +5,7 @@ CACHE:
 index.html
 img/favicon.ico
 img/instagram-icon.svg
+img/user-icon-silhouette.png
 img/viadeo-icon.svg
 scripts/app.js
 scripts/stub.js
@@ -51,4 +52,4 @@ stub/data/secretbox/GET.json
 NETWORK:
 *
 
-# hash: 4b2445c1731fd7d73d039c60d40307bf23fea1a7c35b9faed9b2ecf805d2e768
+# hash: 7222ba17cc317a3945442bb0c24cf294951e469e4f1e1353ecfa7251b78ef2c6

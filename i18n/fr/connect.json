@@ -22,6 +22,8 @@
   "connect.proxy.dialog.button.cancel": "Annuler",
   "connect.proxy.dialog.button.submit": "Connecter",
 
+  "connect.phone.me.label": "Moi",
+
   "connect.phone.dialog.title": "Se connecter",
   "connect.phone.dialog.field.number.label": "Numéro de téléphone",
   "connect.phone.dialog.field.number.required": "Le numéro de téléphone est obligatoire",

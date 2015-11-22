@@ -894,7 +894,7 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
 });
 'use strict';
 
-angular.module('app').factory('phone', function($q, $http, $cache, $timeout, $mdDialog) {
+angular.module('app').factory('phone', function($q, $http, $cache, $timeout, $mdDialog, $translate) {
 
     var isPhoneDevice = false;
     var isStubMode = true;
@@ -956,7 +956,9 @@ angular.module('app').factory('phone', function($q, $http, $cache, $timeout, $md
             var deferred = $q.defer();
             deferred.resolve({
                 type: 'phone',
-                id: $cache.token.phone.getData()
+                id: $cache.token.phone.getData(),
+                name: $translate.instant('connect.phone.me.label'),
+                picture: 'img/user-icon-silhouette.png'
             });
             return deferred.promise;
         }
