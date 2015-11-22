@@ -4,9 +4,7 @@
     var origin = window.location.href.split(window.location.hash)[0];
 
     angular.module('app').constant('settings', {
-        //endpoint: 'http://localhost:9001/rest-api/',
-        //endpoint: 'http://secret-love-back-dev.elasticbeanstalk.com/rest-api/',
-        endpoint: 'https://secret-love-back-prod-hjm26vy7wv.elasticbeanstalk.com/rest-api/',
+        endpoint: 'https://dev-env-brd4jwjrqq.elasticbeanstalk.com/rest-api/',
         toast: {
             hideDelay: 5000,
             position: 'bottom left'

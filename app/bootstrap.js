@@ -10,11 +10,17 @@ angular.element(document).ready(function() {
             return sessionStorage.getItem(KEY) === 'appStub';
         };
 
+        this.isAppDev = function(){
+          return window.location.href.match('localhost');
+        };
+
         this.load = function(){
             if(this.isAppStub()){
-                angular.bootstrap(document, ['appStub']);
+              angular.bootstrap(document, ['appStub']);
+            }else if(this.isAppDev()){
+              angular.bootstrap(document, ['appDev']);
             }else{
-                angular.bootstrap(document, ['app']);
+              angular.bootstrap(document, ['app']);
             }
         };
 
