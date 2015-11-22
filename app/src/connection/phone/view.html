@@ -1,0 +1,28 @@
+<md-dialog aria-label="{{'connect.phone.dialog.title' | translate}}">
+    <form name="phoneForm" novalidate ng-submit="submit()">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{'connect.phone.dialog.title' | translate}}</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <md-input-container flex>
+                <label for="number">{{'connect.phone.dialog.field.number.label' | translate}}</label>
+                <input id="phone" name="phone" ng-model="phone" type="text" ng-pattern="/^\+[0-9]{10,15}$/" required>
+                <ng-md-icon icon="account_box" size="50"></ng-md-icon>
+                <div ng-messages="phoneForm.$dirty && phoneForm.phone.$error">
+                  <div ng-message="required">{{'connect.phone.dialog.field.number.required' | translate}}</div>
+                  <div ng-message="pattern">{{'connect.phone.dialog.field.number.pattern' | translate}}</div>
+                </div>
+            </md-input-container>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <md-button type="button" ng-click="cancel()" >
+                {{'connect.phone.dialog.button.cancel' | translate}}
+            </md-button>
+            <md-button type="submit" ng-disabled="phoneForm.$invalid">
+                {{'connect.phone.dialog.button.submit' | translate}}
+            </md-button>
+        </div>
+    </form>
+</md-dialog>
