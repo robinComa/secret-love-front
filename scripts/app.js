@@ -784,6 +784,23 @@ angular.module('app').controller('ConnectProxyCtrl', function($scope, $mdDialog)
 });
 'use strict';
 
+angular.module('app').controller('ConnectPhoneCtrl', function($scope, $mdDialog){
+
+    $scope.hide = function() {
+        $mdDialog.hide();
+    };
+    $scope.cancel = function() {
+        $mdDialog.cancel();
+    };
+    $scope.submit = function() {
+        if($scope.phoneForm.$valid){
+            $mdDialog.hide($scope.phone);
+        }
+    };
+});
+
+'use strict';
+
 angular.module('app').provider('Connection', function(settings, $cacheProvider){
 
     var findPatternInURI = function(pattern){
@@ -877,16 +894,25 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
 });
 'use strict';
 
-angular.module('app').factory('phone', function($q, $http, $cache, $timeout) {
+angular.module('app').factory('phone', function($q, $http, $cache, $timeout, $mdDialog) {
 
     var isPhoneDevice = false;
     var isStubMode = true;
 
     return{
         getToken: function(){
-            var token = 'OK';
-            $cache.token.phone.setData(token);
-            return $q.when(token);
+            var deferred = $q.defer();
+            $mdDialog.show({
+                controller: 'ConnectPhoneCtrl',
+                templateUrl: 'src/connection/phone/view.html',
+                parent: angular.element(document.querySelector('.state-connect')),
+                clickOutsideToClose:true
+            }).then(function(phone) {
+                $cache.token.phone.setData(phone);
+                deferred.resolve(phone);
+                $cache.token.phone.setData(phone);
+            }, deferred.reject);
+            return deferred.promise;
         },
         isConnected: function(){
             return $cache.token.phone.getData() !== null;
@@ -928,16 +954,16 @@ angular.module('app').factory('phone', function($q, $http, $cache, $timeout) {
         },
         getMe: function(){
             var deferred = $q.defer();
-            //TODO not null id (Telephone number)
             deferred.resolve({
                 type: 'phone',
-                id: null
+                id: $cache.token.phone.getData()
             });
             return deferred.promise;
         }
     };
 
 });
+
 'use strict';
 
 angular.module('app').factory('googlePlus', function(settings, Connection, $http, $q, Friend) {
