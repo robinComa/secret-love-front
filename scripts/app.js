@@ -208,15 +208,14 @@ angular.module('app', [
     },1);
 
 });
+
 'use strict';
 
 (function(){
     var origin = window.location.href.split(window.location.hash)[0];
 
     angular.module('app').constant('settings', {
-        //endpoint: 'http://localhost:9001/rest-api/',
-        //endpoint: 'http://secret-love-back-dev.elasticbeanstalk.com/rest-api/',
-        endpoint: 'https://secret-love-back-prod-hjm26vy7wv.elasticbeanstalk.com/rest-api/',
+        endpoint: 'https://dev-env-brd4jwjrqq.elasticbeanstalk.com/rest-api/',
         toast: {
             hideDelay: 5000,
             position: 'bottom left'
@@ -312,6 +311,14 @@ angular.module('app', [
         }
     });
 })();
+
+'use strict';
+
+angular.module('appDev', [
+    'app'
+]).config(function(settings){
+  settings.endpoint = 'http://localhost:9001/rest-api/'
+});
 
 'use strict';
 
@@ -2194,14 +2201,6 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
 
     $scope.loading = true;
 
-    $scope.friends = [];
-    Friend.query().then(function(){
-        $scope.loading = false;
-    }, function(){}, function(friends){
-        $scope.friends = $scope.friends.concat(friends);
-        updateFilteringFriends();
-    });
-
     $scope.filter = {};
 
     var filter = function(friends, filter){
@@ -2211,6 +2210,14 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
     var updateFilteringFriends = function(){
         $scope.filteringFriends = filter($scope.friends, $scope.filter);
     };
+
+    $scope.friends = [];
+    Friend.query().then(function(){
+        $scope.loading = false;
+    }, function(){}, function(friends){
+        $scope.friends = $scope.friends.concat(friends);
+        updateFilteringFriends();
+    });
 
     $scope.$watch(function(){
         return $scope.filter;
@@ -2313,6 +2320,7 @@ angular.module('app').controller('FriendsCtrl', function(settings, me, $scope, $
     };
 
 });
+
 'use strict';
 
 angular.module('app').controller('FriendsListCtrl', function($scope){
@@ -2650,11 +2658,17 @@ angular.element(document).ready(function() {
             return sessionStorage.getItem(KEY) === 'appStub';
         };
 
+        this.isAppDev = function(){
+          return window.location.href.match('localhost');
+        };
+
         this.load = function(){
             if(this.isAppStub()){
-                angular.bootstrap(document, ['appStub']);
+              angular.bootstrap(document, ['appStub']);
+            }else if(this.isAppDev()){
+              angular.bootstrap(document, ['appDev']);
             }else{
-                angular.bootstrap(document, ['app']);
+              angular.bootstrap(document, ['app']);
             }
         };
 
