@@ -6,9 +6,10 @@ angular.module('appStub', [
     'appStub.social',
     'appStub.interceptor',
     'ngMockE2E'
-]).config(function($httpProvider){
+]).config(function($httpProvider, phoneProvider){
 
-    $httpProvider.interceptors.push('HttpStubInterceptor');
+  phoneProvider.stub = true;
+  $httpProvider.interceptors.push('HttpStubInterceptor');
 
 }).run(function($httpBackend, $interval, SecretBox, $cache){
 
