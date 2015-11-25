@@ -12,6 +12,7 @@ angular.module('app', [
 ]).config(function($httpProvider, LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
 
     $httpProvider.defaults.withCredentials = true;
+    $httpProvider.interceptors.push('AnalyticsInterceptor');
 
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'i18n/{lang}/{part}.json'
