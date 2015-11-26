@@ -2,11 +2,22 @@
 
 angular.module('app').provider('phone', function(){
 
-  this.stub = false;
-
   this.$get = function($q, $http, $cache, $timeout, $mdDialog, $translate, LoadApplication) {
 
-      var isPhoneDevice = true;
+    var getContacts = function(){
+      var deferred = $q.defer();
+      var url = 'http://localhost:8000';
+      window.parent.postMessage('getContacts', url);
+      window.addEventListener('message', function(event){
+        if (event.origin !== url || typeof event.data === 'string'){
+          deferred.reject(event.data);
+        }else{
+          deferred.resolve(event.data);
+        }
+      }, false);
+      return deferred.promise;
+    };
+
       var isStubMode = this.stub;
 
       return{
@@ -28,7 +39,14 @@ angular.module('app').provider('phone', function(){
               return $cache.token.phone.getData() !== null;
           },
           isImplemented: function(){
-            return isPhoneDevice;
+            var iAmIframe = function () {
+                try {
+                    return window.self !== window.top;
+                } catch (e) {
+                    return true;
+                }
+            }
+            return iAmIframe();
           },
           close: function(){
               var deferred = $q.defer();
@@ -48,8 +66,8 @@ angular.module('app').provider('phone', function(){
                           deferred.notify(friends);
                           deferred.resolve(friends);
                       }, deferred.reject);
-                  }else if(navigator.contacts){
-                    navigator.contacts.find([navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name], function(contacts){
+                  }else{
+                    getContacts().then(function(contacts){
                       var friends = [];
                       contacts.forEach(function(contact){
                         if(contact.phoneNumbers){
@@ -70,13 +88,8 @@ angular.module('app').provider('phone', function(){
                         }
                       });
                       deferred.resolve(friends);
-                    }, deferred.reject, {
-                      hasPhoneNumber: true
-                    });
-                    console.log(navigator.contacts)
+                    }, deferred.reject);
                   }
-              }else{
-                  deferred.reject('navigator.contacts API is missing');
               }
               return deferred.promise;
           },
