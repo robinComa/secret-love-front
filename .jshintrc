@@ -20,6 +20,7 @@
     "smarttabs": true,
     "jquery": true,
     "globals":{
-        "angular": true
+        "angular": true,
+        "ga": true
     }
 }

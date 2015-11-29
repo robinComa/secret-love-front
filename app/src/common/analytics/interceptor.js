@@ -4,7 +4,7 @@ angular.module('app').provider('AnalyticsInterceptor', function(){
 
   this.$get = function($q, $rootScope, AnalyticsService){
 
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
+    $rootScope.$on('$stateChangeSuccess', function(event, toState){
       AnalyticsService.sendPageView(toState.url, toState.name);
     });
     return {

@@ -1,20 +1,31 @@
 'use strict';
 
-angular.module('app').provider('phone', function(){
+angular.module('app').provider('phone', function($cacheProvider){
 
-  this.$get = function($q, $http, $cache, $timeout, $mdDialog, $translate, LoadApplication) {
+  var cordova = window.location.hash.split(/[\?\&]{1}/).filter(function(params){
+    return params.match(/=/);
+  }).reduce(function(previous, item){
+    var param = item.split(/=/);
+    previous[param[0]] = decodeURIComponent(param[1]);
+    return previous;
+  }, {});
+
+  if(cordova.referrer){
+    $cacheProvider.phoneReferrer.setData(cordova.referrer);
+  }else{
+    cordova.referrer = $cacheProvider.phoneReferrer.getData();
+  }
+
+  this.$get = function($q, $http, $cache, $timeout, $mdDialog, $translate) {
 
     var getContacts = function(){
       var deferred = $q.defer();
-      var url = 'http://localhost:8000';
-      window.parent.postMessage('getContacts', url);
-      window.addEventListener('message', function(event){
-        if (event.origin !== url || typeof event.data === 'string'){
-          deferred.reject(event.data);
-        }else{
-          deferred.resolve(event.data);
-        }
-      }, false);
+      if(cordova.request === 'contacts'){
+        var response = JSON.parse(cordova.response);
+        deferred.resolve(response);
+      }else{
+        window.location = cordova.referrer+'?request=contacts';
+      }
       return deferred.promise;
     };
 
@@ -45,7 +56,7 @@ angular.module('app').provider('phone', function(){
                 } catch (e) {
                     return true;
                 }
-            }
+            };
             return iAmIframe();
           },
           close: function(){
@@ -59,6 +70,29 @@ angular.module('app').provider('phone', function(){
           getFriends: function(){
               var deferred = $q.defer();
 
+              var mapContactToFriend = function(contacts){
+                var friends = [];
+                contacts.forEach(function(contact){
+                  if(contact.phoneNumbers){
+                    contact.phoneNumbers.forEach(function(phoneNumber){
+                      friends.push({
+                        id: phoneNumber.value,
+                        name: contact.displayName + ' (' + phoneNumber.type + ')',
+                        picture: (function(photos){
+                          var photo = photos[0];
+                          if(photo.type === 'base64'){
+                            return 'data:image/jpg;base64,' + photo.value;
+                          }
+                          return photo.value;
+                        })(contact.photos),
+                        type: 'phone'
+                      });
+                    });
+                  }
+                });
+                return friends;
+              };
+
               if(this.isImplemented && this.isConnected()){
                   if(isStubMode){
                       $http.get('stub/data/friends/phone.json').then(function(response){
@@ -68,26 +102,7 @@ angular.module('app').provider('phone', function(){
                       }, deferred.reject);
                   }else{
                     getContacts().then(function(contacts){
-                      var friends = [];
-                      contacts.forEach(function(contact){
-                        if(contact.phoneNumbers){
-                          contact.phoneNumbers.forEach(function(phoneNumber){
-                            friend.push({
-                              id: phoneNumber.value,
-                              name: contact.displayName + ' (' + phoneNumber.type + ')',
-                              picture: (function(photos){
-                                var photo = photos[0];
-                                if(photo.type === 'base64'){
-                                  return 'data:image/jpg;base64,' + photo.value;
-                                }
-                                return photo.value;
-                              })(contact.photos),
-                              type: 'phone'
-                            })
-                          });
-                        }
-                      });
-                      deferred.resolve(friends);
+                      deferred.resolve(mapContactToFriend(contacts));
                     }, deferred.reject);
                   }
               }
