@@ -12,6 +12,7 @@ angular.module('app', [
 ]).config(function($httpProvider, LanguageProvider, $translateProvider, $stateProvider, $urlRouterProvider, $mdThemingProvider){
 
     $httpProvider.defaults.withCredentials = true;
+    $httpProvider.interceptors.push('AnalyticsInterceptor');
 
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'i18n/{lang}/{part}.json'
@@ -316,8 +317,13 @@ angular.module('app', [
 
 angular.module('appDev', [
     'app'
-]).config(function(settings){
-  settings.endpoint = 'http://localhost:9001/rest-api/'
+]).config(function(settings, AnalyticsServiceProvider){
+
+  settings.endpoint = 'http://localhost:9001/rest-api/';
+
+  AnalyticsServiceProvider.activated = false;
+  AnalyticsServiceProvider.logger = false;
+
 });
 
 'use strict';
@@ -375,6 +381,7 @@ angular.module('app').provider('$cache', function(settings){
         this.token[key] = new Cache('token_' + key, validity.YEAR);
         this.code[key] = new Cache('code_' + key, validity.MINUTE);
     }
+    this.phoneReferrer = new Cache('phone_referrer', validity.YEAR);
     this.friends = new Cache('data_friends', validity.SECOND);
     this.secretBox = new Cache('data_secretBox', validity.SECOND);
     this.hiddenFriends = new Cache('data_hiddenFriends', validity.YEAR);
@@ -384,6 +391,7 @@ angular.module('app').provider('$cache', function(settings){
     };
 
 });
+
 'use strict';
 
 angular.module('app').factory('Me', function(settings, $resource, $q, $injector){
@@ -607,6 +615,75 @@ angular.module('app').factory('Proxy', function(settings, $resource){
     return Proxy;
 
 });
+'use strict';
+
+angular.module('app').provider('AnalyticsInterceptor', function(){
+
+  this.$get = function($q, $rootScope, AnalyticsService){
+
+    $rootScope.$on('$stateChangeSuccess', function(event, toState){
+      AnalyticsService.sendPageView(toState.url, toState.name);
+    });
+    return {
+      response: function(response) {
+        AnalyticsService.sendEvent('XHR', response.config.method + '/' + response.status, response.config.url);
+        return response;
+      },
+      responseError: function(rejection) {
+        AnalyticsService.sendEvent('XHR', rejection.config.method + '/' + rejection.status, rejection.config.url);
+        return $q.reject(rejection);
+      }
+    };
+  };
+
+});
+
+'use strict';
+
+angular.module('app').provider('AnalyticsService', function(){
+
+  /* jshint ignore:start */
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  /* jshint ignore:end */
+
+  this.activated = true;
+  this.logger = false;
+
+  this.$get = function($log){
+
+    var analytics = (function(action, type, params){
+      if(this.activated){
+        ga(action, type, params);
+      }
+      if(this.logger){
+        $log.info('ANALYTICS : ', action, type, params);
+      }
+    }).bind(this);
+
+    analytics('create', 'UA-70670563-1', 'auto');
+
+    return {
+      sendPageView: function(page, title){
+        analytics('send', 'pageview', {
+          page: page,
+          title: title
+        });
+      },
+      sendEvent: function(category, action, label){
+        analytics('send', 'event', {
+          eventCategory: category,
+          eventAction: action,
+          eventLabel: label
+        });
+      }
+    };
+  };
+
+});
+
 'use strict';
 
 angular.module('app').provider('Language', function(){
@@ -894,75 +971,127 @@ angular.module('app').provider('Connection', function(settings, $cacheProvider){
 });
 'use strict';
 
-angular.module('app').factory('phone', function($q, $http, $cache, $timeout, $mdDialog, $translate) {
+angular.module('app').provider('phone', function($cacheProvider){
 
-    var isPhoneDevice = false;
-    var isStubMode = true;
+  var cordova = window.location.hash.split(/[\?\&]{1}/).filter(function(params){
+    return params.match(/=/);
+  }).reduce(function(previous, item){
+    var param = item.split(/=/);
+    previous[param[0]] = decodeURIComponent(param[1]);
+    return previous;
+  }, {});
 
-    return{
-        getToken: function(){
-            var deferred = $q.defer();
-            $mdDialog.show({
-                controller: 'ConnectPhoneCtrl',
-                templateUrl: 'src/connection/phone/view.html',
-                parent: angular.element(document.querySelector('.state-connect')),
-                clickOutsideToClose:true
-            }).then(function(phone) {
-                $cache.token.phone.setData(phone);
-                deferred.resolve(phone);
-                $cache.token.phone.setData(phone);
-            }, deferred.reject);
-            return deferred.promise;
-        },
-        isConnected: function(){
-            return $cache.token.phone.getData() !== null;
-        },
-        isImplemented: function(){
-            return isPhoneDevice || isStubMode;
-        },
-        close: function(){
-            var deferred = $q.defer();
-            $timeout(function(){
-                $cache.token.phone.invalid();
-                deferred.resolve();
-            }, 1);
-            return deferred.promise;
-        },
-        getFriends: function(){
-            var deferred = $q.defer();
-            if(this.isImplemented() && this.isConnected()){
-                if(isStubMode){
-                    $http.get('stub/data/friends/phone.json').then(function(response){
-                        var friends = response.data.map(function(friend){
-                            return {
-                                id: friend.id,
-                                name: friend.displayName,
-                                picture: 'data:image/jpg;base64,' + friend.photos[0],
-                                type: 'phone'
-                            };
-                        });
-                        deferred.notify(friends);
-                        deferred.resolve(friends);
-                    }, deferred.reject);
-                }else if(isPhoneDevice){
-                    deferred.resolve([]);
-                }
-            }else{
-                deferred.resolve([]);
-            }
-            return deferred.promise;
-        },
-        getMe: function(){
-            var deferred = $q.defer();
-            deferred.resolve({
-                type: 'phone',
-                id: $cache.token.phone.getData(),
-                name: $translate.instant('connect.phone.me.label'),
-                picture: 'img/user-icon-silhouette.png'
-            });
-            return deferred.promise;
-        }
+  if(cordova.referrer){
+    $cacheProvider.phoneReferrer.setData(cordova.referrer);
+  }else{
+    cordova.referrer = $cacheProvider.phoneReferrer.getData();
+  }
+
+  this.$get = function($q, $http, $cache, $timeout, $mdDialog, $translate) {
+
+    var getContacts = function(){
+      var deferred = $q.defer();
+      if(cordova.request === 'contacts'){
+        var response = JSON.parse(cordova.response);
+        deferred.resolve(response);
+      }else{
+        window.location = cordova.referrer+'?request=contacts';
+      }
+      return deferred.promise;
     };
+
+      var isStubMode = this.stub;
+
+      return{
+          getToken: function(){
+              var deferred = $q.defer();
+              $mdDialog.show({
+                  controller: 'ConnectPhoneCtrl',
+                  templateUrl: 'src/connection/phone/view.html',
+                  parent: angular.element(document.querySelector('.state-connect')),
+                  clickOutsideToClose:true
+              }).then(function(phone) {
+                  $cache.token.phone.setData(phone);
+                  deferred.resolve(phone);
+                  $cache.token.phone.setData(phone);
+              }, deferred.reject);
+              return deferred.promise;
+          },
+          isConnected: function(){
+              return $cache.token.phone.getData() !== null;
+          },
+          isImplemented: function(){
+            var iAmIframe = function () {
+                try {
+                    return window.self !== window.top;
+                } catch (e) {
+                    return true;
+                }
+            };
+            return iAmIframe();
+          },
+          close: function(){
+              var deferred = $q.defer();
+              $timeout(function(){
+                  $cache.token.phone.invalid();
+                  deferred.resolve();
+              }, 1);
+              return deferred.promise;
+          },
+          getFriends: function(){
+              var deferred = $q.defer();
+
+              var mapContactToFriend = function(contacts){
+                var friends = [];
+                contacts.forEach(function(contact){
+                  if(contact.phoneNumbers){
+                    contact.phoneNumbers.forEach(function(phoneNumber){
+                      friends.push({
+                        id: phoneNumber.value,
+                        name: contact.displayName + ' (' + phoneNumber.type + ')',
+                        picture: (function(photos){
+                          var photo = photos[0];
+                          if(photo.type === 'base64'){
+                            return 'data:image/jpg;base64,' + photo.value;
+                          }
+                          return photo.value;
+                        })(contact.photos),
+                        type: 'phone'
+                      });
+                    });
+                  }
+                });
+                return friends;
+              };
+
+              if(this.isImplemented && this.isConnected()){
+                  if(isStubMode){
+                      $http.get('stub/data/friends/phone.json').then(function(response){
+                          var friends = response.data.map(mapContactToFriend);
+                          deferred.notify(friends);
+                          deferred.resolve(friends);
+                      }, deferred.reject);
+                  }else{
+                    getContacts().then(function(contacts){
+                      deferred.resolve(mapContactToFriend(contacts));
+                    }, deferred.reject);
+                  }
+              }
+              return deferred.promise;
+          },
+          getMe: function(){
+              var deferred = $q.defer();
+              deferred.resolve({
+                  type: 'phone',
+                  id: $cache.token.phone.getData(),
+                  name: $translate.instant('connect.phone.me.label'),
+                  picture: 'img/user-icon-silhouette.png'
+              });
+              return deferred.promise;
+          }
+      };
+
+  };
 
 });
 
