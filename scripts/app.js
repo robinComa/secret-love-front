@@ -2816,7 +2816,7 @@ angular.element(document).ready(function() {
         };
 
         this.isAppDev = function(){
-          return window.location.href.match('localhost');
+          return window.location.href.match('localhost:9000');
         };
 
         this.load = function(){
